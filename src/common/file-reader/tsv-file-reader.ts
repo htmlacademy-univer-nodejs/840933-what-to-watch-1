@@ -1,4 +1,5 @@
 import { readFileSync } from 'fs';
+
 import { FileReaderInterface } from './file-reader.interface.js';
 import { Film } from '../../types/film.type.js';
 import { GenreEnum } from '../../types/genre.enum.js';

@@ -1,5 +1,6 @@
-import { CliCommandInterface } from './cli-command.interface.js';
 import chalk from 'chalk';
+
+import { CliCommandInterface } from './cli-command.interface.js';
 
 export default class HelpCommand implements CliCommandInterface {
   public readonly name = '--help';
