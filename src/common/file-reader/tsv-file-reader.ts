@@ -2,8 +2,7 @@ import { readFileSync } from 'fs';
 
 import { FileReaderInterface } from './file-reader.interface.js';
 import { Film } from '../../types/film.type.js';
-import { GenreEnum } from '../../types/genre.enum.js';
-import { GenreType } from '../../types/genre.enum.js';
+import { genreConstructor } from '../../types/genre.type.js';
 
 export default class TSVFileReader implements FileReaderInterface {
   private rawData = '';
@@ -47,9 +46,9 @@ export default class TSVFileReader implements FileReaderInterface {
         name,
         description,
         publicationDate: new Date(publicationDate),
-        genre: GenreEnum[genre as GenreType],
+        genre: genreConstructor(genre),
         releaseYear: parseInt(releaseYear, 10),
-        rating: parseInt(rating, 10),
+        rating: parseFloat(rating),
         previewLink,
         videoLink,
         actors: actors.split(','),
