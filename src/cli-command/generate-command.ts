@@ -26,6 +26,6 @@ export default class GenerateCommand implements CliCommandInterface {
       await tsvFileWriter.write(movieGeneratorInstance.generate());
     }
 
-    console.log(`File ${chalk.cyan(filepath)} was created!`);
+    console.log(`Файл ${chalk.cyan(filepath)} создан!`);
   }
 }

@@ -33,10 +33,10 @@ export const createFilm = (row: string): Film => {
     rating: Number(rating),
     previewLink,
     videoLink,
-    actors: actors.split(';'),
+    actors: actors.split(','),
     producer,
     duration: Number(duration),
-    commentCount: getRandomValue(0, 100_000_000),
+    commentCount: getRandomValue(0, 10_000),
     user: {
       name: userName,
       email,
