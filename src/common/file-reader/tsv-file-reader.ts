@@ -1,69 +1,30 @@
-import { readFileSync } from 'fs';
+import {createReadStream} from 'fs';
+import EventEmitter from 'events';
 
 import { FileReaderInterface } from './file-reader.interface.js';
-import { Film } from '../../types/film.type.js';
-import { genreConstructor } from '../../types/genre.type.js';
 
-export default class TSVFileReader implements FileReaderInterface {
-  private rawData = '';
-
-  constructor(public filename: string) { }
-
-  public read(): void {
-    this.rawData = readFileSync(this.filename, { encoding: 'utf8' });
+export default class TSVFileReader extends EventEmitter implements FileReaderInterface {
+  constructor(public filename: string) {
+    super();
   }
 
-  public toArray(): Film[] {
-    if (!this.rawData) {
-      return [];
+  async read(): Promise<void> {
+    const stream = createReadStream(this.filename, {encoding: 'utf-8'});
+    let lineRead = '';
+    let endLinePosition = -1;
+    let importedRowCount = 0;
+
+    for await (const chunk of stream) {
+      lineRead += chunk.toString();
+
+      while ((endLinePosition = lineRead.indexOf('\n')) >= 0) {
+        const completeRow = lineRead.slice(0, endLinePosition + 1);
+        lineRead = lineRead.slice(++endLinePosition);
+        importedRowCount++;
+        this.emit('line', completeRow);
+      }
     }
 
-    return this.rawData
-      .split('\n')
-      .filter((row) => row.trim() !== '')
-      .map((line) => line.split('\t'))
-      .map(([
-        name,
-        description,
-        publicationDate,
-        genre,
-        releaseYear,
-        rating,
-        previewLink,
-        videoLink,
-        actors,
-        producer,
-        duration,
-        commentCount,
-        userName,
-        email,
-        avatarPath,
-        password,
-        poster,
-        backgroundImage,
-        backgroungColor
-      ]) => ({
-        name,
-        description,
-        publicationDate: new Date(publicationDate),
-        genre: genreConstructor(genre),
-        releaseYear: parseInt(releaseYear, 10),
-        rating: parseFloat(rating),
-        previewLink,
-        videoLink,
-        actors: actors.split(','),
-        producer: producer,
-        duration: parseInt(duration, 10),
-        commentCount: parseInt(commentCount, 10),
-        user: {
-          name: userName,
-          email,
-          avatarPath,
-          password
-        },
-        poster,
-        backgroundImage,
-        backgroungColor
-      }));
+    this.emit('end', importedRowCount);
   }
 }

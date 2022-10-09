@@ -1,7 +1,7 @@
 {
   "name": "what-to-watch",
   "version": "1.0.1",
-  "description": "Проект «Что посмотреть» от HTML Academy",
+  "description": "Проект «Что посмотреть» от HTML Academy»",
   "keywords": [
     "rest",
     "api",
@@ -14,7 +14,8 @@
     "lint": "eslint src/ --ext .ts",
     "compile": "tsc -p tsconfig.json",
     "clean": "rimraf dist",
-    "ts": "ts-node"
+    "ts": "ts-node",
+    "json-server": "json-server ./mocks/server-data.mock.json --port 8088"
   },
   "devDependencies": {
     "@types/node": "16.11.60",
@@ -22,6 +23,7 @@
     "@typescript-eslint/parser": "5.18.0",
     "eslint": "8.12.0",
     "eslint-config-htmlacademy": "5.1.2",
+    "json-server": "0.17.0",
     "rimraf": "3.0.2",
     "ts-node": "10.7.0",
     "typescript": "4.6.3"
@@ -32,6 +34,8 @@
     "npm": "8.1.0"
   },
   "dependencies": {
-    "chalk": "5.0.1"
+    "chalk": "5.0.1",
+    "dayjs": "1.11.5",
+    "got": "12.5.1"
   }
 }

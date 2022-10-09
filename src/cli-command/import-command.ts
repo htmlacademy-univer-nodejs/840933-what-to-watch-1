@@ -2,22 +2,23 @@ import chalk from 'chalk';
 
 import TSVFileReader from '../common/file-reader/tsv-file-reader.js';
 import { CliCommandInterface } from './cli-command.interface.js';
+import { createFilm } from '../utils/film-constructor.js';
 
 export default class ImportCommand implements CliCommandInterface {
   public readonly name = '--import';
-  public execute(filename: string): void {
+
+  async execute(filename: string): Promise<void> {
     const fileReader = new TSVFileReader(filename.trim());
+    fileReader.on('line', (line) => console.log(createFilm(line)));
+    fileReader.on('end', (count) => console.log(`${count} rows imported.`));
 
     try {
-      fileReader.read();
-      console.log(fileReader.toArray());
+      await fileReader.read();
     } catch (err) {
-
-      if (!(err instanceof Error)) {
-        throw err;
+      if (err instanceof Error) {
+        console.error(chalk.bgRed(chalk.black(`Не удалось импортировать данные из файла из-за ошибки: «${err.message}»`)));
       }
-
-      console.log(`Не удалось импортировать данные из файла по причине: «${chalk.red(err.message)}»`);
+      console.error(`Can't read the file: ${chalk.red(err)}`);
     }
   }
 }
