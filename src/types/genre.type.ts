@@ -1,4 +1,4 @@
-const genreArray = [
+export const genreArray = [
   'comedy',
   'documentary',
   'drama',
