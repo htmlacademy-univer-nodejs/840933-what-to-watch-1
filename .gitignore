@@ -1,4 +1,6 @@
 .vscode/
+.fleet/
+.env
 /node_modules/
 /build/
 /lib/
