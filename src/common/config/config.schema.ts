@@ -23,7 +23,7 @@ export const configSchema = convict<ConfigSchema>({
     default: '127.0.0.1'
   },
   SALT: {
-    doc: 'Salt for password hash',
+    doc: '«Соль» для хеширования паролей',
     format: String,
     env: 'SALT',
     default: null
