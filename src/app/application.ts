@@ -15,6 +15,6 @@ export default class Application {
   public async init() {
     this.logger.info('Происходит запуск приложения');
     this.logger.info(`Порт: ${this.config.get('PORT')}`);
-    this.logger.info(`Хост: ${this.config.get('DB_HOST')}`);
+    this.logger.info(`Хост базы данных: ${this.config.get('DB_HOST')}`);
   }
 }
