@@ -1,6 +1,6 @@
 import {LoggerInterface} from '../common/logger/logger.interface';
 
-export default class ConsoleLog implements LoggerInterface {
+export class ConsoleLog implements LoggerInterface {
   public debug(message: string, ...args: unknown[]): void {
     console.debug(message, ...args);
   }
