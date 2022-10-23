@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import {Container} from 'inversify';
+
 import {LoggerInterface} from './common/logger/logger.interface.js';
 import LoggerService from './common/logger/logger.service.js';
 import {Component} from './types/component.type.js';

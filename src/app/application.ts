@@ -13,7 +13,7 @@ export default class Application {
   }
 
   public async init() {
-    this.logger.info('Происходит запуск приложения');
+    this.logger.info('Приложение создано :)');
     this.logger.info(`Порт: ${this.config.get('PORT')}`);
     this.logger.info(`Хост базы данных: ${this.config.get('DB_HOST')}`);
   }
