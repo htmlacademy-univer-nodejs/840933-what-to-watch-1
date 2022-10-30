@@ -22,11 +22,11 @@ const applicationContainer = new Container();
 applicationContainer.bind<Application>(Component.Application).to(Application).inSingletonScope();
 applicationContainer.bind<LoggerInterface>(Component.LoggerInterface).to(LoggerService).inSingletonScope();
 applicationContainer.bind<ConfigInterface>(Component.ConfigInterface).to(ConfigService).inSingletonScope();
-applicationContainer.bind<DBInterface>(Component.DatabaseInterface).to(DBService).inSingletonScope();
+applicationContainer.bind<DBInterface>(Component.DBInterface).to(DBService).inSingletonScope();
 applicationContainer.bind<UserServiceInterface>(Component.UserServiceInterface).to(UserService);
-applicationContainer.bind<FilmServiceInterface>(Component.MovieServiceInterface).to(FilmService);
+applicationContainer.bind<FilmServiceInterface>(Component.FilmServiceInterface).to(FilmService);
 applicationContainer.bind<types.ModelType<UserEntity>>(Component.UserModel).toConstantValue(UserModel);
-applicationContainer.bind<types.ModelType<FilmEntity>>(Component.MovieModel).toConstantValue(FilmModel);
+applicationContainer.bind<types.ModelType<FilmEntity>>(Component.FilmModel).toConstantValue(FilmModel);
 
 const application = applicationContainer.get<Application>(Component.Application);
 await application.init();

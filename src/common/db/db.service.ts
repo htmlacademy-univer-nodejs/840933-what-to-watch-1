@@ -10,13 +10,13 @@ export class DBService implements DBInterface {
   constructor(@inject(Component.LoggerInterface) private logger: LoggerInterface) {}
 
   async connect(uri: string): Promise<void> {
-    this.logger.info('Connecting to MongoDB.');
+    this.logger.info('Подключение к БД.');
     await mongoose.connect(uri);
-    this.logger.info('Database connection established.');
+    this.logger.info('Соединение установлено.');
   }
 
   async disconnect(): Promise<void> {
     await mongoose.disconnect();
-    this.logger.info('Database connection closed.');
+    this.logger.info('Соединение закрыто.');
   }
 }

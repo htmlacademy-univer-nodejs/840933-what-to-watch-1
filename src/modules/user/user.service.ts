@@ -1,5 +1,5 @@
 import {types} from '@typegoose/typegoose';
-import {DocumentType} from '@typegoose/typegoose/lib/types';
+import {DocumentType} from '@typegoose/typegoose/lib/types.js';
 import {inject, injectable} from 'inversify';
 
 import {UserEntity} from './user.entity.js';

@@ -2,7 +2,7 @@ import {MockData} from '../types/mock-data.type.js';
 import {CliCommandInterface} from './cli-command.interface.js';
 import got from 'got';
 import chalk from 'chalk';
-import MovieGenerator from '../common/movie-generator/movie-generator.js';
+import FilmGenerator from '../common/movie-generator/film-generator.js';
 import TSVFileWriter from '../common/file-writer/file-writer.js';
 
 export default class GenerateCommand implements CliCommandInterface {
@@ -19,7 +19,7 @@ export default class GenerateCommand implements CliCommandInterface {
       throw Error(`Can't fetch data from ${chalk.red(url)}.`);
     }
 
-    const movieGeneratorInstance = new MovieGenerator(this.initialData);
+    const movieGeneratorInstance = new FilmGenerator(this.initialData);
     const tsvFileWriter = new TSVFileWriter(filepath);
 
     for (let i = 0; i < movieCount; i++) {

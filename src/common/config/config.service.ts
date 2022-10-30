@@ -11,10 +11,12 @@ export default class ConfigService implements ConfigInterface {
   private readonly config: ConfigSchema;
 
   constructor(@inject(Component.LoggerInterface) private logger: LoggerInterface) {
-    const parsedOutput = config();
+    const parsedOutput = config({
+      path: '../.env'
+    });
 
     if (parsedOutput.error) {
-      throw new Error('Cannot read .env file.');
+      throw new Error('Не получается прочитать .env файл.');
     }
 
     configSchema.load({});
