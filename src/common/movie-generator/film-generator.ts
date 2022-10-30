@@ -1,13 +1,18 @@
-import {MockData} from '../../types/mock-data.type.js';
-import {getRandomItem, getRandomItems, getRandomValue, getRandomDate} from '../../utils/random-function.js';
-import {FilmGeneratorInterface} from './film-generator.interface.js';
+import { MockData } from '../../types/mock-data.type.js';
+import {
+  getRandomItem,
+  getRandomItems,
+  getRandomValue,
+  getRandomDate,
+} from '../../utils/random-function.js';
+import { FilmGeneratorInterface } from './film-generator.interface.js';
 import {
   MIN_RELEASE_YEAR,
   MAX_RELEASE_YEAR,
   MIN_RATING,
   MAX_RATING,
   MIN_DURATION,
-  MAX_DURATION
+  MAX_DURATION,
 } from './film-generator.constants.js';
 import { genreArray } from '../../types/genre.type.js';
 
@@ -30,8 +35,12 @@ export default class FilmGenerator implements FilmGeneratorInterface {
     const email = getRandomItem<string>(this.mockData.emails);
     const avatar = getRandomItem<string>(this.mockData.avatarPaths);
     const posterPath = getRandomItem<string>(this.mockData.posterPaths);
-    const backgroundImagePath = getRandomItem<string>(this.mockData.backgroundImagePaths);
-    const backgroundColor = getRandomItem<string>(this.mockData.backgroundColors);
+    const backgroundImagePath = getRandomItem<string>(
+      this.mockData.backgroundImagePaths
+    );
+    const backgroundColor = getRandomItem<string>(
+      this.mockData.backgroundColors
+    );
 
     return [
       name,
@@ -50,7 +59,7 @@ export default class FilmGenerator implements FilmGeneratorInterface {
       avatar,
       posterPath,
       backgroundImagePath,
-      backgroundColor
+      backgroundColor,
     ].join('\t');
   }
 }

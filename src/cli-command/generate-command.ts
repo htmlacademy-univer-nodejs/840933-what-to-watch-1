@@ -1,15 +1,23 @@
-import {MockData} from '../types/mock-data.type.js';
-import {CliCommandInterface} from './cli-command.interface.js';
 import got from 'got';
 import chalk from 'chalk';
+
 import FilmGenerator from '../common/movie-generator/film-generator.js';
 import TSVFileWriter from '../common/file-writer/file-writer.js';
+import { LoggerInterface } from '../common/logger/logger.interface.js';
+import { MockData } from '../types/mock-data.type.js';
+import { CliCommandInterface } from './cli-command.interface.js';
+import { ConsoleLog } from '../loggers/loggers.console.js';
 
 export default class GenerateCommand implements CliCommandInterface {
   public readonly name = '--generate';
   private initialData?: MockData;
+  private logger: LoggerInterface;
 
-  public async execute(...parameters:string[]): Promise<void> {
+  constructor() {
+    this.logger = new ConsoleLog();
+  }
+
+  public async execute(...parameters: string[]): Promise<void> {
     const [count, filepath, url] = parameters;
     const movieCount = parseInt(count, 10);
 
@@ -26,6 +34,6 @@ export default class GenerateCommand implements CliCommandInterface {
       await tsvFileWriter.write(movieGeneratorInstance.generate());
     }
 
-    console.log(`Файл ${chalk.cyan(filepath)} создан!`);
+    this.logger.info(`Файл ${chalk.cyan(filepath)} создан!`);
   }
 }
