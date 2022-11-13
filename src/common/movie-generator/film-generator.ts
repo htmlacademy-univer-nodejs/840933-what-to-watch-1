@@ -1,17 +1,22 @@
-import {MockData} from '../../types/mock-data.type.js';
-import {getRandomItem, getRandomItems, getRandomValue, getRandomDate} from '../../utils/random-function.js';
-import {MovieGeneratorInterface} from './movie-generator.interface.js';
+import { MockData } from '../../types/mock-data.type.js';
+import {
+  getRandomItem,
+  getRandomItems,
+  getRandomValue,
+  getRandomDate,
+} from '../../utils/random-function.js';
+import { FilmGeneratorInterface } from './film-generator.interface.js';
 import {
   MIN_RELEASE_YEAR,
   MAX_RELEASE_YEAR,
   MIN_RATING,
   MAX_RATING,
   MIN_DURATION,
-  MAX_DURATION
-} from './movie-generator.constants.js';
+  MAX_DURATION,
+} from './film-generator.constants.js';
 import { genreArray } from '../../types/genre.type.js';
 
-export default class MovieGenerator implements MovieGeneratorInterface {
+export default class FilmGenerator implements FilmGeneratorInterface {
   constructor(private readonly mockData: MockData) {}
 
   public generate(): string {
@@ -28,11 +33,14 @@ export default class MovieGenerator implements MovieGeneratorInterface {
     const duration = getRandomValue(MIN_DURATION, MAX_DURATION);
     const userName = getRandomItem<string>(this.mockData.users);
     const email = getRandomItem<string>(this.mockData.emails);
-    const password = getRandomItem<string>(this.mockData.passwords);
     const avatar = getRandomItem<string>(this.mockData.avatarPaths);
     const posterPath = getRandomItem<string>(this.mockData.posterPaths);
-    const backgroundImagePath = getRandomItem<string>(this.mockData.backgroundImagePaths);
-    const backgroundColor = getRandomItem<string>(this.mockData.backgroundColors);
+    const backgroundImagePath = getRandomItem<string>(
+      this.mockData.backgroundImagePaths
+    );
+    const backgroundColor = getRandomItem<string>(
+      this.mockData.backgroundColors
+    );
 
     return [
       name,
@@ -48,11 +56,10 @@ export default class MovieGenerator implements MovieGeneratorInterface {
       duration,
       userName,
       email,
-      password,
       avatar,
       posterPath,
       backgroundImagePath,
-      backgroundColor
+      backgroundColor,
     ].join('\t');
   }
 }

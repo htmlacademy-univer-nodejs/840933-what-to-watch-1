@@ -1,6 +1,7 @@
 .vscode/
 .fleet/
 .env
+/mongodb/
 /node_modules/
 /build/
 /lib/

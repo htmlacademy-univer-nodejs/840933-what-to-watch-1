@@ -17,7 +17,6 @@ export const createFilm = (row: string): Film => {
     duration,
     userName,
     email,
-    password,
     avatarPath,
     poster,
     backgroundImage,
@@ -40,7 +39,6 @@ export const createFilm = (row: string): Film => {
     user: {
       name: userName,
       email,
-      password,
       avatarPath
     },
     poster,

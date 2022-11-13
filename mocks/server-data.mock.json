@@ -54,11 +54,11 @@
         "Джош Бун"
       ],
       "users": [
-        "Кисулик Владик",
-        "Кисулик Сашулик",
+        "Владик",
+        "Сашулик",
         "Евик",
         "Дексон",
-        "Кисулик Никита"
+        "Никита"
       ],
       "emails": [
         "kisik@vk.com",
@@ -73,13 +73,6 @@
         "123.png",
         "graph.png",
         "vladik.jpg"
-      ],
-      "passwords": [
-        "qwerty21",
-        "qw12345",
-        "qwerty12345",
-        "kotik_vacia",
-        "hello_world"
       ],
       "posterPaths": [
         "poster/500-day-of-summer.jpg",
