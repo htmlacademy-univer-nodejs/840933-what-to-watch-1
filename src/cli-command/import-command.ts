@@ -2,7 +2,7 @@ import chalk from 'chalk';
 
 import TSVFileReader from '../common/file-reader/tsv-file-reader.js';
 import { CliCommandInterface } from './cli-command.interface.js';
-import { createFilm } from '../utils/film-constructor.js';
+import { createFilm } from '../utils/film.constructor.js';
 import { UserServiceInterface } from '../modules/user/user.interface.js';
 import { DBInterface } from '../common/db/db.interface.js';
 import { LoggerInterface } from '../common/logger/logger.interface.js';
@@ -14,7 +14,7 @@ import { FilmModel } from '../modules/film/film.entity.js';
 import { DBService } from '../common/db/db.service.js';
 import { Film } from '../types/film.type.js';
 import { ConsoleLog } from '../loggers/loggers.console.js';
-import { getDBConnectionURI } from '../utils/db-connection.js';
+import { getDBConnectionURI } from '../utils/db.connection.js';
 import { ConfigInterface } from '../common/config/config.interface.js';
 import ConfigService from '../common/config/config.service.js';
 
