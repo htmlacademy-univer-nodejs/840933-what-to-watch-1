@@ -4,7 +4,7 @@ import {inject, injectable} from 'inversify';
 import {LoggerInterface} from '../common/logger/logger.interface.js';
 import {ConfigInterface} from '../common/config/config.interface.js';
 import {Component} from '../types/component.type.js';
-import {getDBConnectionURI} from '../utils/db-connection.js';
+import {getDBConnectionURI} from '../utils/db.connection.js';
 import {DBInterface} from '../common/db/db.interface.js';
 
 @injectable()

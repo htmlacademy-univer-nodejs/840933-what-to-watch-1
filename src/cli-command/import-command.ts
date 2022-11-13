@@ -70,7 +70,7 @@ export default class ImportCommand implements CliCommandInterface {
     const user = await this.userService.findOrCreate(
       {
         ...film.user,
-        password: process.env.DB_PASSWORD,
+        password: this.config.get('DB_PASSWORD'),
       },
       this.salt
     );
