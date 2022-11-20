@@ -23,7 +23,6 @@ export default class ImportCommand implements CliCommandInterface {
   private userService!: UserServiceInterface;
   private filmService!: FilmServiceInterface;
   private databaseService!: DBInterface;
-  private salt!: string;
   private readonly logger: LoggerInterface;
   private readonly config: ConfigInterface;
 
@@ -35,7 +34,7 @@ export default class ImportCommand implements CliCommandInterface {
     this.config = new ConfigService(this.logger);
 
     this.filmService = new FilmService(this.logger, FilmModel);
-    this.userService = new UserService(this.logger, UserModel);
+    this.userService = new UserService(this.logger, UserModel, FilmModel);
     this.databaseService = new DBService(this.logger);
   }
 
@@ -48,7 +47,6 @@ export default class ImportCommand implements CliCommandInterface {
       this.config.get('DB_NAME'),
     );
 
-    this.salt = this.config.get('SALT');
     await this.databaseService.connect(uri);
 
     const fileReader = new TSVFileReader(filename.trim());
@@ -67,12 +65,17 @@ export default class ImportCommand implements CliCommandInterface {
   }
 
   private async saveFilm(film: Film) {
+    const pass = this.config.get('DB_PASSWORD') || 'password';
+    const { name, email, avatarPath } = film.user;
+
     const user = await this.userService.findOrCreate(
       {
-        ...film.user,
-        password: this.config.get('DB_PASSWORD'),
+        name,
+        email,
+        avatarPath,
+        password: pass
       },
-      this.salt
+      this.config.get('SALT')
     );
 
     await this.filmService.create({

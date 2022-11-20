@@ -7,7 +7,7 @@ import { FilmEntity } from './film.entity.js';
 import { Component } from '../../types/component.type.js';
 import { LoggerInterface } from '../../common/logger/logger.interface.js';
 import { UpdateFilmDto } from './dto/updateFilm.js';
-import { MAX_FILMS } from '../../../constants/film.constants.js';
+import { MAX_FILMS } from '../../constants/film.constants.js';
 
 @injectable()
 export class FilmService implements FilmServiceInterface {

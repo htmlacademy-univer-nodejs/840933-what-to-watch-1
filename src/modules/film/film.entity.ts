@@ -4,7 +4,7 @@ import typegoose, {
   getModelForClass,
 } from '@typegoose/typegoose';
 
-import { Genre } from '../../types/genre.type.js';
+import { Genre, genreArray } from '../../types/genre.type.js';
 import { UserEntity } from '../user/user.entity.js';
 
 const { prop, modelOptions } = typegoose;
@@ -13,20 +13,20 @@ export interface FilmEntity extends defaultClasses.Base {}
 
 @modelOptions({
   schemaOptions: {
-    collection: 'movies',
+    collection: 'films',
   },
 })
 export class FilmEntity extends defaultClasses.TimeStamps {
-  @prop({ required: true, minlength: 2, maxlength: 100 })
+  @prop({ trim: true, required: true, minlength: 2, maxlength: 100 })
   public name!: string;
 
-  @prop({ required: true, minlength: 20, maxlength: 1024 })
+  @prop({ trim: true, required: true, minlength: 20, maxlength: 1024 })
   public description!: string;
 
   @prop({ required: true })
   public publicationDate!: Date;
 
-  @prop({ type: () => String, required: true })
+  @prop({ type: () => String, required: true, enum: genreArray })
   public genre!: Genre;
 
   @prop({ required: true })
@@ -54,7 +54,7 @@ export class FilmEntity extends defaultClasses.TimeStamps {
   public commentCount!: number;
 
   @prop({ ref: UserEntity, required: true })
-  public user: Ref<UserEntity>;
+  public userId: Ref<UserEntity>;
 
   @prop({ required: true, match: /(\S+(\.jpg)$)/ })
   public poster!: string;
