@@ -1,10 +1,10 @@
 import { DocumentType } from '@typegoose/typegoose';
 
-import { CreateFilmDto } from './dto/film.js';
+import { CreateFilmDto } from './dto/createFilm.dto.js';
 import { FilmEntity } from './film.entity.js';
-import { UpdateFilmDto } from './dto/updateFilm.js';
+import { UpdateFilmDto } from './dto/updateFilm.dto.js';
 
-export interface FilmServiceInterface {
+export type FilmServiceInterface = {
   create(dto: CreateFilmDto): Promise<DocumentType<FilmEntity>>;
   findById(movieId: string): Promise<DocumentType<FilmEntity> | null>;
   find(): Promise<DocumentType<FilmEntity>[]>;

@@ -2,12 +2,12 @@ import { readFileSync } from 'fs';
 import chalk from 'chalk';
 
 import { CliCommandInterface } from './cli-command.interface.js';
-import { LoggerInterface } from '../common/logger/logger.interface.js';
+import { Logger } from '../common/logger/logger.type.js';
 import { ConsoleLog } from '../loggers/loggers.console.js';
 
 export default class VersionCommand implements CliCommandInterface {
   public readonly name = '--version';
-  private logger: LoggerInterface;
+  private logger: Logger;
 
   constructor() {
     this.logger = new ConsoleLog();

@@ -3,7 +3,7 @@ import chalk from 'chalk';
 
 import FilmGenerator from '../common/movie-generator/film-generator.js';
 import TSVFileWriter from '../common/file-writer/file-writer.js';
-import { LoggerInterface } from '../common/logger/logger.interface.js';
+import { Logger } from '../common/logger/logger.type.js';
 import { MockData } from '../types/mock-data.type.js';
 import { CliCommandInterface } from './cli-command.interface.js';
 import { ConsoleLog } from '../loggers/loggers.console.js';
@@ -11,7 +11,7 @@ import { ConsoleLog } from '../loggers/loggers.console.js';
 export default class GenerateCommand implements CliCommandInterface {
   public readonly name = '--generate';
   private initialData?: MockData;
-  private logger: LoggerInterface;
+  private logger: Logger;
 
   constructor() {
     this.logger = new ConsoleLog();

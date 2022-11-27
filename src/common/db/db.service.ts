@@ -2,13 +2,13 @@ import mongoose from 'mongoose';
 import { inject, injectable } from 'inversify';
 
 import { Component } from '../../types/component.type.js';
-import { LoggerInterface } from '../logger/logger.interface.js';
+import { Logger } from '../logger/logger.type.js';
 import { DBInterface } from './db.interface.js';
 
 @injectable()
 export class DBService implements DBInterface {
   constructor(
-    @inject(Component.LoggerInterface) private logger: LoggerInterface
+    @inject(Component.LoggerInterface) private logger: Logger
   ) {}
 
   async connect(uri: string): Promise<void> {

@@ -3,16 +3,16 @@ import { DocumentType } from '@typegoose/typegoose/lib/types.js';
 import { inject, injectable } from 'inversify';
 
 import { UserEntity } from './user.entity.js';
-import { CreateUserDto } from './dto/user.js';
-import { UserServiceInterface } from './user.interface.js';
+import { CreateUserDto } from './dto/createUser.dto.js';
 import { Component } from '../../types/component.type.js';
-import { LoggerInterface } from '../../common/logger/logger.interface.js';
+import { Logger } from '../../common/logger/logger.type.js';
 import { FilmEntity } from '../film/film.entity.js';
+import { UserServiceType } from './user.type.js';
 
 @injectable()
-export class UserService implements UserServiceInterface {
+export class UserService implements UserServiceType {
   constructor(
-    @inject(Component.LoggerInterface) private logger: LoggerInterface,
+    @inject(Component.Logger) private logger: Logger,
     @inject(Component.UserModel)
     private readonly userModel: types.ModelType<UserEntity>,
     @inject(Component.FilmModel)
