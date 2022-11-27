@@ -4,7 +4,7 @@ import {
   getRandomItems,
   getRandomValue,
   getRandomDate,
-} from '../../utils/random-function.js';
+} from '../../utils/math.js';
 import { FilmGeneratorInterface } from './film-generator.interface.js';
 import {
   MIN_RELEASE_YEAR,
@@ -20,6 +20,7 @@ export default class FilmGenerator implements FilmGeneratorInterface {
   constructor(private readonly mockData: MockData) {}
 
   public generate(): string {
+    const isPromo = Math.random() < 0.5;
     const name = getRandomItem<string>(this.mockData.names);
     const description = getRandomItem<string>(this.mockData.descriptions);
     const publicationDate = getRandomDate(new Date(1895, 0, 1), new Date());
@@ -60,6 +61,7 @@ export default class FilmGenerator implements FilmGeneratorInterface {
       posterPath,
       backgroundImagePath,
       backgroundColor,
+      isPromo
     ].join('\t');
   }
 }

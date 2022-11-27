@@ -11,7 +11,7 @@
   "scripts": {
     "cli": "npm run build && node ./dist/main.js",
     "start": "npm run ts ./src/main.ts",
-    "dev": "npm run ts ./src/main.ts | pino-pretty --colorize --translateTime SYS:standard",
+    "dev": "nodemon",
     "build": "npm run clean && npm run compile",
     "lint": "eslint src/ --ext .ts",
     "compile": "tsc -p tsconfig.json",
@@ -29,6 +29,7 @@
     "eslint-config-htmlacademy": "5.1.2",
     "json-server": "0.17.0",
     "pino-pretty": "9.1.1",
+    "nodemon": "2.0.20",
     "rimraf": "3.0.2",
     "typescript": "4.6.3"
   },
@@ -38,14 +39,14 @@
     "npm": "8.1.0"
   },
   "dependencies": {
-    "@typegoose/typegoose": "9.12.1",
+    "@typegoose/typegoose": "9.8.1",
     "chalk": "5.0.1",
     "convict": "6.2.3",
     "convict-format-with-validator": "6.2.0",
     "dotenv": "16.0.3",
     "got": "12.5.1",
     "inversify": "6.0.1",
-    "mongoose": "6.6.7",
+    "mongoose": "6.3.1",
     "pino": "8.6.1",
     "reflect-metadata": "0.1.13"
   }

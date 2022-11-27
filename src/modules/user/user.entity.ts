@@ -30,10 +30,16 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
   @prop()
   public avatarPath?: string;
 
+  @prop({ required: true, default: [] })
+  public listFilmToWatch!: string[];
+
   @prop({ required: true, default: '' })
   public name!: string;
 
-  @prop({ required: true, default: '' })
+  @prop({ required: true, default: '', validate: {
+    validator: (v: string) => v.length < 12 && v.length > 6,
+    message: 'Пароль должен быть больше 6 символов и меньше 12'
+  } })
   private password!: string;
 
   setPassword(password: string, salt: string) {

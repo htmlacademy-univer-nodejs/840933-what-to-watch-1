@@ -4,7 +4,9 @@ export const Component = {
   ConfigInterface: Symbol.for('ConfigInterface'),
   DBInterface: Symbol.for('DBInterface'),
   UserServiceInterface: Symbol.for('UserServiceInterface'),
-  UserModel: Symbol.for('UserModel'),
   FilmServiceInterface: Symbol.for('FilmServiceInterface'),
-  FilmModel: Symbol.for('FilmModel')
+  CommentServiceInterface: Symbol.for('CommentServiceInterface'),
+  FilmModel: Symbol.for('FilmModel'),
+  CommentModel: Symbol.for('CommentModel'),
+  UserModel: Symbol.for('UserModel'),
 };

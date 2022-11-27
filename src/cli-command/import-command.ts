@@ -2,7 +2,7 @@ import chalk from 'chalk';
 
 import TSVFileReader from '../common/file-reader/tsv-file-reader.js';
 import { CliCommandInterface } from './cli-command.interface.js';
-import { createFilm } from '../utils/film-constructor.js';
+import { createFilm } from '../utils/film.constructor.js';
 import { UserServiceInterface } from '../modules/user/user.interface.js';
 import { DBInterface } from '../common/db/db.interface.js';
 import { LoggerInterface } from '../common/logger/logger.interface.js';
@@ -14,7 +14,7 @@ import { FilmModel } from '../modules/film/film.entity.js';
 import { DBService } from '../common/db/db.service.js';
 import { Film } from '../types/film.type.js';
 import { ConsoleLog } from '../loggers/loggers.console.js';
-import { getDBConnectionURI } from '../utils/db-connection.js';
+import { getDBConnectionURI } from '../utils/db.connection.js';
 import { ConfigInterface } from '../common/config/config.interface.js';
 import ConfigService from '../common/config/config.service.js';
 
@@ -23,7 +23,6 @@ export default class ImportCommand implements CliCommandInterface {
   private userService!: UserServiceInterface;
   private filmService!: FilmServiceInterface;
   private databaseService!: DBInterface;
-  private salt!: string;
   private readonly logger: LoggerInterface;
   private readonly config: ConfigInterface;
 
@@ -35,7 +34,7 @@ export default class ImportCommand implements CliCommandInterface {
     this.config = new ConfigService(this.logger);
 
     this.filmService = new FilmService(this.logger, FilmModel);
-    this.userService = new UserService(this.logger, UserModel);
+    this.userService = new UserService(this.logger, UserModel, FilmModel);
     this.databaseService = new DBService(this.logger);
   }
 
@@ -48,7 +47,6 @@ export default class ImportCommand implements CliCommandInterface {
       this.config.get('DB_NAME'),
     );
 
-    this.salt = this.config.get('SALT');
     await this.databaseService.connect(uri);
 
     const fileReader = new TSVFileReader(filename.trim());
@@ -67,12 +65,17 @@ export default class ImportCommand implements CliCommandInterface {
   }
 
   private async saveFilm(film: Film) {
+    const pass = this.config.get('DB_PASSWORD') || 'password';
+    const { name, email, avatarPath } = film.user;
+
     const user = await this.userService.findOrCreate(
       {
-        ...film.user,
-        password: process.env.DB_PASSWORD,
+        name,
+        email,
+        avatarPath,
+        password: pass
       },
-      this.salt
+      this.config.get('SALT')
     );
 
     await this.filmService.create({

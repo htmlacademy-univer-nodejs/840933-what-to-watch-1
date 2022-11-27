@@ -1,6 +1,6 @@
 import { Film } from '../types/film.type.js';
 import { genreConstructor } from '../types/genre.type.js';
-import { getRandomValue } from './random-function.js';
+import { getRandomValue } from './math.js';
 
 export const createFilm = (row: string): Film => {
   const [
@@ -20,7 +20,8 @@ export const createFilm = (row: string): Film => {
     avatarPath,
     poster,
     backgroundImage,
-    backgroungColor
+    backgroungColor,
+    isPromo
   ] = row.replace('\n', '').split('\t');
 
   return {
@@ -43,6 +44,7 @@ export const createFilm = (row: string): Film => {
     },
     poster,
     backgroundImage,
-    backgroungColor
+    backgroungColor,
+    isPromo: Boolean(isPromo)
   };
 };

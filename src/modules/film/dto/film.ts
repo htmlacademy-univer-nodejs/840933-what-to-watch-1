@@ -12,7 +12,7 @@ export class CreateFilmDto {
   actors!: string[];
   producer!: string;
   duration!: number;
-  commentCount!: number;
+  userId!: string;
   poster!: string;
   backgroundImage!: string;
   backgroungColor!: string;
