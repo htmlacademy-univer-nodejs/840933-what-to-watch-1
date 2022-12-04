@@ -21,7 +21,8 @@ export default class Application {
     @inject(Component.DBInterface) private dbClient: DBInterface,
     @inject(Component.FilmController) private movieController: Controller,
     @inject(Component.ExceptionFilter) private exceptionFilter: ExceptionFilter,
-    @inject(Component.UserController) private userController: Controller
+    @inject(Component.UserController) private userController: Controller,
+    @inject(Component.CommentController) private commentController: Controller,
   ) {
     this.expressApp = express();
   }
@@ -29,6 +30,7 @@ export default class Application {
   initRoutes() {
     this.expressApp.use('/movies', this.movieController.router);
     this.expressApp.use('/users', this.userController.router);
+    this.expressApp.use('/comments', this.commentController.router);
   }
 
   initMiddleware() {
