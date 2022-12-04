@@ -1,12 +1,12 @@
 import chalk from 'chalk';
 
-import { LoggerInterface } from '../common/logger/logger.interface.js';
+import { Logger } from '../common/logger/logger.type.js';
 import { ConsoleLog } from '../loggers/loggers.console.js';
 import { CliCommandInterface } from './cli-command.interface.js';
 
 export default class HelpCommand implements CliCommandInterface {
   public readonly name = '--help';
-  private logger: LoggerInterface;
+  private logger: Logger;
 
   constructor() {
     this.logger = new ConsoleLog();

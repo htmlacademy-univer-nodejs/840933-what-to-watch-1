@@ -1,14 +1,14 @@
-import pino, {Logger} from 'pino';
-import {injectable} from 'inversify';
+import * as pino from 'pino';
+import { injectable } from 'inversify';
 
-import {LoggerInterface} from './logger.interface.js';
+import { Logger } from './logger.type.js';
 
 @injectable()
-export default class LoggerService implements LoggerInterface {
+export default class LoggerService implements Logger {
   private logger!: Logger;
 
   constructor() {
-    this.logger = pino();
+    this.logger = pino.pino();
     this.logger.info('Подключение логирования…');
   }
 

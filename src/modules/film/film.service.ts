@@ -2,17 +2,17 @@ import { inject, injectable } from 'inversify';
 import { DocumentType, types } from '@typegoose/typegoose';
 
 import { FilmServiceInterface } from './film.interface.js';
-import { CreateFilmDto } from './dto/film.js';
+import { CreateFilmDto } from './dto/createFilm.dto.js';
 import { FilmEntity } from './film.entity.js';
 import { Component } from '../../types/component.type.js';
-import { LoggerInterface } from '../../common/logger/logger.interface.js';
-import { UpdateFilmDto } from './dto/updateFilm.js';
+import { Logger } from '../../common/logger/logger.type.js';
+import { UpdateFilmDto } from './dto/updateFilm.dto.js';
 import { MAX_FILMS } from '../../constants/film.constants.js';
 
 @injectable()
 export class FilmService implements FilmServiceInterface {
   constructor(
-    @inject(Component.LoggerInterface) private readonly logger: LoggerInterface,
+    @inject(Component.Logger) private readonly logger: Logger,
     @inject(Component.FilmModel)
     private readonly filmModel: types.ModelType<FilmEntity>
   ) {}

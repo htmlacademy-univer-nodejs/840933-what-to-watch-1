@@ -3,9 +3,9 @@ import chalk from 'chalk';
 import TSVFileReader from '../common/file-reader/tsv-file-reader.js';
 import { CliCommandInterface } from './cli-command.interface.js';
 import { createFilm } from '../utils/film.constructor.js';
-import { UserServiceInterface } from '../modules/user/user.interface.js';
+import { UserServiceType } from '../modules/user/user.type.js';
 import { DBInterface } from '../common/db/db.interface.js';
-import { LoggerInterface } from '../common/logger/logger.interface.js';
+import { Logger } from '../common/logger/logger.type.js';
 import { FilmServiceInterface } from '../modules/film/film.interface.js';
 import { UserModel } from '../modules/user/user.entity.js';
 import { UserService } from '../modules/user/user.service.js';
@@ -20,10 +20,10 @@ import ConfigService from '../common/config/config.service.js';
 
 export default class ImportCommand implements CliCommandInterface {
   public readonly name = '--import';
-  private userService!: UserServiceInterface;
+  private userService!: UserServiceType;
   private filmService!: FilmServiceInterface;
   private databaseService!: DBInterface;
-  private readonly logger: LoggerInterface;
+  private readonly logger: Logger;
   private readonly config: ConfigInterface;
 
   constructor() {
