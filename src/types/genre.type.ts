@@ -1,3 +1,15 @@
+export enum GenreEnum {
+  COMEDY = 'comedy',
+  CRIME = 'crime',
+  FAMILY = 'family',
+  ROMANCE = 'romance',
+  SCIFI = 'scifi',
+  THRILLER = 'thriller',
+  DOCUMENTARY = 'documentary',
+  DRAMA = 'drama',
+  HORROR = 'horror',
+}
+
 export const genreArray = [
   'comedy',
   'documentary',

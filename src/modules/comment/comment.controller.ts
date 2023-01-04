@@ -2,6 +2,7 @@ import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
 import * as staticCore from 'express-serve-static-core';
 import { StatusCodes } from 'http-status-codes';
+import { DocumentType } from '@typegoose/typegoose';
 
 import { ControllerService } from '../../controller/controller.service.js';
 import { Component } from '../../types/component.type.js';
@@ -18,7 +19,8 @@ import { FilmResponse } from '../film/response/film.response.js';
 import { ValidateObjectIdMiddleware } from '../../middlewares/validateObjectID.middleware.js';
 import { ValidateDtoMiddleware } from '../../middlewares/validateDTO.middleware.js';
 import { CommentResponse } from './response/comment.response.js';
-import { ParamsToGetFilm } from '../../types/params.type.js';
+import { ParamsToGetFilm, ParamsToGetFilms } from '../../types/params.type.js';
+import { FilmEntity } from '../film/film.entity.js';
 
 @injectable()
 export default class MovieController extends ControllerService {
@@ -90,10 +92,18 @@ export default class MovieController extends ControllerService {
     this.ok(res, fillDTO(FilmResponse, film));
   }
 
-  async index(_req: Request, res: Response): Promise<void> {
-    const films = await this.filmService.find();
-
-    this.ok(res, fillDTO(FilmResponse, films));
+  async index(_req: Request<unknown, unknown, unknown, ParamsToGetFilms>, res: Response): Promise<void> {
+    // const films = await this.filmService.find();
+    // this.ok(res, fillDTO(FilmResponse, films));
+    const { genre, limit } = _req.query;
+    let movies: DocumentType<FilmEntity>[];
+    if (genre) {
+      movies = await this.filmService.findByGenre(genre, limit);
+    } else {
+      movies = await this.filmService.find(limit);
+    }
+    const movieResponse = fillDTO(FilmResponse, movies);
+    this.ok(res, movieResponse);
   }
 
   async update({params, body}: Request<Record<string, string>, Record<string, unknown>, UpdateFilmDto>, res: Response): Promise<void> {
