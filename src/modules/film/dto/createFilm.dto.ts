@@ -2,6 +2,7 @@ import {
   IsArray,
   IsDateString,
   IsInt,
+  IsEnum,
   IsMongoId,
   IsString,
   Length,
@@ -10,7 +11,7 @@ import {
   Min,
 } from 'class-validator';
 
-import { Genre, genreArray } from '../../../types/genre.type';
+import { Genre, GenreEnum, genreArray } from '../../../types/genre.type';
 import { imageRegex } from '../constants/movie.const';
 
 export class CreateFilmDto {
@@ -23,7 +24,7 @@ export class CreateFilmDto {
   @IsDateString({}, {message: 'Дата выпуска фильма должна соответствовать формату ISO'})
   public publicationDate!: Date;
 
-  @IsString({message: `genre must be one of: ${genreArray.join(', ')}`})
+  @IsEnum(GenreEnum, {message: `Жанры: ${genreArray.join(', ')}`})
   public genre!: Genre;
 
   @IsInt({message: 'Год выхода обязательно целов число'})
