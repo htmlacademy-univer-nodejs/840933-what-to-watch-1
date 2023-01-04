@@ -15,6 +15,7 @@ import { LoginUserDto } from './dto/loginUser.dto.js';
 import UserResponse from './response/user.response.js';
 import { UserServiceType } from './user.type.js';
 import { UserRoute } from './user.route.js';
+import { ValidateDtoMiddleware } from '../../middlewares/validateDTO.middleware.js';
 
 @injectable()
 export class UserController extends ControllerService {
@@ -31,11 +32,13 @@ export class UserController extends ControllerService {
       path: UserRoute.REGISTER,
       method: HttpMethod.Post,
       handler: this.create,
+      middlewares: [new ValidateDtoMiddleware(CreateUserDto)]
     });
     this.addRoute<UserRoute>({
       path: UserRoute.LOGIN,
       method: HttpMethod.Post,
       handler: this.login,
+      middlewares: [new ValidateDtoMiddleware(CreateUserDto)]
     });
     this.addRoute<UserRoute>({
       path: UserRoute.LOGIN,
@@ -181,7 +184,7 @@ export class UserController extends ControllerService {
   ): Promise<void> {
     await this.userService.deleteFilmToWatch(body.userId, body.movieId);
     this.noContent(_res, {
-      message: 'Успешно. Фильм удален из списка "К просмотру".',
+      message: 'Фильм успешно удален из списка "К просмотру".',
     });
   }
 }
