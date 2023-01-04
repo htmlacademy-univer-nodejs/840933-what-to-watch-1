@@ -93,15 +93,10 @@ export default class MovieController extends ControllerService {
   }
 
   async index(_req: Request<unknown, unknown, unknown, ParamsToGetFilms>, res: Response): Promise<void> {
-    // const films = await this.filmService.find();
-    // this.ok(res, fillDTO(FilmResponse, films));
     const { genre, limit } = _req.query;
-    let movies: DocumentType<FilmEntity>[];
-    if (genre) {
-      movies = await this.filmService.findByGenre(genre, limit);
-    } else {
-      movies = await this.filmService.find(limit);
-    }
+    const movies: DocumentType<FilmEntity>[] = genre
+      ? await this.filmService.findByGenre(genre, limit)
+      : await this.filmService.find(limit);
     const movieResponse = fillDTO(FilmResponse, movies);
     this.ok(res, movieResponse);
   }
