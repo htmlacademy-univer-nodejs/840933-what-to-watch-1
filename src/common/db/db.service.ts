@@ -8,7 +8,7 @@ import { DBInterface } from './db.interface.js';
 @injectable()
 export class DBService implements DBInterface {
   constructor(
-    @inject(Component.LoggerInterface) private logger: Logger
+    @inject(Component.Logger) private logger: Logger
   ) {}
 
   async connect(uri: string): Promise<void> {

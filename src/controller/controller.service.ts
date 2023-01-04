@@ -20,12 +20,16 @@ export abstract class ControllerService implements Controller {
   }
 
   addRoute<T extends string>(route: Route<T>) {
-    this._router[route.method](
-      route.path,
-      asyncHandler(route.handler.bind(this))
+    const routeHandler = asyncHandler(route.handler.bind(this));
+    const middlewares = route.middlewares?.map(
+      (middleware) => asyncHandler(middleware.execute.bind(middleware))
     );
+
+    const allHandlers = middlewares ? [...middlewares, routeHandler] : routeHandler;
+    this._router[route.method](route.path, allHandlers);
+
     this.logger.info(
-      `Route registered: ${route.method.toUpperCase()} ${route.path}`
+      `Маршруты зарегистрированы: ${route.method.toUpperCase()} ${route.path}`
     );
   }
 

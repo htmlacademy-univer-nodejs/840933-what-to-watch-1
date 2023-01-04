@@ -11,7 +11,7 @@ export default class ConfigService implements ConfigInterface {
   private readonly config: ConfigSchema;
 
   constructor(
-    @inject(Component.LoggerInterface) private logger: Logger
+    @inject(Component.Logger) private logger: Logger
   ) {
     const parsedOutput = config();
 
