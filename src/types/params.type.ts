@@ -1,3 +1,3 @@
-export type ParamsGetFilm = {
+export type ParamsToGetFilm = {
   id: string;
 }

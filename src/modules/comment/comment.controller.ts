@@ -18,7 +18,7 @@ import { FilmResponse } from '../film/response/film.response.js';
 import { ValidateObjectIdMiddleware } from '../../middlewares/validateObjectID.middleware.js';
 import { ValidateDtoMiddleware } from '../../middlewares/validateDTO.middleware.js';
 import { CommentResponse } from './response/comment.response.js';
-import { ParamsGetFilm } from '../../types/params.type.js';
+import { ParamsToGetFilm } from '../../types/params.type.js';
 
 @injectable()
 export default class MovieController extends ControllerService {
@@ -120,7 +120,7 @@ export default class MovieController extends ControllerService {
     this.noContent(res, {message: 'Фильм был успешно удален'});
   }
 
-  async indexComments({params}: Request<staticCore.ParamsDictionary | ParamsGetFilm>, res: Response): Promise<void> {
+  async indexComments({params}: Request<staticCore.ParamsDictionary | ParamsToGetFilm>, res: Response): Promise<void> {
     const comments = await this.commentService.findByFilmId(params.id);
     this.ok(res, fillDTO(CommentResponse, comments));
   }
