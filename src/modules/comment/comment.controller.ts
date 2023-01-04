@@ -9,7 +9,7 @@ import { Logger } from '../../common/logger/logger.type.js';
 import { FilmServiceInterface } from '../film/film.interface.js';
 import { CommentServiceInterface } from './comment.interface.js';
 import { HttpMethod } from '../../utils/http.enum.js';
-import { FilmRoute } from '../film/film.model.js';
+import { FilmRoute } from '../film/film.route.js';
 import { fillDTO } from '../../utils/dto.js';
 import { CreateFilmDto } from '../film/dto/createFilm.dto.js';
 import { HttpError } from '../../errors/http.errors.js';
@@ -46,7 +46,7 @@ export default class MovieController extends ControllerService {
         new ValidateObjectIdMiddleware('id'),
       ],
     });
-    this.addRoute<FilmRoute>({ path: FilmRoute.GET_MOVIES, method: HttpMethod.Get, handler: this.index });
+    this.addRoute<FilmRoute>({ path: FilmRoute.GET, method: HttpMethod.Get, handler: this.index });
     this.addRoute<FilmRoute>({
       path: FilmRoute.UPDATE,
       method: HttpMethod.Patch,

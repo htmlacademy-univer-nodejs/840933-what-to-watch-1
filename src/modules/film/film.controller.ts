@@ -10,7 +10,7 @@ import { HttpMethod } from '../../utils/http.enum.js';
 import { CreateFilmDto } from './dto/createFilm.dto.js';
 import { UpdateFilmDto } from './dto/updateFilm.dto.js';
 import { FilmServiceInterface } from './film.interface.js';
-import { FilmRoute } from './film.model.js';
+import { FilmRoute } from './film.route.js';
 import { FilmResponse } from './response/film.response.js';
 import { fillDTO } from '../../utils/dto.js';
 
@@ -25,37 +25,37 @@ export class FilmController extends ControllerService {
     this.logger.info('Созданы маршруты для MovieController !');
 
     this.addRoute<FilmRoute>({
-      path: FilmRoute.ROOT,
+      path: FilmRoute.GET,
       method: HttpMethod.Get,
       handler: this.index,
     });
 
     this.addRoute<FilmRoute>({
-      path: FilmRoute.CREATE,
+      path: FilmRoute.POST,
       method: HttpMethod.Post,
       handler: this.create,
     });
 
     this.addRoute<FilmRoute>({
-      path: FilmRoute.MOVIE,
+      path: FilmRoute.GET_FILMS,
       method: HttpMethod.Get,
       handler: this.getFilm,
     });
 
     this.addRoute<FilmRoute>({
-      path: FilmRoute.MOVIE,
+      path: FilmRoute.UPDATE,
       method: HttpMethod.Patch,
       handler: this.updateFilm,
     });
 
     this.addRoute<FilmRoute>({
-      path: FilmRoute.MOVIE,
+      path: FilmRoute.DELETE,
       method: HttpMethod.Delete,
       handler: this.deleteFilm,
     });
 
     this.addRoute<FilmRoute>({
-      path: FilmRoute.PROMO,
+      path: FilmRoute.GET_PROMO,
       method: HttpMethod.Get,
       handler: this.getPromo,
     });

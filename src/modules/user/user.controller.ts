@@ -14,7 +14,7 @@ import { CreateUserDto } from './dto/createUser.dto.js';
 import { LoginUserDto } from './dto/loginUser.dto.js';
 import UserResponse from './response/user.response.js';
 import { UserServiceType } from './user.type.js';
-import { UserRoute } from './user.enum.js';
+import { UserRoute } from './user.route.js';
 
 @injectable()
 export class UserController extends ControllerService {
