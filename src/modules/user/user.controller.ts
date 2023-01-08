@@ -16,6 +16,8 @@ import UserResponse from './response/user.response.js';
 import { UserServiceType } from './user.type.js';
 import { UserRoute } from './user.route.js';
 import { ValidateDtoMiddleware } from '../../middlewares/validateDTO.middleware.js';
+import { ValidateObjectIdMiddleware } from '../../middlewares/validateObjectID.middleware.js';
+import { UploadFileMiddleware } from '../../middlewares/upload.middleware.js';
 
 @injectable()
 export class UserController extends ControllerService {
@@ -64,6 +66,15 @@ export class UserController extends ControllerService {
       path: UserRoute.TO_WATCH,
       method: HttpMethod.Delete,
       handler: this.deleteToWatch,
+    });
+    this.addRoute<UserRoute>({
+      path: UserRoute.AVATAR,
+      method: HttpMethod.Post,
+      handler: this.uploadAvatar,
+      middlewares: [
+        new ValidateObjectIdMiddleware('id'),
+        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar'),
+      ]
     });
   }
 
@@ -152,8 +163,14 @@ export class UserController extends ControllerService {
     >,
     _res: Response
   ): Promise<void> {
-    const result = this.userService.findListFilmToWatch(body.userId);
+    const result = await this.userService.findListFilmToWatch(body.userId);
     this.ok(_res, fillDTO(FilmResponse, result));
+  }
+
+  async uploadAvatar(req: Request, res: Response) {
+    this.created(res, {
+      filepath: req.file?.path
+    });
   }
 
   async postToWatch(
@@ -162,13 +179,13 @@ export class UserController extends ControllerService {
     }: Request<
       Record<string, unknown>,
       Record<string, unknown>,
-      { userId: string; movieId: string }
+      { userId: string; filmId: string }
     >,
     _res: Response
   ): Promise<void> {
-    await this.userService.addFilmToWatch(body.userId, body.movieId);
+    await this.userService.addFilmToWatch(body.filmId, body.userId);
     this.noContent(_res, {
-      message: 'Успешно. Фильм добавлен в список "К просмотру".',
+      message: 'Фильм успешно добавлен в список «К просмотру».',
     });
   }
 
@@ -178,11 +195,11 @@ export class UserController extends ControllerService {
     }: Request<
       Record<string, unknown>,
       Record<string, unknown>,
-      { userId: string; movieId: string }
+      { userId: string; filmId: string }
     >,
     _res: Response
   ): Promise<void> {
-    await this.userService.deleteFilmToWatch(body.userId, body.movieId);
+    await this.userService.deleteFilmToWatch(body.userId, body.filmId);
     this.noContent(_res, {
       message: 'Фильм успешно удален из списка "К просмотру".',
     });

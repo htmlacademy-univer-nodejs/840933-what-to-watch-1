@@ -2,6 +2,7 @@
 .fleet/
 .env
 /mongodb/
+/upload/
 /mongo/
 /node_modules/
 /build/

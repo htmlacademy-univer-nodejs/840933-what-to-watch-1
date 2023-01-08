@@ -5,5 +5,5 @@ export enum FilmRoute {
   GET_FILMS = '/',
   UPDATE = '/:id',
   DELETE = '/:id',
-  GET_PROMO = '/'
+  GET_PROMO = '/promo'
 }

@@ -53,14 +53,14 @@ export class UserService implements UserServiceType {
     const listFilmToWatch = await this.userModel.findById(userId).select('listFilmToWatch');
     return this.filmModel.find({
       _id: {
-        $in: listFilmToWatch
+        $in: listFilmToWatch?.listFilmToWatch
       }
     });
   }
 
   async addFilmToWatch(movieId: string, userId: string): Promise<void | null> {
     return this.userModel.findByIdAndUpdate(userId, {
-      $push: {
+      $addToSet: {
         listFilmToWatch: movieId
       }
     });

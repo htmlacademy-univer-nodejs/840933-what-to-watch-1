@@ -3,13 +3,13 @@ import { Genre } from '../../../types/genre.type';
 
 export class FilmResponse {
   @Expose()
-  public title!: string;
+  public name!: string;
 
   @Expose()
   public description!: string;
 
   @Expose()
-  public publishingDate!: number;
+  public publicationDate!: number;
 
   @Expose()
   public genre!: Genre;
@@ -21,28 +21,28 @@ export class FilmResponse {
   public rating!: number;
 
   @Expose()
-  public previewPath!: string;
+  public previewLink!: string;
 
   @Expose()
-  public moviePath!: string;
+  public videoLink!: string;
 
   @Expose()
   public actors!: string[];
 
   @Expose()
-  public director!: string;
+  public producer!: string;
 
   @Expose()
-  public durationInMinutes!: number;
+  public duration!: number;
 
   @Expose()
   public userId!: string;
 
   @Expose()
-  public posterPath!: string;
+  public poster!: string;
 
   @Expose()
-  public backgroundImagePath!: string;
+  public backgroundImage!: string;
 
   @Expose()
   public backgroundColor!: string;

@@ -1,0 +1,166 @@
+###
+
+# Фильмы
+## Добавить новый фильм
+POST http://localhost:8000/films/create HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "500 Дней Лета",
+  "description": "",
+  "publicationDate": "2009-11-18T22:55:33.903Z",
+  "genre": "romance",
+  "releaseYear": 2009,
+  "previewLink": "https://what-to-watch.ru/api/preview/500-day-of-summer",
+  "videoLink": "https://what-to-watch.ru/api/preview/500-day-of-summer",
+  "actors": [
+    "Зоуи Дешанель",
+    "Джозеф Горден Левитт",
+    "Хлоя Грейс Морец"
+  ],
+  "producer": "Марк Уэбб",
+  "duration": 98,
+  "userId": "6383d47aed383bd2e38c2d32",
+  "poster": "poster/500-day-of-summer.jpg",
+  "backgroundImage": "background/500-day-of-summer.jpg",
+  "backgroungColor": "pink"
+}
+
+###
+
+## Редактирование карточки фильма
+PATCH http://localhost:8000/films/638d07890c09034b948986d9 HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "500 Дней Лета",
+  "description": "",
+  "publicationDate": "2009-11-18T22:55:33.903Z",
+  "genre": "romance",
+  "releaseYear": 2009,
+  "previewLink": "https://what-to-watch.ru/api/preview/500-day-of-summer",
+  "videoLink": "https://what-to-watch.ru/api/preview/500-day-of-summer",
+  "actors": [
+    "Зоуи Дешанель",
+    "Джозеф Горден Левитт",
+    "Хлоя Грейс Морец"
+  ],
+  "producer": "Марк Уэбб",
+  "duration": 98,
+  "userId": "6383d47aed383bd2e38c2d32",
+  "poster": "poster/500-day-of-summer.jpg",
+  "backgroundImage": "background/500-day-of-summer.jpg",
+  "backgroungColor": "pink"
+  "isPromo": true
+}
+
+###
+
+## Удаление карточки фильма
+DELETE http://localhost:8000/films/6383d334a152510dfdd795bb HTTP/1.1
+
+###
+
+## Получить список фильмов
+GET http://localhost:8000/films HTTP/1.1
+Accept: application/json
+
+###
+
+## Получение списка фильмов определенного жанра
+GET http://localhost:8000/films?genre=drama HTTP/1.1
+Accept: application/json
+
+###
+
+## Получение детальной информации по фильму
+GET http://localhost:8000/films/638d07890c09034b948986d9 HTTP/1.1
+Accept: application/json
+
+###
+
+## Получение промо-фильма
+GET http://localhost:8000/films/promo HTTP/1.1
+Accept: application/json
+
+###
+
+## Получить список фильмов «К просмотру»
+GET http://localhost:8000/users/to_watch HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "userId": "6383d47aed383bd2e38c2d32"
+}
+
+###
+
+## Добавить фильм в список «К просмотру»
+POST http://localhost:8000/users/to_watch HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "userId": "638d1929d4b90dfe8de2f94a",
+  "movieId": "638d0d6b0f5e4b6fb4376ea2"
+}
+
+###
+
+## Удалить фильм из списка «К просмотру»
+DELETE http://localhost:8000/users/to_watch HTTP/1.1
+Content-Type: application/json
+
+{
+  "userId": "6383d47aed383bd2e38c2d32",
+  "movieId": "638d0d6b0f5e4b6fb4376ea2"
+}
+
+###
+
+# Комментарии
+## Получить список комментариев для определённого фильма
+GET http://localhost:8000/films/6383d334a152510dfdd795bb/comments HTTP/1.1
+Accept: application/json
+
+###
+
+## Добавить новый комментарий к определённому фильму
+POST http://localhost:8000/comments HTTP/1.1
+Content-Type: application/json
+
+{
+  "text": "ФИЛЬМ АГОНЬ !!!",
+  "rating": 8,
+  "publishingDate": "2020-11-14T22:55:33.903Z",
+  "userId": "6383d47aed383bd2e38c2d32",
+  "movieId": "638d0d6b0f5e4b6fb4376ea2"
+}
+
+###
+
+# Пользователи
+## Создание нового пользователя
+POST http://localhost:8000/users/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "vladatkishkin@vk.com",
+  "name": "Vladik",
+  "password": "kisik",
+  "avatarPath": "evik.jpg"
+}
+
+###
+
+## Отправка аватарки пользователя
+POST http://localhost:8000/users/6383d47aed383bd2e38c2d32/avatar HTTP/1.1
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="avatar"; filename="screen.png"
+Content-Type: image/png
+
+< /Users/mac/Desktop/evik.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--

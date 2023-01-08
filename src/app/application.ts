@@ -19,7 +19,7 @@ export default class Application {
     @inject(Component.Logger) private logger: Logger,
     @inject(Component.ConfigInterface) private config: ConfigInterface,
     @inject(Component.DBInterface) private dbClient: DBInterface,
-    @inject(Component.FilmController) private movieController: Controller,
+    @inject(Component.FilmController) private filmController: Controller,
     @inject(Component.ExceptionFilter) private exceptionFilter: ExceptionFilter,
     @inject(Component.UserController) private userController: Controller,
     @inject(Component.CommentController) private commentController: Controller,
@@ -28,13 +28,14 @@ export default class Application {
   }
 
   initRoutes() {
-    this.expressApp.use('/movies', this.movieController.router);
+    this.expressApp.use('/films', this.filmController.router);
     this.expressApp.use('/users', this.userController.router);
     this.expressApp.use('/comments', this.commentController.router);
   }
 
   initMiddleware() {
     this.expressApp.use(express.json());
+    this.expressApp.use('/upload', express.static(this.config.get('UPLOAD_DIRECTORY')));
   }
 
   initExceptionFilters() {
