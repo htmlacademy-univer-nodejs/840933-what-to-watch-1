@@ -53,5 +53,11 @@ export const configSchema = convict<ConfigSchema>({
     format: String,
     env: 'UPLOAD_DIRECTORY',
     default: null
+  },
+  JWT_SECRET: {
+    doc: 'Токен JWT необходимый для авторизации',
+    format: String,
+    env: 'JWT_SECRET',
+    default: null
   }
 });

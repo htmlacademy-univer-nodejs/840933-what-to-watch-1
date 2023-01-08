@@ -1,9 +1,7 @@
 export enum FilmRoute {
-  GET = '/:id',
-  POST = '',
-  GET_COMMENTS = '/:id/comments',
-  GET_FILMS = '/',
-  UPDATE = '/:id',
-  DELETE = '/:id',
-  GET_PROMO = '/promo'
+  ROOT = '/',
+  CREATE = '/create',
+  MOVIE = '/:filmId',
+  PROMO = '/promo',
+  COMMENTS = '/:filmId/comments'
 }

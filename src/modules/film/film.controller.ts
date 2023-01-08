@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
-import { StatusCodes } from 'http-status-codes';
 import { inject, injectable } from 'inversify';
+import { DocumentType } from '@typegoose/typegoose';
 
 import { ControllerService } from '../../controller/controller.service.js';
-import { HttpError } from '../../errors/http.errors.js';
 import { Logger } from '../../common/logger/logger.type.js';
 import { Component } from '../../types/component.type.js';
 import { HttpMethod } from '../../utils/http.enum.js';
@@ -15,123 +14,122 @@ import { FilmResponse } from './response/film.response.js';
 import { fillDTO } from '../../utils/dto.js';
 import { FilmEntity } from './film.entity.js';
 import FilmListResponse from './response/filmList.response.js';
-import { DocumentType } from '@typegoose/typegoose';
+import { CommentServiceInterface } from '../comment/comment.interface.js';
+import { ValidateObjectIdMiddleware } from '../../middlewares/validateObjectID.middleware.js';
+import { DocumentExistsMiddleware } from '../../middlewares/documentExists.middleware.js';
+import { CommentResponse } from '../comment/response/comment.response.js';
+import { ValidateDtoMiddleware } from '../../middlewares/validateDTO.middleware.js';
+import { PrivateRouteMiddleware } from '../../middlewares/privateRoute.middleware.js';
+import { HttpError } from '../../errors/http.errors.js';
+import { StatusCodes } from 'http-status-codes';
 
 @injectable()
 export class FilmController extends ControllerService {
   constructor(
     @inject(Component.Logger) logger: Logger,
-    @inject(Component.FilmServiceInterface)
-    private readonly filmService: FilmServiceInterface
+    @inject(Component.FilmServiceInterface,)
+    private readonly filmService: FilmServiceInterface,
+    @inject(Component.CommentServiceInterface)
+    private readonly commentService: CommentServiceInterface
   ) {
     super(logger);
     this.logger.info('Созданы маршруты для MovieController !');
 
+    this.addRoute<FilmRoute>({path: FilmRoute.PROMO, method: HttpMethod.Get, handler: this.showPromo});
+    this.addRoute<FilmRoute>({path: FilmRoute.ROOT, method: HttpMethod.Get, handler: this.index});
     this.addRoute<FilmRoute>({
-      path: FilmRoute.GET,
-      method: HttpMethod.Get,
-      handler: this.index,
-    });
-
-    this.addRoute<FilmRoute>({path: FilmRoute.GET_PROMO, method: HttpMethod.Get, handler: this.showPromo});
-
-    this.addRoute<FilmRoute>({
-      path: FilmRoute.POST,
+      path: FilmRoute.CREATE,
       method: HttpMethod.Post,
       handler: this.create,
+      middlewares: [new PrivateRouteMiddleware(), new ValidateDtoMiddleware(CreateFilmDto)]
     });
-
     this.addRoute<FilmRoute>({
-      path: FilmRoute.GET_FILMS,
+      path: FilmRoute.MOVIE,
       method: HttpMethod.Get,
-      handler: this.getFilm,
+      handler: this.show,
+      middlewares: [
+        new ValidateObjectIdMiddleware('movieId'),
+        new DocumentExistsMiddleware(this.filmService, 'Film', 'filmId')
+      ]
     });
-
     this.addRoute<FilmRoute>({
-      path: FilmRoute.UPDATE,
+      path: FilmRoute.MOVIE,
       method: HttpMethod.Patch,
-      handler: this.updateFilm,
+      handler: this.update,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('movieId'),
+        new ValidateDtoMiddleware(UpdateFilmDto),
+        new DocumentExistsMiddleware(this.filmService, 'Film', 'filmId')
+      ]
     });
-
     this.addRoute<FilmRoute>({
-      path: FilmRoute.DELETE,
+      path: FilmRoute.MOVIE,
       method: HttpMethod.Delete,
-      handler: this.deleteFilm,
+      handler: this.delete,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('movieId'),
+        new DocumentExistsMiddleware(this.filmService, 'Film', 'filmId')
+      ]
     });
-
     this.addRoute<FilmRoute>({
-      path: FilmRoute.GET_PROMO,
+      path: FilmRoute.COMMENTS,
       method: HttpMethod.Get,
-      handler: this.getPromo,
+      handler: this.getComments,
+      middlewares: [
+        new ValidateObjectIdMiddleware('movieId'),
+        new DocumentExistsMiddleware(this.filmService, 'Film', 'filmId'),
+      ]
     });
   }
 
-  async index(_req: Request, res: Response): Promise<void> {
-    const { genre, limit } = _req.query;
-    const movies: DocumentType<FilmEntity>[] = genre
-      ? await this.filmService.findByGenre(String(genre), Number(limit))
-      : await this.filmService.find(Number(limit));
+  async index(req: Request, res: Response): Promise<void> {
+    const { genre, limit } = req.query;
+    const movies: DocumentType<FilmEntity>[] = genre ? await this.filmService.findByGenre(String(genre), Number(limit)) : await this.filmService.find(Number(limit));
     const movieResponse = fillDTO(FilmListResponse, movies);
     this.ok(res, movieResponse);
   }
 
-  async create(
-    {
-      body,
-    }: Request<Record<string, unknown>, Record<string, unknown>, CreateFilmDto>,
-    res: Response
-  ): Promise<void> {
-    const result = await this.filmService.create(body);
-    this.created(res, fillDTO(FilmResponse, result));
+  async create(req: Request, res: Response): Promise<void> {
+    const {body, user} = req;
+    const result = await this.filmService.create({...body, userId: user.id});
+    const film = await this.filmService.findById(result.id);
+    this.created(res, fillDTO(FilmResponse, film));
   }
 
-  async getFilm(
-    { params }: Request<Record<string, unknown>>,
-    res: Response
-  ): Promise<void> {
-    const result = await this.filmService.findById(`${params.movieId}`);
+  async show({params}: Request, res: Response): Promise<void> {
+    const result = await this.filmService.findById(params.filmId);
     this.ok(res, fillDTO(FilmResponse, result));
   }
 
-  async updateFilm(
-    {
-      params,
-      body,
-    }: Request<Record<string, string>, Record<string, unknown>, UpdateFilmDto>,
-    res: Response
-  ): Promise<void> {
-    const film = await this.filmService.findById(params.movieId);
-
-    if (!film) {
+  async update(req: Request, res: Response): Promise<void> {
+    const {params, body, user} = req;
+    const film = await this.filmService.findById(params.filmId);
+    if (film?.userId?.id !== user.id) {
       throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Фильм с «${params.id}» не найден :(`,
+        StatusCodes.FORBIDDEN,
+        `Пользователь с ${user.id} не может обновить карточку фильма с id ${film?.id}.`,
         'MovieController'
       );
     }
-
-    const result = await this.filmService.updateById(params.movieId, body);
+    const result = await this.filmService.updateById(params.filmId, body);
     this.ok(res, fillDTO(FilmResponse, result));
   }
 
-  async deleteFilm(
-    { params }: Request<Record<string, string>>,
-    res: Response
-  ): Promise<void> {
-    const film = await this.filmService.findById(`${params.id}`);
-
-    if (!film) {
+  async delete(req: Request, res: Response): Promise<void> {
+    const {params, user} = req;
+    const film = await this.filmService.findById(params.filmId);
+    if (film?.userId?.id !== user.id) {
       throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Фильма с id «${params.id}» не существует.`,
+        StatusCodes.FORBIDDEN,
+        `У пользователя с таким id ${user.id} нет прав на удаления фильма с id ${film?.id}.`,
         'MovieController'
       );
     }
 
     await this.filmService.deleteById(`${params.movieId}`);
-    this.noContent(res, {
-      message: 'Фильм был удален !'
-    });
+    this.noContent(res, {message: 'Фильм успешно удален.'});
   }
 
   async showPromo(_: Request, res: Response): Promise<void> {
@@ -139,8 +137,8 @@ export class FilmController extends ControllerService {
     this.ok(res, fillDTO(FilmResponse, result));
   }
 
-  async getPromo(_: Request, res: Response): Promise<void> {
-    const result = await this.filmService.findPromo();
-    this.ok(res, fillDTO(FilmResponse, result));
+  async getComments({params}: Request, res: Response): Promise<void> {
+    const comments = await this.commentService.findByFilmId(params.filmId);
+    this.ok(res, fillDTO(CommentResponse, comments));
   }
 }
