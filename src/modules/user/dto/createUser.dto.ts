@@ -1,4 +1,4 @@
-import { IsEmail, IsString, Length, Matches } from 'class-validator';
+import { IsArray, IsEmail, IsString, Length, Matches } from 'class-validator';
 
 import { avatarRegex } from '../constants/user.const.js';
 
@@ -15,4 +15,7 @@ export class CreateUserDto {
 
   @Matches(avatarRegex, {message: 'Фото должно быть в форматах .jpg или .png'})
   public avatarPath?: string;
+
+  @IsArray()
+  public filmsToWatch: string[] = [];
 }

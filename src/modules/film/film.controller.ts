@@ -13,6 +13,9 @@ import { FilmServiceInterface } from './film.interface.js';
 import { FilmRoute } from './film.route.js';
 import { FilmResponse } from './response/film.response.js';
 import { fillDTO } from '../../utils/dto.js';
+import { FilmEntity } from './film.entity.js';
+import FilmListResponse from './response/filmList.response.js';
+import { DocumentType } from '@typegoose/typegoose';
 
 @injectable()
 export class FilmController extends ControllerService {
@@ -29,6 +32,8 @@ export class FilmController extends ControllerService {
       method: HttpMethod.Get,
       handler: this.index,
     });
+
+    this.addRoute<FilmRoute>({path: FilmRoute.GET_PROMO, method: HttpMethod.Get, handler: this.showPromo});
 
     this.addRoute<FilmRoute>({
       path: FilmRoute.POST,
@@ -62,9 +67,12 @@ export class FilmController extends ControllerService {
   }
 
   async index(_req: Request, res: Response): Promise<void> {
-    const films = await this.filmService.find();
-    const filmsResponse = fillDTO(FilmResponse, films);
-    this.ok(res, filmsResponse);
+    const { genre, limit } = _req.query;
+    const movies: DocumentType<FilmEntity>[] = genre
+      ? await this.filmService.findByGenre(String(genre), Number(limit))
+      : await this.filmService.find(Number(limit));
+    const movieResponse = fillDTO(FilmListResponse, movies);
+    this.ok(res, movieResponse);
   }
 
   async create(
@@ -124,6 +132,11 @@ export class FilmController extends ControllerService {
     this.noContent(res, {
       message: 'Фильм был удален !'
     });
+  }
+
+  async showPromo(_: Request, res: Response): Promise<void> {
+    const result = await this.filmService.findPromo();
+    this.ok(res, fillDTO(FilmResponse, result));
   }
 
   async getPromo(_: Request, res: Response): Promise<void> {
