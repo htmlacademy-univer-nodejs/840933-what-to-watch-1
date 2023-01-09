@@ -42,7 +42,7 @@ export default class CommentController extends ControllerService {
     req: Request,
     res: Response
   ): Promise<void> {
-    const { body, user } = req;
+    const { body, user }: any = req;
 
     if (!(await this.filmService.exists(body.filmId))) {
       throw new HttpError(
@@ -56,6 +56,7 @@ export default class CommentController extends ControllerService {
       ...body,
       userId: user.id,
     });
+
     this.created(res, fillDTO(CommentResponse, comment));
   }
 }

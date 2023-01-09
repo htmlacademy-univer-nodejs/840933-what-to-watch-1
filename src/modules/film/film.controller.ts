@@ -48,7 +48,7 @@ export class FilmController extends ControllerService {
       method: HttpMethod.Get,
       handler: this.show,
       middlewares: [
-        new ValidateObjectIdMiddleware('movieId'),
+        new ValidateObjectIdMiddleware('filmId'),
         new DocumentExistsMiddleware(this.filmService, 'Film', 'filmId')
       ]
     });
@@ -58,7 +58,7 @@ export class FilmController extends ControllerService {
       handler: this.update,
       middlewares: [
         new PrivateRouteMiddleware(),
-        new ValidateObjectIdMiddleware('movieId'),
+        new ValidateObjectIdMiddleware('filmId'),
         new ValidateDtoMiddleware(UpdateFilmDto),
         new DocumentExistsMiddleware(this.filmService, 'Film', 'filmId')
       ]
@@ -69,7 +69,7 @@ export class FilmController extends ControllerService {
       handler: this.delete,
       middlewares: [
         new PrivateRouteMiddleware(),
-        new ValidateObjectIdMiddleware('movieId'),
+        new ValidateObjectIdMiddleware('filmId'),
         new DocumentExistsMiddleware(this.filmService, 'Film', 'filmId')
       ]
     });
@@ -78,7 +78,7 @@ export class FilmController extends ControllerService {
       method: HttpMethod.Get,
       handler: this.getComments,
       middlewares: [
-        new ValidateObjectIdMiddleware('movieId'),
+        new ValidateObjectIdMiddleware('filmId'),
         new DocumentExistsMiddleware(this.filmService, 'Film', 'filmId'),
       ]
     });
@@ -92,7 +92,7 @@ export class FilmController extends ControllerService {
   }
 
   async create(req: Request, res: Response): Promise<void> {
-    const {body, user} = req;
+    const { body, user }: any = req;
     const result = await this.filmService.create({...body, userId: user.id});
     const film = await this.filmService.findById(result.id);
     this.created(res, fillDTO(FilmResponse, film));
@@ -104,7 +104,7 @@ export class FilmController extends ControllerService {
   }
 
   async update(req: Request, res: Response): Promise<void> {
-    const {params, body, user} = req;
+    const { params, body, user }: any = req;
     const film = await this.filmService.findById(params.filmId);
     if (film?.userId?.id !== user.id) {
       throw new HttpError(
@@ -118,7 +118,7 @@ export class FilmController extends ControllerService {
   }
 
   async delete(req: Request, res: Response): Promise<void> {
-    const {params, user} = req;
+    const {params, user}: any = req;
     const film = await this.filmService.findById(params.filmId);
     if (film?.userId?.id !== user.id) {
       throw new HttpError(

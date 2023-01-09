@@ -15,6 +15,7 @@ export class AuthenticateMiddleware implements MiddlewareInterface {
     next: NextFunction
   ): Promise<void> {
     const authorizationHeader = req.headers?.authorization?.split(' ');
+    let { user }: any = req;
 
     if (!authorizationHeader) {
       return next();
@@ -38,7 +39,7 @@ export class AuthenticateMiddleware implements MiddlewareInterface {
         );
       }
 
-      req.user = { email: payload.email, id: payload.id };
+      user = { email: payload.email, id: payload.id };
       return next();
     } catch {
       return next(
