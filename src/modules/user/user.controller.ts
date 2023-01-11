@@ -18,6 +18,9 @@ import { UserRoute } from './user.route.js';
 import { ValidateDtoMiddleware } from '../../middlewares/validateDTO.middleware.js';
 import { ValidateObjectIdMiddleware } from '../../middlewares/validateObjectID.middleware.js';
 import { UploadFileMiddleware } from '../../middlewares/upload.middleware.js';
+import { PrivateRouteMiddleware } from '../../middlewares/privateRoute.middleware.js';
+import { JWT_ALGORITHM, createJWT } from '../../utils/createJWT.js';
+import LoggedUserResponse from './response/ loggedUser.response.js';
 
 @injectable()
 export class UserController extends ControllerService {
@@ -48,24 +51,22 @@ export class UserController extends ControllerService {
       handler: this.get,
     });
     this.addRoute<UserRoute>({
-      path: UserRoute.LOGOUT,
-      method: HttpMethod.Delete,
-      handler: this.logout,
-    });
-    this.addRoute<UserRoute>({
       path: UserRoute.TO_WATCH,
       method: HttpMethod.Get,
       handler: this.getToWatch,
+      middlewares: [new PrivateRouteMiddleware()]
     });
     this.addRoute<UserRoute>({
       path: UserRoute.TO_WATCH,
       method: HttpMethod.Post,
       handler: this.postToWatch,
+      middlewares: [new PrivateRouteMiddleware()]
     });
     this.addRoute<UserRoute>({
       path: UserRoute.TO_WATCH,
       method: HttpMethod.Delete,
       handler: this.deleteToWatch,
+      middlewares: [new PrivateRouteMiddleware()]
     });
     this.addRoute<UserRoute>({
       path: UserRoute.AVATAR,
@@ -89,7 +90,7 @@ export class UserController extends ControllerService {
     if (existsUser) {
       throw new HttpError(
         StatusCodes.CONFLICT,
-        `User with email «${body.email}» exists.`,
+        `Пользователь с таким  email «${body.email}» существуют.`,
         'UserController'
       );
     }
@@ -107,50 +108,33 @@ export class UserController extends ControllerService {
     Record<string, unknown>,
     Record<string, unknown>,
     LoginUserDto
-  >): Promise<void> {
-    const existsUser = await this.userService.findByEmail(body.email);
+  >, res: Response): Promise<void> {
+    const user = await this.userService.verifyUser(body, this.configService.get('SALT'));
 
-    if (!existsUser) {
+    if (!user) {
       throw new HttpError(
         StatusCodes.UNAUTHORIZED,
-        `User with email ${body.email} not found.`,
+        'Unauthorized',
         'UserController'
       );
     }
 
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'UserController'
+    const token = await createJWT(
+      JWT_ALGORITHM,
+      this.configService.get('JWT_SECRET'),
+      { email: user.email, id: user.id}
     );
+
+    this.ok(res, fillDTO(LoggedUserResponse, {email: user.email, token}));
   }
 
   async get(
-    req: Request<
-      Record<string, unknown>,
-      Record<string, unknown>,
-      Record<string, string>
-    >
+    req: Request,
+    res: Response
   ): Promise<void> {
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'UserController'
-    );
-  }
-
-  async logout(
-    req: Request<
-      Record<string, unknown>,
-      Record<string, unknown>,
-      Record<string, string>
-    >
-  ): Promise<void> {
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'UserController'
-    );
+    const { user }: any = req;
+    const userByEmail = await this.userService.findByEmail(user.email);
+    this.ok(res, fillDTO(LoggedUserResponse, userByEmail));
   }
 
   async getToWatch(

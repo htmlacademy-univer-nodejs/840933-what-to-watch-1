@@ -72,4 +72,8 @@ export class FilmService implements FilmServiceInterface {
       rating: (currentRating * currentCommentCount + newRating) / (currentCommentCount + 1)
     });
   }
+
+  async exists(documentId: string): Promise<boolean> {
+    return (this.filmModel.exists({_id: documentId})) !== null;
+  }
 }

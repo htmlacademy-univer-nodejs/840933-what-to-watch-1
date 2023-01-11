@@ -8,6 +8,7 @@ import { Component } from '../../types/component.type.js';
 import { Logger } from '../../common/logger/logger.type.js';
 import { FilmEntity } from '../film/film.entity.js';
 import { UserServiceType } from './user.type.js';
+import { LoginUserDto } from './dto/loginUser.dto.js';
 
 @injectable()
 export class UserService implements UserServiceType {
@@ -64,6 +65,14 @@ export class UserService implements UserServiceType {
         listFilmToWatch: movieId
       }
     });
+  }
+
+  async verifyUser(dto: LoginUserDto, salt: string): Promise<DocumentType<UserEntity> | null> {
+    const user = await this.findByEmail(dto.email);
+    if (user && user.verifyPassword(dto.password, salt)) {
+      return user;
+    }
+    return null;
   }
 
   async deleteFilmToWatch(movieId: string, userId: string): Promise<void | null> {

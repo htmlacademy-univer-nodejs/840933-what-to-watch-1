@@ -1,132 +1,62 @@
-import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
-import * as staticCore from 'express-serve-static-core';
 import { StatusCodes } from 'http-status-codes';
-import { DocumentType } from '@typegoose/typegoose';
+import { inject } from 'inversify';
+import { HttpMethod } from '../../utils/http.enum';
 
-import { ControllerService } from '../../controller/controller.service.js';
-import { Component } from '../../types/component.type.js';
-import { Logger } from '../../common/logger/logger.type.js';
-import { FilmServiceInterface } from '../film/film.interface.js';
-import { CommentServiceInterface } from './comment.interface.js';
-import { HttpMethod } from '../../utils/http.enum.js';
-import { FilmRoute } from '../film/film.route.js';
+import { Component } from '../../types/component.type';
+import { Logger } from '../../common/logger/logger.type';
+import { ControllerService } from '../../controller/controller.service';
+import { CommentServiceInterface } from './comment.interface';
+import { FilmServiceInterface } from '../film/film.interface';
+import { CommentRoute } from './comment.route';
+import { PrivateRouteMiddleware } from '../../middlewares/privateRoute.middleware';
+import { ValidateDtoMiddleware } from '../../middlewares/validateDTO.middleware';
+import { CommentDto } from './dto/comment.dto';
+import { CommentResponse } from './response/comment.response';
 import { fillDTO } from '../../utils/dto.js';
-import { CreateFilmDto } from '../film/dto/createFilm.dto.js';
-import { HttpError } from '../../errors/http.errors.js';
-import { UpdateFilmDto } from '../film/dto/updateFilm.dto.js';
-import { FilmResponse } from '../film/response/film.response.js';
-import { ValidateObjectIdMiddleware } from '../../middlewares/validateObjectID.middleware.js';
-import { ValidateDtoMiddleware } from '../../middlewares/validateDTO.middleware.js';
-import { CommentResponse } from './response/comment.response.js';
-import { ParamsToGetFilm, ParamsToGetFilms } from '../../types/params.type.js';
-import { FilmEntity } from '../film/film.entity.js';
+import { HttpError } from '../../errors/http.errors';
 
-@injectable()
-export default class MovieController extends ControllerService {
+export default class CommentController extends ControllerService {
   constructor(
     @inject(Component.Logger) logger: Logger,
-    @inject(Component.FilmModel) private readonly filmService: FilmServiceInterface,
-    @inject(Component.CommentModel) private readonly commentService: CommentServiceInterface,
+    @inject(Component.CommentServiceInterface)
+    private readonly commentService: CommentServiceInterface,
+    @inject(Component.FilmServiceInterface)
+    private readonly filmService: FilmServiceInterface
   ) {
     super(logger);
-    this.logger.info('Маршруты для MovieController.');
 
-    this.addRoute<FilmRoute>({
-      path: FilmRoute.POST,
+    this.logger.info('Register routes for CommentController.');
+    this.addRoute<CommentRoute>({
+      path: CommentRoute.ROOT,
       method: HttpMethod.Post,
       handler: this.create,
       middlewares: [
-        new ValidateDtoMiddleware(CreateFilmDto),
-      ],
-    });
-    this.addRoute<FilmRoute>({
-      path: FilmRoute.GET,
-      method: HttpMethod.Get,
-      handler: this.show,
-      middlewares: [
-        new ValidateObjectIdMiddleware('id'),
-      ],
-    });
-    this.addRoute<FilmRoute>({ path: FilmRoute.GET, method: HttpMethod.Get, handler: this.index });
-    this.addRoute<FilmRoute>({
-      path: FilmRoute.UPDATE,
-      method: HttpMethod.Patch,
-      handler: this.update,
-      middlewares: [
-        new ValidateObjectIdMiddleware('id'),
-        new ValidateDtoMiddleware(UpdateFilmDto),
-      ],
-    });
-    this.addRoute<FilmRoute>({
-      path: FilmRoute.DELETE,
-      method: HttpMethod.Delete,
-      handler: this.delete,
-      middlewares: [
-        new ValidateObjectIdMiddleware('id'),
-      ],
-    });
-    this.addRoute<FilmRoute>({
-      path: FilmRoute.GET_COMMENTS,
-      method: HttpMethod.Get,
-      handler: this.indexComments,
-      middlewares: [
-        new ValidateObjectIdMiddleware('id'),
+        new PrivateRouteMiddleware(),
+        new ValidateDtoMiddleware(CommentDto),
       ],
     });
   }
 
-  async create({body}: Request<Record<string, unknown>, Record<string, unknown>, CreateFilmDto>, res: Response): Promise<void> {
-    const result = await this.filmService.create(body);
+  public async create(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    const { body, user }: any = req;
 
-    this.created(res, fillDTO(FilmResponse, result));
-  }
-
-  async show({params}: Request<Record<string, unknown>>, res: Response): Promise<void> {
-    const film = await this.filmService.findById(`${params.id}`);
-
-    if (!film) {
-      throw new HttpError(StatusCodes.NOT_FOUND, `Фильм с id '${params.id}' не найден`, 'FilmController');
+    if (!(await this.filmService.exists(body.filmId))) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `Фильм с id ${body.filmId} не был найден.`,
+        'CommentController'
+      );
     }
 
-    this.ok(res, fillDTO(FilmResponse, film));
-  }
+    const comment = await this.commentService.create({
+      ...body,
+      userId: user.id,
+    });
 
-  async index(_req: Request<unknown, unknown, unknown, ParamsToGetFilms>, res: Response): Promise<void> {
-    const { genre, limit } = _req.query;
-    const movies: DocumentType<FilmEntity>[] = genre
-      ? await this.filmService.findByGenre(genre, limit)
-      : await this.filmService.find(limit);
-    const movieResponse = fillDTO(FilmResponse, movies);
-    this.ok(res, movieResponse);
-  }
-
-  async update({params, body}: Request<Record<string, string>, Record<string, unknown>, UpdateFilmDto>, res: Response): Promise<void> {
-    const film = await this.filmService.findById(params.id);
-
-    if (!film) {
-      throw new HttpError(StatusCodes.NOT_FOUND, `Фильм с is '${params.id}' не найден`, 'MovieController');
-    }
-
-    const result = await this.filmService.updateById(params.id, body);
-
-    this.ok(res, fillDTO(FilmResponse, result));
-  }
-
-  async delete({params}: Request<Record<string, string>>, res: Response): Promise<void> {
-    const film = await this.filmService.findById(`${params.id}`);
-
-    if (!film) {
-      throw new HttpError(StatusCodes.NOT_FOUND, `Фильм с is '${params.id}' не найден`, 'MovieController');
-    }
-
-    await this.filmService.deleteById(`${params.id}`);
-
-    this.noContent(res, {message: 'Фильм был успешно удален'});
-  }
-
-  async indexComments({params}: Request<staticCore.ParamsDictionary | ParamsToGetFilm>, res: Response): Promise<void> {
-    const comments = await this.commentService.findByFilmId(params.id);
-    this.ok(res, fillDTO(CommentResponse, comments));
+    this.created(res, fillDTO(CommentResponse, comment));
   }
 }
