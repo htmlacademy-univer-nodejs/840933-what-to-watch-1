@@ -1,9 +1,9 @@
-import { IsEmail, IsString } from 'class-validator';
+import {IsEmail, IsString} from 'class-validator';
 
 export class LoginUserDto {
-  @IsEmail({}, {message: 'Невалидный email'})
+  @IsEmail({}, {message: 'email must be valid address'})
   public email!: string;
 
-  @IsString({message: 'Пароль является обязательным полем'})
+  @IsString({message: 'password is required'})
   public password!: string;
 }

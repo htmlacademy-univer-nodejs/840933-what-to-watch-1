@@ -1,0 +1,95 @@
+{
+  "api": {
+    "titles": [
+      "Авиатор",
+      "Криминальное чтиво",
+      "Отель Гранд Будапешт",
+      "Выживший",
+      "Королевство Полной Луны"
+    ],
+    "descriptions": [
+      "Получив от отца небольшую фабрику, Говард Хьюз превратил ее в гигантское, фантастически прибыльное предприятие. Став владельцем огромной кинокомпании, он снял самый дорогой для своего времени фильм и покорил сердца прелестнейших голливудских актрис.",
+      "Двое бандитов Винсент Вега и Джулс Винфилд проводят время в философских беседах в перерыве между разборками и «решением проблем» с должниками своего криминального босса Марселласа Уоллеса. Параллельно разворачивается три истории.",
+      "Картина расскажет о легендарном консьерже популярного европейского отеля и проследит за его жизнью между двумя мировыми войнами, а также за его дружбой с юной сотрудницей, которая становится его протеже.",
+      "Охотник Хью Гласс серьезно ранен на неизведанных просторах американского Дикого Запада. Товарищ Хью по отряду покорителей новых земель Джон Фицжеральд предательски оставляет его умирать в одиночестве. Теперь у Гласса осталось только одно оружие — его сила воли. Он готов бросить вызов первобытной природе, суровой зиме и враждебным племенам индейцев, только чтобы выжить и отомстить Фицжеральду.",
+      "Подростки Сэм и Сьюзи сбегают ото всех в свой идеальный мир. Атмосферная сказка Уэса Андерсона о первой любви"
+    ],
+    "previewPaths": [
+      "https://what-to-watch.ru/preview/aviator.jpg",
+      "https://what-to-watch.ru/preview/pulp-fiction.jpg",
+      "https://what-to-watch.ru/preview/relevant.jpg",
+      "https://what-to-watch.ru/preview/the-grand-budapest-hotel.jpg",
+      "https://what-to-watch.ru/preview/moonrise-kingdom.jpg"
+    ],
+    "moviePaths": [
+      "https://what-to-watch.ru/movie/aviator.jpg",
+      "https://what-to-watch.ru/movie/pulp-fiction.jpg",
+      "https://what-to-watch.ru/movie/relevant.jpg",
+      "https://what-to-watch.ru/movie/the-grand-budapest-hotel.jpg",
+      "https://what-to-watch.ru/movie/moonrise-kingdom.jpg"
+    ],
+    "actors": [
+      "Эдвард Нортон",
+      "Леонардо Ди Каприо",
+      "Билл Мюрей",
+      "Рэйф Файнс",
+      "Оуэн Уилсон",
+      "Сирша Ронан",
+      "Эдриен Броуди",
+      "Брюс Уиллис",
+      "Ума Турман",
+      "Джон Траволта",
+      "Тим Рот",
+      "Сэмюэл Л. Джексон",
+      "Тильда Суинтон",
+      "Лукас Хеджес",
+      "Фрэнсис Макдорманд",
+      "Том Харди",
+      "Донал Глисон",
+      "Кейт Бланшетт"
+    ],
+    "directors": [
+      "Уэс Андерсон",
+      "Квентин Тарантино",
+      "Мартин Скорсезе",
+      "Алехандро Гонсалес Иньярриту"
+    ],
+    "users": [
+      "Кисик Владик",
+      "Кисик Евик",
+      "Кисик Сашулик",
+      "Кисик Никита",
+      "Кисик Темушка"
+    ],
+    "emails": [
+      "atkvs@skbkontur.ru",
+      "vladatkishkin@gmail.com",
+      "atkishin@yandex.ru",
+      "test@skbkontur.ru",
+      "disney@gmail.com"
+    ],
+    "posterPaths": [
+      "static/aviator.jpg",
+      "static/pulp-fiction.jpg",
+      "static/relevant.jpg",
+      "static/the-grand-budapest-hotel.jpg",
+      "static/moonrise-kingdom.jpg"
+    ],
+    "backgroundImagePaths": [
+      "static/bg/aviator.jpg",
+      "static/bg/pulp-fiction.jpg",
+      "static/bg/relevant.jpg",
+      "static/bg/the-grand-budapest-hotel.jpg",
+      "static/bg/moonrise-kingdom.jpg"
+    ],
+    "backgroundColors": [
+      "green",
+      "red",
+      "blue",
+      "cyan",
+      "pink",
+      "orange",
+      "yellow"
+    ]
+  }
+}

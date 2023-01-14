@@ -1,41 +1,41 @@
-import chalk from 'chalk';
-
-import TSVFileReader from '../common/file-reader/tsv-file-reader.js';
-import { CliCommandInterface } from './cli-command.interface.js';
-import { createFilm } from '../utils/film.constructor.js';
-import { UserServiceType } from '../modules/user/user.type.js';
-import { DBInterface } from '../common/db/db.interface.js';
-import { Logger } from '../common/logger/logger.type.js';
-import { FilmServiceInterface } from '../modules/film/film.interface.js';
-import { UserModel } from '../modules/user/user.entity.js';
-import { UserService } from '../modules/user/user.service.js';
-import { FilmService } from '../modules/film/film.service.js';
-import { FilmModel } from '../modules/film/film.entity.js';
-import { DBService } from '../common/db/db.service.js';
-import { Film } from '../types/film.type.js';
-import { ConsoleLog } from '../loggers/loggers.console.js';
-import { getDBConnectionURI } from '../utils/db.connection.js';
 import { ConfigInterface } from '../common/config/config.interface.js';
 import ConfigService from '../common/config/config.service.js';
+import { DatabaseInterface } from '../common/dbClient/db.interface.js';
+import MongoDBService from '../common/dbClient/mongodb.service.js';
+import { TSVFileReader } from '../common/fileReader/tsvFileReader.js';
+import ConsoleLoggerService from '../common/logger/consoleLogger.service.js';
+import { LoggerInterface } from '../common/logger/logger.interface.js';
+import { MovieServiceInterface } from '../modules/movie/movieService.interface.js';
+import { MovieModel } from '../modules/movie/movie.entity.js';
+import { MovieService } from '../modules/movie/movie.service.js';
+import { UserServiceInterface } from '../modules/user/userService.interface.js';
+import { UserModel } from '../modules/user/user.entity.js';
+import { UserService } from '../modules/user/user.service.js';
+import { Movie } from '../types/types/movie.type.js';
+import { createMovie } from '../utils/commonFunctions.js';
+import { getDBConnectionURI } from '../utils/db.js';
+import { CliCommandInterface } from './cli-command.interface.js';
+
+const DEFAULT_USER_PASSWORD = '123456';
 
 export default class ImportCommand implements CliCommandInterface {
-  public readonly name = '--import';
-  private userService!: UserServiceType;
-  private filmService!: FilmServiceInterface;
-  private databaseService!: DBInterface;
-  private readonly logger: Logger;
+  readonly name = '--import';
+  private userService!: UserServiceInterface;
+  private movieService!: MovieServiceInterface;
+  private databaseService!: DatabaseInterface;
+  private salt!: string;
+  private readonly logger: LoggerInterface;
   private readonly config: ConfigInterface;
 
   constructor() {
     this.onLine = this.onLine.bind(this);
     this.onComplete = this.onComplete.bind(this);
 
-    this.logger = new ConsoleLog();
+    this.logger = new ConsoleLoggerService();
+    this.movieService = new MovieService(this.logger, MovieModel);
+    this.userService = new UserService(this.logger, UserModel, MovieModel);
+    this.databaseService = new MongoDBService(this.logger);
     this.config = new ConfigService(this.logger);
-
-    this.filmService = new FilmService(this.logger, FilmModel);
-    this.userService = new UserService(this.logger, UserModel, FilmModel);
-    this.databaseService = new DBService(this.logger);
   }
 
   async execute(filename: string): Promise<void> {
@@ -44,9 +44,10 @@ export default class ImportCommand implements CliCommandInterface {
       this.config.get('DB_PASSWORD'),
       this.config.get('DB_HOST'),
       this.config.get('DB_PORT'),
-      this.config.get('DB_NAME'),
+      this.config.get('DB_NAME')
     );
 
+    this.salt = this.config.get('SALT');
     await this.databaseService.connect(uri);
 
     const fileReader = new TSVFileReader(filename.trim());
@@ -57,43 +58,32 @@ export default class ImportCommand implements CliCommandInterface {
       await fileReader.read();
     } catch (err) {
       if (err instanceof Error) {
-        this.logger.info(
-          `${chalk.red('Невозможно прочитатать файл')}: ${err.message}`
-        );
+        this.logger.error(`Can't read the file: ${err.message}`);
       }
     }
   }
 
-  private async saveFilm(film: Film) {
-    const pass = this.config.get('DB_PASSWORD') || 'password';
-    const { name, email, avatarPath } = film.user;
-
+  private async saveMovie(movie: Movie) {
     const user = await this.userService.findOrCreate(
       {
-        name,
-        email,
-        avatarPath,
-        password: pass
+        ...movie.user,
+        password: process.env.DB_PASSWORD || DEFAULT_USER_PASSWORD,
       },
-      this.config.get('SALT')
+      this.salt
     );
 
-    await this.filmService.create({
-      ...film,
-      userId: user.id,
-      posterPath: '',
-      backgroundColor: ''
-    });
+    await this.movieService.create(movie, user.id);
   }
 
   private async onLine(line: string, resolve: () => void) {
-    const movie = createFilm(line);
-    await this.saveFilm(movie);
+    const movie = createMovie(line);
+    this.logger.info(`Created new movie: ${movie}`);
+    await this.saveMovie(movie);
     resolve();
   }
 
   private onComplete(count: number) {
-    this.logger.info(`${chalk.cyan(count)} строк было прочитано.`);
+    this.logger.info(`${count} rows imported.`);
     this.databaseService.disconnect();
   }
 }

@@ -1,36 +1,40 @@
-import { inject, injectable } from 'inversify';
 import { types } from '@typegoose/typegoose';
 import { DocumentType } from '@typegoose/typegoose/lib/types.js';
+import { inject, injectable } from 'inversify';
 
-import { CommentServiceInterface } from './comment.interface.js';
-import { Component } from '../../types/component.type.js';
+import { COMPONENT } from '../../types/types/component.type.js';
+import { MovieServiceInterface } from '../movie/movieService.interface.js';
+import { CommentServiceInterface } from './commentService.interface.js';
 import { CommentEntity } from './comment.entity.js';
-import { CommentDto } from './dto/comment.dto.js';
-import { FilmServiceInterface } from '../film/film.interface.js';
+import { MAX_COMMENTS_COUNT } from './comment.models.js';
+import { CreateCommentDto } from './dto/createComment.dto.js';
 
 @injectable()
-export default class CommentService implements CommentServiceInterface {
+export class CommentService implements CommentServiceInterface {
   constructor(
-    @inject(Component.CommentModel)
+    @inject(COMPONENT.CommentModel)
     private readonly commentModel: types.ModelType<CommentEntity>,
-    @inject(Component.FilmServiceInterface)
-    private readonly movieService: FilmServiceInterface
+    @inject(COMPONENT.MovieServiceInterface)
+    private readonly movieService: MovieServiceInterface
   ) {}
 
   public async create(
-    dto: CommentDto
+    dto: CreateCommentDto,
+    user: string
   ): Promise<DocumentType<CommentEntity>> {
-    const comment = await this.commentModel.create(dto);
-    await this.movieService.updateRating(dto.filmId, dto.rating);
-    await this.movieService.incrementComments(dto.filmId);
-    return comment.populate('userId');
+    const comment = await this.commentModel.create({ ...dto, user });
+    await this.movieService.updateMovieRating(dto.movieId, dto.rating);
+    await this.movieService.incCommentsCount(dto.movieId);
+    return comment.populate('user');
   }
 
-  public async findByFilmId(
-    filmId: string
+  public async findByMovieId(
+    movieId: string
   ): Promise<DocumentType<CommentEntity>[]> {
-    return this.commentModel.find({
-      filmId
-    }).populate('userId');
+    const movieComments = await this.commentModel
+      .find({ movieId })
+      .sort({ createdAt: -1 })
+      .limit(MAX_COMMENTS_COUNT);
+    return this.commentModel.populate(movieComments, 'user');
   }
 }

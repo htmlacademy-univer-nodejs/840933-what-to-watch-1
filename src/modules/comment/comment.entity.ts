@@ -3,9 +3,10 @@ import typegoose, {
   getModelForClass,
   Ref,
 } from '@typegoose/typegoose';
+import mongoose from 'mongoose';
 
+import { MovieEntity } from '../movie/movie.entity.js';
 import { UserEntity } from '../user/user.entity.js';
-import { FilmEntity } from '../film/film.entity.js';
 
 const { prop, modelOptions } = typegoose;
 
@@ -24,16 +25,17 @@ export class CommentEntity extends defaultClasses.TimeStamps {
   public rating!: number;
 
   @prop({
-    ref: FilmEntity,
+    ref: MovieEntity,
     required: true,
   })
-  public movieId!: Ref<FilmEntity>;
+  public movieId!: Ref<MovieEntity>;
 
   @prop({
+    type: mongoose.Types.ObjectId,
     ref: UserEntity,
     required: true,
   })
-  public userId!: Ref<UserEntity>;
+  public user!: Ref<UserEntity>;
 }
 
 export const CommentModel = getModelForClass(CommentEntity);

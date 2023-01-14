@@ -8,11 +8,11 @@ import ImportCommand from './cli-command/import-command.js';
 import CLIApplication from './app/cli-application.js';
 import GenerateCommand from './cli-command/generate-command.js';
 
-const cliInstance = new CLIApplication();
-
-cliInstance.registerCommands([
-  new HelpCommand, new VersionCommand,
-  new ImportCommand, new GenerateCommand
+const myManager = new CLIApplication();
+myManager.registerCommands([
+  new HelpCommand(),
+  new VersionCommand(),
+  new ImportCommand(),
+  new GenerateCommand(),
 ]);
-
-cliInstance.processCommand(process.argv);
+myManager.processCommand(process.argv);

@@ -1,21 +1,17 @@
-import { IsArray, IsEmail, IsString, Length, Matches } from 'class-validator';
-
-import { avatarRegex } from '../constants/user.const.js';
+import { IsEmail, IsOptional, IsString, Length } from 'class-validator';
 
 export class CreateUserDto {
-  @IsEmail({}, {message: 'Неверный формат адреса электронной почты'})
+  @IsEmail({}, { message: 'email must be valid address' })
   public email!: string;
 
-  @IsString({message: 'Имя является обязательным полем'})
+  @IsString({ message: 'name is required' })
+  @Length(1, 15, { message: 'Min length for name is 1, max is 15' })
   public name!: string;
 
-  @IsString()
-  @Length(6, 12, {message: 'Минимальная длина пароля 6, максимальная 12'})
+  @IsString({ message: 'password is required' })
+  @Length(6, 12, { message: 'Min length for password is 6, max is 12' })
   public password!: string;
 
-  @Matches(avatarRegex, {message: 'Фото должно быть в форматах .jpg или .png'})
-  public avatarPath?: string;
-
-  @IsArray()
-  public filmsToWatch: string[] = [];
+  @IsOptional()
+  public avatar?: Buffer;
 }

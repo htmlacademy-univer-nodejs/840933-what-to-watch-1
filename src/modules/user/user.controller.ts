@@ -3,94 +3,120 @@ import { StatusCodes } from 'http-status-codes';
 import { inject, injectable } from 'inversify';
 
 import { ConfigInterface } from '../../common/config/config.interface.js';
-import { ControllerService } from '../../controller/controller.service.js';
-import { HttpError } from '../../errors/http.errors.js';
-import { Logger } from '../../common/logger/logger.type.js';
-import { Component } from '../../types/component.type.js';
-import { HttpMethod } from '../../utils/http.enum.js';
-import { fillDTO } from '../../utils/dto.js';
-import { FilmResponse } from '../film/response/film.response.js';
+import { Controller } from '../../common/controller/controller.js';
+import { HttpError } from '../../common/errors/http.error.js';
+import { LoggerInterface } from '../../common/logger/logger.interface.js';
+import { PrivateRouteMiddleware } from '../../middlewares/privateRoute.middleware.js';
+import { UploadFileMiddleware } from '../../middlewares/uploadFile.middleware.js';
+import { ValidateDtoMiddleware } from '../../middlewares/validateDto.middleware.js';
+import { ValidateObjectIdMiddleware } from '../../middlewares/validateObjectId.middleware.js';
+import { COMPONENT } from '../../types/types/component.type.js';
+import { HttpMethod } from '../../types/enums/http-method.enum.js';
+import { createJWT, fillDTO } from '../../utils/commonFunctions.js';
+import { MovieListItemResponse } from '../movie/response/movieListItem.response.js';
 import { CreateUserDto } from './dto/createUser.dto.js';
 import { LoginUserDto } from './dto/loginUser.dto.js';
-import UserResponse from './response/user.response.js';
-import { UserServiceType } from './user.type.js';
-import { UserRoute } from './user.route.js';
-import { ValidateDtoMiddleware } from '../../middlewares/validateDTO.middleware.js';
-import { ValidateObjectIdMiddleware } from '../../middlewares/validateObjectID.middleware.js';
-import { UploadFileMiddleware } from '../../middlewares/upload.middleware.js';
-import { PrivateRouteMiddleware } from '../../middlewares/privateRoute.middleware.js';
-import { JWT_ALGORITHM, createJWT } from '../../utils/createJWT.js';
-import LoggedUserResponse from './response/ loggedUser.response.js';
+import { LoggedUserResponse } from './response/loggedUser.response.js';
+import { UserResponse } from './response/user.response.js';
+import { UserServiceInterface } from './userService.interface.js';
+import { JWT_ALGORITHM, UserRoute } from './user.models.js';
+import { UploadStaticMiddleware } from '../../middlewares/uploadStatic.middleware.js';
 
 @injectable()
-export class UserController extends ControllerService {
+export class UserController extends Controller {
   constructor(
-    @inject(Component.Logger) logger: Logger,
-    @inject(Component.UserService)
-    private readonly userService: UserServiceType,
-    @inject(Component.ConfigInterface)
-    private readonly configService: ConfigInterface
+    @inject(COMPONENT.LoggerInterface) logger: LoggerInterface,
+    @inject(COMPONENT.ConfigInterface) configService: ConfigInterface,
+    @inject(COMPONENT.UserServiceInterface)
+    private readonly userService: UserServiceInterface
   ) {
-    super(logger);
-    this.logger.info('Созданы маршруты для UserController !');
+    super(logger, configService);
+
     this.addRoute<UserRoute>({
-      path: UserRoute.REGISTER,
+      path: UserRoute.Register,
       method: HttpMethod.Post,
       handler: this.create,
-      middlewares: [new ValidateDtoMiddleware(CreateUserDto)]
+      middlewares: [
+        new UploadFileMiddleware(
+          'avatar',
+          this.configService.get('UPLOAD_DIRECTORY')
+        ),
+        new ValidateDtoMiddleware(CreateUserDto),
+      ],
     });
     this.addRoute<UserRoute>({
-      path: UserRoute.LOGIN,
+      path: UserRoute.Login,
       method: HttpMethod.Post,
       handler: this.login,
-      middlewares: [new ValidateDtoMiddleware(CreateUserDto)]
+      middlewares: [new ValidateDtoMiddleware(LoginUserDto)],
     });
     this.addRoute<UserRoute>({
-      path: UserRoute.LOGIN,
+      path: UserRoute.Login,
       method: HttpMethod.Get,
       handler: this.get,
     });
     this.addRoute<UserRoute>({
-      path: UserRoute.TO_WATCH,
+      path: UserRoute.ToWatch,
       method: HttpMethod.Get,
       handler: this.getToWatch,
-      middlewares: [new PrivateRouteMiddleware()]
+      middlewares: [new PrivateRouteMiddleware(this.userService)],
     });
     this.addRoute<UserRoute>({
-      path: UserRoute.TO_WATCH,
+      path: UserRoute.ToWatch,
       method: HttpMethod.Post,
       handler: this.postToWatch,
-      middlewares: [new PrivateRouteMiddleware()]
+      middlewares: [new PrivateRouteMiddleware(this.userService)],
     });
     this.addRoute<UserRoute>({
-      path: UserRoute.TO_WATCH,
+      path: UserRoute.ToWatch,
       method: HttpMethod.Delete,
       handler: this.deleteToWatch,
-      middlewares: [new PrivateRouteMiddleware()]
+      middlewares: [new PrivateRouteMiddleware(this.userService)],
     });
     this.addRoute<UserRoute>({
-      path: UserRoute.AVATAR,
+      path: UserRoute.Avatar,
       method: HttpMethod.Post,
       handler: this.uploadAvatar,
       middlewares: [
-        new ValidateObjectIdMiddleware('id'),
-        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar'),
-      ]
+        new PrivateRouteMiddleware(this.userService),
+        new ValidateObjectIdMiddleware('userId'),
+        new UploadFileMiddleware(
+          'avatar',
+          this.configService.get('UPLOAD_DIRECTORY')
+        ),
+      ],
     });
+    this.addRoute<UserRoute>({
+      path: UserRoute.Static,
+      method: HttpMethod.Post,
+      handler: this.uploadStatic,
+      middlewares: [
+        new PrivateRouteMiddleware(this.userService),
+        new UploadStaticMiddleware(
+          'static',
+          this.configService.get('STATIC_DIRECTORY')
+        ),
+      ],
+    });
+
+    this.logger.info('Маршруты для UserController были зарегистрированы.');
   }
 
   async create(
-    {
-      body,
-    }: Request<Record<string, unknown>, Record<string, unknown>, CreateUserDto>,
+    req: Request<
+      Record<string, unknown>,
+      Record<string, unknown>,
+      CreateUserDto
+    >,
     res: Response
   ): Promise<void> {
+    const { body } = req;
     const existsUser = await this.userService.findByEmail(body.email);
 
     if (existsUser) {
       throw new HttpError(
         StatusCodes.CONFLICT,
-        `Пользователь с таким  email «${body.email}» существуют.`,
+        `User with email «${body.email}» exists.`,
         'UserController'
       );
     }
@@ -99,17 +125,27 @@ export class UserController extends ControllerService {
       body,
       this.configService.get('SALT')
     );
-    this.created(res, fillDTO(UserResponse, result));
+    const createdUser: UserResponse = result;
+
+    if (req.file) {
+      const avatarPath = req.file.filename;
+      await this.userService.setUserAvatarPath(result.id, avatarPath);
+      createdUser.avatarPath = avatarPath;
+    }
+
+    this.created(res, fillDTO(UserResponse, createdUser));
   }
 
-  async login({
-    body,
-  }: Request<
-    Record<string, unknown>,
-    Record<string, unknown>,
-    LoginUserDto
-  >, res: Response): Promise<void> {
-    const user = await this.userService.verifyUser(body, this.configService.get('SALT'));
+  async login(
+    {
+      body,
+    }: Request<Record<string, unknown>, Record<string, unknown>, LoginUserDto>,
+    res: Response
+  ): Promise<void> {
+    const user = await this.userService.verifyUser(
+      body,
+      this.configService.get('SALT')
+    );
 
     if (!user) {
       throw new HttpError(
@@ -122,70 +158,98 @@ export class UserController extends ControllerService {
     const token = await createJWT(
       JWT_ALGORITHM,
       this.configService.get('JWT_SECRET'),
-      { email: user.email, id: user.id}
+      { email: user.email, id: user.id }
     );
 
-    this.ok(res, fillDTO(LoggedUserResponse, {email: user.email, token}));
+    this.ok(res, { token });
   }
 
-  async get(
-    req: Request,
-    res: Response
-  ): Promise<void> {
-    const { user }: any = req;
-    const userByEmail = await this.userService.findByEmail(user.email);
-    this.ok(res, fillDTO(LoggedUserResponse, userByEmail));
-  }
+  async get(req: Request, res: Response): Promise<void> {
+    if (!req.user) {
+      throw new HttpError(
+        StatusCodes.UNAUTHORIZED,
+        'Unauthorized',
+        'UserController'
+      );
+    }
 
-  async getToWatch(
-    {
-      body,
-    }: Request<
-      Record<string, unknown>,
-      Record<string, unknown>,
-      { userId: string }
-    >,
-    _res: Response
-  ): Promise<void> {
-    const result = await this.userService.findListFilmToWatch(body.userId);
-    this.ok(_res, fillDTO(FilmResponse, result));
-  }
-
-  async uploadAvatar(req: Request, res: Response) {
-    this.created(res, {
-      filepath: req.file?.path
+    const user = await this.userService.findByEmail(req.user.email);
+    this.ok(res, {
+      ...fillDTO(LoggedUserResponse, user),
+      token: req.headers.authorization?.split(' ')[1],
     });
   }
 
+  async getToWatch(
+    req: Request<Record<string, unknown>, Record<string, unknown>>,
+    _res: Response
+  ): Promise<void> {
+    const { user } = req;
+    const result = await this.userService.findToWatch(user.id);
+    this.ok(_res, fillDTO(MovieListItemResponse, result));
+  }
+
   async postToWatch(
-    {
-      body,
-    }: Request<
+    req: Request<
       Record<string, unknown>,
       Record<string, unknown>,
-      { userId: string; filmId: string }
+      { movieId: string }
     >,
     _res: Response
   ): Promise<void> {
-    await this.userService.addFilmToWatch(body.filmId, body.userId);
+    const { body, user } = req;
+    await this.userService.addToWatch(body.movieId, user.id);
+
     this.noContent(_res, {
-      message: 'Фильм успешно добавлен в список «К просмотру».',
+      message: 'Успешно. Фильм добавлен в список "К просмотру".',
     });
   }
 
   async deleteToWatch(
-    {
-      body,
-    }: Request<
+    req: Request<
       Record<string, unknown>,
       Record<string, unknown>,
-      { userId: string; filmId: string }
+      { movieId: string }
     >,
     _res: Response
   ): Promise<void> {
-    await this.userService.deleteFilmToWatch(body.userId, body.filmId);
+    const { body, user } = req;
+    await this.userService.deleteToWatch(body.movieId, user.id);
     this.noContent(_res, {
-      message: 'Фильм успешно удален из списка "К просмотру".',
+      message: 'Успешно. Фильм удален из списка "К просмотру".',
     });
+  }
+
+  async uploadAvatar(req: Request, res: Response) {
+    const userId = req.params.userId;
+    const user = await this.userService.findById(userId);
+
+    if (!user) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `User with id ${userId} doesn't exist`,
+        'UploadFileMiddleware'
+      );
+    }
+
+    if (req.file) {
+      const createdFileName = req.file.filename;
+      await this.userService.setUserAvatarPath(
+        req.params.userId,
+        createdFileName
+      );
+      this.created(res, {
+        avatarPath: createdFileName,
+      });
+    }
+  }
+
+  async uploadStatic(req: Request, res: Response) {
+    if (req.file) {
+      const createdFileName = req.file.filename;
+      this.created(res, {
+        staticFile: createdFileName
+      });
+    }
   }
 }

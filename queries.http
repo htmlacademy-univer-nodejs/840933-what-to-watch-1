@@ -2,87 +2,90 @@
 
 # Фильмы
 ## Добавить новый фильм
-POST http://localhost:8000/films/create HTTP/1.1
+POST http://localhost:8000/movies/create HTTP/1.1
+Accept: application/json
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.cThIIoDvwdueQB468K5xDc5633seEFoqwxjF_xSJyQQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZCI6IjYzYzE5OTdkNzRiNjJiYWZmMDdkNGIyYSIsImlhdCI6MTY3MzYzMjE0NSwiZXhwIjoxNjczODA0OTQ1fQ.QOSlczvhMOLunlV2pwF6ZGap8sJ4nK3bEtN6p1ZOPHQ
 
 {
-  "name": "500 Дней Лета",
-  "description": "",
-  "publicationDate": "2009-11-18T22:55:33.903Z",
-  "genre": "romance",
-  "releaseYear": 2009,
-  "previewLink": "https://what-to-watch.ru/api/preview/500-day-of-summer",
-  "videoLink": "https://what-to-watch.ru/api/preview/500-day-of-summer",
+  "title": "Авиатор",
+  "description": "Кисик государство устраивает игры на выживание, за которыми в прямом эфире следит весь мир.",
+  "publishingDate": "2022-10-21T22:55:33.903Z",
+  "genre": "thriller",
+  "releaseYear": 2013,
+  "rating": 7,
+  "commentsCount": 12,
+  "previewPath": "https://www.what-to-watch.ru/hunger_games_preview",
+  "moviePath": "https://www.what-to-watch.ru/hunger_games",
   "actors": [
-    "Зоуи Дешанель",
-    "Джозеф Горден Левитт",
-    "Хлоя Грейс Морец"
+    "Дженнифер Лоуренс",
+    "Джош Хатчерсон",
+    "Лиам Хемсворт"
   ],
-  "producer": "Марк Уэбб",
-  "duration": 98,
-  "userId": "6383d47aed383bd2e38c2d32",
-  "poster": "poster/500-day-of-summer.jpg",
-  "backgroundImage": "background/500-day-of-summer.jpg",
-  "backgroungColor": "pink"
+  "director": "Гэри Росс",
+  "duration": 70,
+  "posterPath": "aviator.jpg",
+  "backgroundImagePath": "OG9SaAd2MsLsln8cdBWAi.jpeg",
+  "backgroundColor": "green"
 }
 
 ###
 
 ## Редактирование карточки фильма
-PATCH http://localhost:8000/films/638d07890c09034b948986d9 HTTP/1.1
+PATCH http://localhost:8000/movies/63c29a0483e4f0e1a55550c7 HTTP/1.1
+Accept: application/json
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.cThIIoDvwdueQB468K5xDc5633seEFoqwxjF_xSJyQQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZCI6IjYzYzE5OTdkNzRiNjJiYWZmMDdkNGIyYSIsImlhdCI6MTY3MzY5ODI3NywiZXhwIjoxNjczODcxMDc3fQ.FtuZJ0TTy3SyB4l4uP2IxacYL8s7mKlo4-3HQpkbqFs
 
 {
-  "name": "500 Дней Лета",
-  "description": "",
-  "publicationDate": "2009-11-18T22:55:33.903Z",
-  "genre": "romance",
-  "releaseYear": 2009,
-  "previewLink": "https://what-to-watch.ru/api/preview/500-day-of-summer",
-  "videoLink": "https://what-to-watch.ru/api/preview/500-day-of-summer",
+  "title": "Король лев",
+  "description": "У величественного Короля-Льва Муфасы рождается наследник по имени Симба. Уже в детстве любознательный малыш становится жертвой интриг своего завистливого дяди Шрама, мечтающего о власти. Симба познаёт горе утраты, предательство и изгнание, но в конце концов обретает верных друзей и находит любимую. Закалённый испытаниями, он в нелёгкой борьбе отвоёвывает своё законное место в «Круге жизни», осознав, что значит быть настоящим Королём.",
+  "publishingDate": "2022-10-22T22:55:33.903Z",
+  "genre": "drama",
+  "releaseYear": 2013,
+  "previewPath": "https://www.what-to-watch.ru/lion_ling_preview",
+  "moviePath": "https://www.what-to-watch.ru/lion_king",
   "actors": [
-    "Зоуи Дешанель",
-    "Джозеф Горден Левитт",
-    "Хлоя Грейс Морец"
+    "Джеймс Эрл Джонс",
+    "Мэттью Бродерик",
+    "Джонатан Тейлор Томас"
   ],
-  "producer": "Марк Уэбб",
-  "duration": 98,
-  "userId": "6383d47aed383bd2e38c2d32",
-  "poster": "poster/500-day-of-summer.jpg",
-  "backgroundImage": "background/500-day-of-summer.jpg",
-  "backgroungColor": "pink"
+  "director": "Роджер Алерс",
+  "duration": 12,
+  "posterPath": "lion_king_poster.jpg",
+  "backgroundImagePath": "lion_king_bg.jpg",
+  "backgroundColor": "orange",
   "isPromo": true
 }
 
 ###
 
 ## Удаление карточки фильма
-DELETE http://localhost:8000/films/6383d334a152510dfdd795bb HTTP/1.1
+DELETE http://localhost:8000/movies/63c295e5b577c08e2073c25f HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRpa0B2ay5jb20iLCJpZCI6IjYzYzE5NjJiNzRiNjJiYWZmMDdkNGFjZSIsImlhdCI6MTY3MzYzMTMzMCwiZXhwIjoxNjczODA0MTMwfQ.7GpFXSTgboQaaDDFIZUWEpbRqxm-KwPd6jasPvQ4M-U
 
 ###
 
 ## Получить список фильмов
-GET http://localhost:8000/films HTTP/1.1
+GET http://localhost:8000/movies HTTP/1.1
 Accept: application/json
 
 ###
 
 ## Получение списка фильмов определенного жанра
-GET http://localhost:8000/films?genre=drama HTTP/1.1
+GET http://localhost:8000/movies?genre=drama HTTP/1.1
 Accept: application/json
 
 ###
 
 ## Получение детальной информации по фильму
-GET http://localhost:8000/films/638d07890c09034b948986d9 HTTP/1.1
+GET http://localhost:8000/movies/63c29870298bc7e1ffc50056 HTTP/1.1
 Accept: application/json
 
 ###
 
 ## Получение промо-фильма
-GET http://localhost:8000/films/promo HTTP/1.1
+GET http://localhost:8000/movies/promo HTTP/1.1
 Accept: application/json
 
 ###
@@ -90,12 +93,7 @@ Accept: application/json
 ## Получить список фильмов «К просмотру»
 GET http://localhost:8000/users/to_watch HTTP/1.1
 Accept: application/json
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.cThIIoDvwdueQB468K5xDc5633seEFoqwxjF_xSJyQQ
-
-{
-  "userId": "6383d47aed383bd2e38c2d32"
-}
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZCI6IjYzYzE5OTdkNzRiNjJiYWZmMDdkNGIyYSIsImlhdCI6MTY3MzY5NzU2MCwiZXhwIjoxNjczODcwMzYwfQ.IhQ_ChT1zB00ENBhZME1VJ692lNLawIBP-EJ0pnuEow
 
 ###
 
@@ -103,11 +101,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3O
 POST http://localhost:8000/users/to_watch HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.cThIIoDvwdueQB468K5xDc5633seEFoqwxjF_xSJyQQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZCI6IjYzYzE5OTdkNzRiNjJiYWZmMDdkNGIyYSIsImlhdCI6MTY3MzY5NzU2MCwiZXhwIjoxNjczODcwMzYwfQ.IhQ_ChT1zB00ENBhZME1VJ692lNLawIBP-EJ0pnuEow
 
 {
-  "userId": "638d1929d4b90dfe8de2f94a",
-  "movieId": "638d0d6b0f5e4b6fb4376ea2"
+  "movieId": "63c1969174b62baff07d4adb"
 }
 
 ###
@@ -115,34 +112,30 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3O
 ## Удалить фильм из списка «К просмотру»
 DELETE http://localhost:8000/users/to_watch HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.cThIIoDvwdueQB468K5xDc5633seEFoqwxjF_xSJyQQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InVzZXJAbWFpbC5ydSIsImlkIjoiNjNiZGM5MWU2OTk5OTY5YWY2MmI3MTBhIiwiaWF0IjoxNjczNDgwNTEyLCJleHAiOjE2NzM2NTMzMTJ9.hbxFnkOA3q99Ob2UVricBjd0l80WB-MgUpMGe4VVUtk
 
 {
-  "userId": "6383d47aed383bd2e38c2d32",
-  "movieId": "638d0d6b0f5e4b6fb4376ea2"
+  "movieId": "63bf39c669e4b4d4bf20a1e5"
 }
 
 ###
 
 # Комментарии
 ## Получить список комментариев для определённого фильма
-GET http://localhost:8000/films/6383d334a152510dfdd795bb/comments HTTP/1.1
+GET http://localhost:8000/movies/63c1969174b62baff07d4adb/comments HTTP/1.1
 Accept: application/json
-
 
 ###
 
-## Добавить новый комментарий к определённому фильму
+## Добавить новый комментарий к фильму
 POST http://localhost:8000/comments HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.cThIIoDvwdueQB468K5xDc5633seEFoqwxjF_xSJyQQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRpa0B2ay5jb20iLCJpZCI6IjYzYzE5NjJiNzRiNjJiYWZmMDdkNGFjZSIsImlhdCI6MTY3MzYzMTMzMCwiZXhwIjoxNjczODA0MTMwfQ.7GpFXSTgboQaaDDFIZUWEpbRqxm-KwPd6jasPvQ4M-U
 
 {
-  "text": "ФИЛЬМ АГОНЬ !!!",
-  "rating": 8,
-  "publishingDate": "2020-11-14T22:55:33.903Z",
-  "userId": "6383d47aed383bd2e38c2d32",
-  "movieId": "638d0d6b0f5e4b6fb4376ea2"
+  "text": "Король Левик",
+  "rating": 10,
+  "movieId": "63c1969174b62baff07d4adb"
 }
 
 ###
@@ -150,27 +143,58 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3O
 # Пользователи
 ## Создание нового пользователя
 POST http://localhost:8000/users/register HTTP/1.1
-Content-Type: application/json
+Content-Type: multipart/form-data; boundary=DataToLogin
 
-{
-  "email": "vladatkishkin@vk.com",
-  "name": "Vladik",
-  "password": "kisik",
-  "avatarPath": "evik.jpg"
-}
+--DataToLogin
+Content-Disposition: form-data; name="email"
+Content-Type: text/plain
+
+vladeeek@vk.com
+--DataToLogin
+Content-Disposition: form-data; name="name"
+Content-Type: text/plain
+
+vladik
+--DataToLogin
+Content-Disposition: form-data; name="password"
+Content-Type: text/plain
+
+123456
+--DataToLogin
+Content-Disposition: form-data; name="avatar"; filename="Владольф.jpg"
+Content-Type: image/jpeg
+
+< /Users/mac/Desktop/Владольф.jpg
+--DataToLogin--
 
 ###
 
 ## Отправка аватарки пользователя
-POST http://localhost:8000/users/6383d47aed383bd2e38c2d32/avatar HTTP/1.1
-Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+POST http://localhost:8000/users/63c1997d74b62baff07d4b2a/avatar HTTP/1.1
+Content-Type: multipart/form-data; boundary=----VladikAvatar
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZCI6IjYzYzE5OTdkNzRiNjJiYWZmMDdkNGIyYSIsImlhdCI6MTY3MzY5NjgwNSwiZXhwIjoxNjczODY5NjA1fQ.iUYM9pzCIjMZtGGoSJmLgdgO_Y-uwpc_IceoVvvBcI4
 
-------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="avatar"; filename="screen.png"
+------VladikAvatar
+Content-Disposition: form-data; name="avatar"; filename="Владольф.png"
 Content-Type: image/png
 
-< /Users/mac/Desktop/evik.png
-------WebKitFormBoundary7MA4YWxkTrZu0gW--
+< /Users/mac/Desktop/Владольф.png
+------VladikAvatar--
+
+###
+
+## Обновление статики
+
+POST http://localhost:8000/users/static HTTP/1.1
+Content-Type: multipart/form-data; boundary=----NewStaticFile
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZCI6IjYzYzE5OTdkNzRiNjJiYWZmMDdkNGIyYSIsImlhdCI6MTY3MzY5NjgwNSwiZXhwIjoxNjczODY5NjA1fQ.iUYM9pzCIjMZtGGoSJmLgdgO_Y-uwpc_IceoVvvBcI4
+
+------NewStaticFile
+Content-Disposition: form-data; name="static"; filename="Владольф.jpg"
+Content-Type: image/jpeg
+
+< /Users/mac/Desktop/Владольф.jpg
+------NewStaticFile--
 
 ###
 
@@ -179,12 +203,12 @@ POST http://localhost:8000/users/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "vladatkishkin@vk.com",
-  "password": "kisik",
+  "email": "vladek@vk.com",
+  "password": "123456"
 }
 
 ###
 
 ## Проверка токена пользователя
 GET http://localhost:8000/users/login HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.cThIIoDvwdueQB468K5xDc5633seEFoqwxjF_xSJyQQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZCI6IjYzYzE5OTdkNzRiNjJiYWZmMDdkNGIyYSIsImlhdCI6MTY3MzY5NjgwNSwiZXhwIjoxNjczODY5NjA1fQ.iUYM9pzCIjMZtGGoSJmLgdgO_Y-uwpc_IceoVvvBcI4
