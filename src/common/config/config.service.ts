@@ -4,13 +4,13 @@ import {inject, injectable} from 'inversify';
 import {ConfigInterface} from './config.interface.js';
 import {LoggerInterface} from '../logger/logger.interface.js';
 import {CONFIG_SCHEMA, ConfigSchema} from './config.schema.js';
-import { COMPONENT } from '../../types/types/component.type.js';
+import { Component } from '../../types/types/component.type.js';
 
 @injectable()
 export default class ConfigService implements ConfigInterface {
   private readonly config: ConfigSchema;
 
-  constructor(@inject(COMPONENT.LoggerInterface) private logger: LoggerInterface) {
+  constructor(@inject(Component.LoggerInterface) private logger: LoggerInterface) {
     const parsedOutput = config();
 
     if (parsedOutput.error) {
@@ -22,7 +22,7 @@ export default class ConfigService implements ConfigInterface {
 
     this.config = CONFIG_SCHEMA.getProperties();
 
-    this.logger.info('.env file successfully parsed.');
+    this.logger.info('.env файл был успешно прочитан.');
   }
 
   get<T extends keyof ConfigSchema>(key: T): ConfigSchema[T] {

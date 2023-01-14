@@ -2,7 +2,7 @@ import { DocumentType, types } from '@typegoose/typegoose';
 import { inject, injectable } from 'inversify';
 
 import { LoggerInterface } from '../../common/logger/logger.interface.js';
-import { COMPONENT } from '../../types/types/component.type.js';
+import { Component } from '../../types/types/component.type.js';
 import { TGenre } from '../../types/types/genre.type.js';
 import CreateMovieDto from './dto/createMovie.dto.js';
 import UpdateMovieDto from './dto/updateMovie.dto.js';
@@ -13,8 +13,8 @@ import { MAX_MOVIES_COUNT } from './movie.models.js';
 @injectable()
 export class MovieService implements MovieServiceInterface {
   constructor(
-    @inject(COMPONENT.LoggerInterface) private readonly logger: LoggerInterface,
-    @inject(COMPONENT.MovieModel)
+    @inject(Component.LoggerInterface) private readonly logger: LoggerInterface,
+    @inject(Component.MovieModel)
     private readonly movieModel: types.ModelType<MovieEntity>
   ) {}
 

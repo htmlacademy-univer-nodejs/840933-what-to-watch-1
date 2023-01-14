@@ -3,7 +3,8 @@ import typegoose, {
   getModelForClass,
 } from '@typegoose/typegoose';
 import { User } from '../../types/types/user.type.js';
-import { checkPassword, createSHA256 } from '../../utils/commonFunctions.js';
+import { checkPassword } from '../../utils/commonFunctions.js';
+import { createSHA256 } from '../../utils/crypro.js';
 import { DEFAULT_AVATAR_FILE_NAME } from './user.models.js';
 
 const { prop, modelOptions } = typegoose;
@@ -34,7 +35,7 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
   public name!: string;
 
   @prop({ required: true, default: [] })
-  public moviesToWatch!: string[];
+  public mylist!: string[];
 
   @prop({ required: true })
   private password!: string;
@@ -46,6 +47,10 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
 
   verifyPassword(password: string, salt: string) {
     return createSHA256(password, salt) === this.password;
+  }
+
+  getPassword() {
+    return this.password;
   }
 }
 

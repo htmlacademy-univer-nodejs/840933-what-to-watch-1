@@ -27,63 +27,75 @@ import { UserServiceInterface } from './modules/user/userService.interface.js';
 import { UserController } from './modules/user/user.controller.js';
 import { UserEntity, UserModel } from './modules/user/user.entity.js';
 import { UserService } from './modules/user/user.service.js';
-import { COMPONENT } from './types/types/component.type.js';
+import { Component } from './types/types/component.type.js';
 
 const applicationContainer = new Container();
 
 applicationContainer
-  .bind<Application>(COMPONENT.Application)
+  .bind<Application>(Component.Application)
   .to(Application)
   .inSingletonScope();
+
 applicationContainer
-  .bind<LoggerInterface>(COMPONENT.LoggerInterface)
+  .bind<LoggerInterface>(Component.LoggerInterface)
   .to(LoggerService)
   .inSingletonScope();
+
 applicationContainer
-  .bind<ConfigInterface>(COMPONENT.ConfigInterface)
+  .bind<ConfigInterface>(Component.ConfigInterface)
   .to(ConfigService)
   .inSingletonScope();
+
 applicationContainer
-  .bind<DatabaseInterface>(COMPONENT.DatabaseInterface)
+  .bind<DatabaseInterface>(Component.DatabaseInterface)
   .to(MongoDBService)
   .inSingletonScope();
+
 applicationContainer
-  .bind<UserServiceInterface>(COMPONENT.UserServiceInterface)
+  .bind<UserServiceInterface>(Component.UserServiceInterface)
   .to(UserService);
+
 applicationContainer
-  .bind<types.ModelType<UserEntity>>(COMPONENT.UserModel)
+  .bind<types.ModelType<UserEntity>>(Component.UserModel)
   .toConstantValue(UserModel);
+
 applicationContainer
-  .bind<MovieServiceInterface>(COMPONENT.MovieServiceInterface)
+  .bind<MovieServiceInterface>(Component.MovieServiceInterface)
   .to(MovieService);
+
 applicationContainer
-  .bind<types.ModelType<MovieEntity>>(COMPONENT.MovieModel)
+  .bind<types.ModelType<MovieEntity>>(Component.MovieModel)
   .toConstantValue(MovieModel);
+
 applicationContainer
-  .bind<CommentServiceInterface>(COMPONENT.CommentServiceInterface)
+  .bind<CommentServiceInterface>(Component.CommentServiceInterface)
   .to(CommentService);
+
 applicationContainer
-  .bind<types.ModelType<CommentEntity>>(COMPONENT.CommentModel)
+  .bind<types.ModelType<CommentEntity>>(Component.CommentModel)
   .toConstantValue(CommentModel);
 
 applicationContainer
-  .bind<ControllerInterface>(COMPONENT.MovieController)
+  .bind<ControllerInterface>(Component.MovieController)
   .to(MovieController)
   .inSingletonScope();
+
 applicationContainer
-  .bind<ExceptionFilterInterface>(COMPONENT.ExceptionFilterInterface)
+  .bind<ExceptionFilterInterface>(Component.ExceptionFilterInterface)
   .to(ExceptionFilter)
   .inSingletonScope();
+
 applicationContainer
-  .bind<ControllerInterface>(COMPONENT.UserController)
+  .bind<ControllerInterface>(Component.UserController)
   .to(UserController)
   .inSingletonScope();
+
 applicationContainer
-  .bind<ControllerInterface>(COMPONENT.CommentController)
+  .bind<ControllerInterface>(Component.CommentController)
   .to(CommentController)
   .inSingletonScope();
 
 const application = applicationContainer.get<Application>(
-  COMPONENT.Application
+  Component.Application
 );
 await application.init();

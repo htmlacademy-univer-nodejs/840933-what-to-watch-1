@@ -3,7 +3,7 @@ import { DocumentType } from '@typegoose/typegoose/lib/types.js';
 import { inject, injectable } from 'inversify';
 
 import { LoggerInterface } from '../../common/logger/logger.interface.js';
-import { COMPONENT } from '../../types/types/component.type.js';
+import { Component } from '../../types/types/component.type.js';
 import { MovieEntity } from '../movie/movie.entity.js';
 import { CreateUserDto } from './dto/createUser.dto.js';
 import { LoginUserDto } from './dto/loginUser.dto.js';
@@ -13,10 +13,10 @@ import { UserEntity } from './user.entity.js';
 @injectable()
 export class UserService implements UserServiceInterface {
   constructor(
-    @inject(COMPONENT.LoggerInterface) private logger: LoggerInterface,
-    @inject(COMPONENT.UserModel)
+    @inject(Component.LoggerInterface) private logger: LoggerInterface,
+    @inject(Component.UserModel)
     private readonly userModel: types.ModelType<UserEntity>,
-    @inject(COMPONENT.MovieModel)
+    @inject(Component.MovieModel)
     private readonly movieModel: types.ModelType<MovieEntity>
   ) {}
 
@@ -61,24 +61,24 @@ export class UserService implements UserServiceInterface {
     return this.create(dto, salt);
   }
 
-  async findToWatch(userId: string): Promise<DocumentType<MovieEntity>[]> {
-    const moviesToWatch = await this.userModel
+  async getMyList(userId: string): Promise<DocumentType<MovieEntity>[]> {
+    const mylist = await this.userModel
       .findById(userId)
-      .select('moviesToWatch');
+      .select('mylist');
     return this.movieModel
-      .find({ _id: { $in: moviesToWatch?.moviesToWatch } })
+      .find({ _id: { $in: mylist?.mylist } })
       .populate('user');
   }
 
-  async addToWatch(movieId: string, userId: string): Promise<void | null> {
+  async addToMyList(movieId: string, userId: string): Promise<void | null> {
     return this.userModel.findByIdAndUpdate(userId, {
-      $addToSet: { moviesToWatch: movieId },
+      $addToSet: { mylist: movieId },
     });
   }
 
-  async deleteToWatch(movieId: string, userId: string): Promise<void | null> {
+  async deleteFromMyList(movieId: string, userId: string): Promise<void | null> {
     return this.userModel.findByIdAndUpdate(userId, {
-      $pull: { moviesToWatch: movieId },
+      $pull: { mylist: movieId },
     });
   }
 

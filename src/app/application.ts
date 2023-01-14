@@ -1,27 +1,34 @@
 import cors from 'cors';
-import express, {Express} from 'express';
-import {inject, injectable} from 'inversify';
-import {ConfigInterface} from '../common/config/config.interface.js';
-import {ControllerInterface} from '../common/controller/controller.interface';
-import {DatabaseInterface} from '../common/dbClient/db.interface.js';
-import {ExceptionFilterInterface} from '../filters/exceptionFilter.interface.js';
-import {LoggerInterface} from '../common/logger/logger.interface.js';
+import express, { Express } from 'express';
+import { inject, injectable } from 'inversify';
+
+import { ConfigInterface } from '../common/config/config.interface.js';
+import { ControllerInterface } from '../common/controller/controller.interface';
+import { DatabaseInterface } from '../common/dbClient/db.interface.js';
+import { ExceptionFilterInterface } from '../filters/exceptionFilter.interface.js';
+import { LoggerInterface } from '../common/logger/logger.interface.js';
 import { AuthenticateMiddleware } from '../middlewares/authenticate.middleware.js';
-import {COMPONENT} from '../types/types/component.type.js';
-import {getFullServerPath} from '../utils/commonFunctions.js';
-import {getDBConnectionURI} from '../utils/db.js';
+import { Component } from '../types/types/component.type.js';
+import { getFullServerPath } from '../utils/commonFunctions.js';
+import { getDBConnectionURI } from '../utils/db.js';
 
 @injectable()
 export default class Application {
   private expressApp: Express;
 
-  constructor(@inject(COMPONENT.LoggerInterface) private logger: LoggerInterface,
-              @inject(COMPONENT.ConfigInterface) private config: ConfigInterface,
-              @inject(COMPONENT.DatabaseInterface) private dbClient: DatabaseInterface,
-              @inject(COMPONENT.MovieController) private movieController: ControllerInterface,
-              @inject(COMPONENT.ExceptionFilterInterface) private exceptionFilter: ExceptionFilterInterface,
-              @inject(COMPONENT.UserController) private userController: ControllerInterface,
-              @inject(COMPONENT.CommentController) private commentController: ControllerInterface,) {
+  constructor(
+    @inject(Component.LoggerInterface) private logger: LoggerInterface,
+    @inject(Component.ConfigInterface) private config: ConfigInterface,
+    @inject(Component.DatabaseInterface) private dbClient: DatabaseInterface,
+    @inject(Component.MovieController)
+    private movieController: ControllerInterface,
+    @inject(Component.ExceptionFilterInterface)
+    private exceptionFilter: ExceptionFilterInterface,
+    @inject(Component.UserController)
+    private userController: ControllerInterface,
+    @inject(Component.CommentController)
+    private commentController: ControllerInterface,
+  ) {
     this.expressApp = express();
   }
 
@@ -33,11 +40,21 @@ export default class Application {
 
   initMiddleware() {
     this.expressApp.use(express.json());
-    this.expressApp.use('/upload', express.static(`.${this.config.get('UPLOAD_DIRECTORY')}`));
-    this.expressApp.use('/static', express.static(`.${this.config.get('STATIC_DIRECTORY')}`));
+    this.expressApp.use(
+      '/upload',
+      express.static(`.${this.config.get('UPLOAD_DIRECTORY')}`)
+    );
+    this.expressApp.use(
+      '/static',
+      express.static(`.${this.config.get('STATIC_DIRECTORY')}`)
+    );
 
-    const authenticateMiddleware = new AuthenticateMiddleware(this.config.get('JWT_SECRET'));
-    this.expressApp.use(authenticateMiddleware.execute.bind(authenticateMiddleware));
+    const authenticateMiddleware = new AuthenticateMiddleware(
+      this.config.get('JWT_SECRET')
+    );
+    this.expressApp.use(
+      authenticateMiddleware.execute.bind(authenticateMiddleware)
+    );
     this.expressApp.use(cors());
   }
 
@@ -63,6 +80,8 @@ export default class Application {
     this.initRoutes();
     this.initExceptionFilters();
     const host = this.config.get('HOST');
-    this.expressApp.listen(port, () => this.logger.info(`Server started on ${getFullServerPath(host, port)}`));
+    this.expressApp.listen(port, () =>
+      this.logger.info(`Сервер был запущен на url -> ${getFullServerPath(host, port)}`)
+    );
   }
 }

@@ -10,9 +10,9 @@ import { PrivateRouteMiddleware } from '../../middlewares/privateRoute.middlewar
 import { UploadFileMiddleware } from '../../middlewares/uploadFile.middleware.js';
 import { ValidateDtoMiddleware } from '../../middlewares/validateDto.middleware.js';
 import { ValidateObjectIdMiddleware } from '../../middlewares/validateObjectId.middleware.js';
-import { COMPONENT } from '../../types/types/component.type.js';
-import { HttpMethod } from '../../types/enums/http-method.enum.js';
-import { createJWT, fillDTO } from '../../utils/commonFunctions.js';
+import { Component } from '../../types/types/component.type.js';
+import { HttpMethod } from '../../types/enums/httpMethod.enum.js';
+import { fillDTO } from '../../utils/commonFunctions.js';
 import { MovieListItemResponse } from '../movie/response/movieListItem.response.js';
 import { CreateUserDto } from './dto/createUser.dto.js';
 import { LoginUserDto } from './dto/loginUser.dto.js';
@@ -21,13 +21,14 @@ import { UserResponse } from './response/user.response.js';
 import { UserServiceInterface } from './userService.interface.js';
 import { JWT_ALGORITHM, UserRoute } from './user.models.js';
 import { UploadStaticMiddleware } from '../../middlewares/uploadStatic.middleware.js';
+import { createJWT } from '../../utils/crypro.js';
 
 @injectable()
 export class UserController extends Controller {
   constructor(
-    @inject(COMPONENT.LoggerInterface) logger: LoggerInterface,
-    @inject(COMPONENT.ConfigInterface) configService: ConfigInterface,
-    @inject(COMPONENT.UserServiceInterface)
+    @inject(Component.LoggerInterface) logger: LoggerInterface,
+    @inject(Component.ConfigInterface) configService: ConfigInterface,
+    @inject(Component.UserServiceInterface)
     private readonly userService: UserServiceInterface
   ) {
     super(logger, configService);
@@ -44,35 +45,41 @@ export class UserController extends Controller {
         new ValidateDtoMiddleware(CreateUserDto),
       ],
     });
+
     this.addRoute<UserRoute>({
       path: UserRoute.Login,
       method: HttpMethod.Post,
       handler: this.login,
       middlewares: [new ValidateDtoMiddleware(LoginUserDto)],
     });
+
     this.addRoute<UserRoute>({
       path: UserRoute.Login,
       method: HttpMethod.Get,
       handler: this.get,
     });
+
     this.addRoute<UserRoute>({
-      path: UserRoute.ToWatch,
+      path: UserRoute.MyList,
       method: HttpMethod.Get,
       handler: this.getToWatch,
       middlewares: [new PrivateRouteMiddleware(this.userService)],
     });
+
     this.addRoute<UserRoute>({
-      path: UserRoute.ToWatch,
+      path: UserRoute.MyList,
       method: HttpMethod.Post,
       handler: this.postToWatch,
       middlewares: [new PrivateRouteMiddleware(this.userService)],
     });
+
     this.addRoute<UserRoute>({
-      path: UserRoute.ToWatch,
+      path: UserRoute.MyList,
       method: HttpMethod.Delete,
       handler: this.deleteToWatch,
       middlewares: [new PrivateRouteMiddleware(this.userService)],
     });
+
     this.addRoute<UserRoute>({
       path: UserRoute.Avatar,
       method: HttpMethod.Post,
@@ -86,6 +93,7 @@ export class UserController extends Controller {
         ),
       ],
     });
+
     this.addRoute<UserRoute>({
       path: UserRoute.Static,
       method: HttpMethod.Post,
@@ -185,7 +193,7 @@ export class UserController extends Controller {
     _res: Response
   ): Promise<void> {
     const { user } = req;
-    const result = await this.userService.findToWatch(user.id);
+    const result = await this.userService.getMyList(user.id);
     this.ok(_res, fillDTO(MovieListItemResponse, result));
   }
 
@@ -198,7 +206,7 @@ export class UserController extends Controller {
     _res: Response
   ): Promise<void> {
     const { body, user } = req;
-    await this.userService.addToWatch(body.movieId, user.id);
+    await this.userService.addToMyList(body.movieId, user.id);
 
     this.noContent(_res, {
       message: 'Успешно. Фильм добавлен в список "К просмотру".',
@@ -214,7 +222,7 @@ export class UserController extends Controller {
     _res: Response
   ): Promise<void> {
     const { body, user } = req;
-    await this.userService.deleteToWatch(body.movieId, user.id);
+    await this.userService.deleteFromMyList(body.movieId, user.id);
     this.noContent(_res, {
       message: 'Успешно. Фильм удален из списка "К просмотру".',
     });

@@ -16,7 +16,7 @@
     "compile": "tsc -p tsconfig.json",
     "clean": "rimraf dist",
     "ts": "ts-node",
-    "redoc": "npx redoc-cli serve specification/specification.yaml",
+    "doc": "npx redoc-cli serve specification/specification.yaml",
     "mockServer": "json-server ./mocks/mock-server-data.json --port 8088",
     "cli": "npm run ts src/main.ts --"
   },

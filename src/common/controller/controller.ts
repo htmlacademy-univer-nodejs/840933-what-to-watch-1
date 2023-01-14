@@ -3,7 +3,7 @@ import asyncHandler from 'express-async-handler';
 import { StatusCodes } from 'http-status-codes';
 import { injectable } from 'inversify';
 
-import { STATIC_RESOURCE_FIELDS } from '../../app/application.contants.js';
+import { STATIC_RESOURCE_FIELDS } from '../../constants/application.contants.js';
 import { RouteInterface } from '../../types/interfaces/route.interface.js';
 import {
   getFullServerPath,

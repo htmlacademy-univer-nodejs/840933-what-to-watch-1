@@ -1,13 +1,20 @@
 import got from 'got';
 
-import { MockData } from '../types/types/mock-data.type.js';
-import { CliCommandInterface } from './cli-command.interface.js';
+import { MockData } from '../types/types/mockData.type.js';
+import { CliCommandInterface } from './cliCommand.interface.js';
 import { MovieGenerator } from '../common/movieGenerator/movieGenerator.js';
 import { TSVFileWriter } from '../common/fileWriter/fileWriter.js';
+import { LoggerInterface } from '../common/logger/logger.interface.js';
+import { ConsoleLoggerService } from '../common/logger/consoleLogger.service.js';
 
-export default class GenerateCommand implements CliCommandInterface {
+export class GenerateCommand implements CliCommandInterface {
   public readonly name = '--generate';
   private initialData?: MockData;
+  private readonly logger: LoggerInterface;
+
+  constructor() {
+    this.logger = new ConsoleLoggerService();
+  }
 
   public async execute(...parameters: string[]): Promise<void> {
     const [count, filepath, url] = parameters;
@@ -16,7 +23,7 @@ export default class GenerateCommand implements CliCommandInterface {
     try {
       this.initialData = await got.get(url).json();
     } catch {
-      return console.log(`Can't fetch data from ${url}.`);
+      return this.logger.error(`Не получается получить данные по адресу ${url}.`);
     }
 
     const movieGeneratorString = new MovieGenerator(this.initialData);
@@ -26,6 +33,6 @@ export default class GenerateCommand implements CliCommandInterface {
       await tsvFileWriter.write(movieGeneratorString.generate());
     }
 
-    console.log(`File ${filepath} was created!`);
+    this.logger.info(`Файл с мок данным ${filepath} был успешно создан`);
   }
 }

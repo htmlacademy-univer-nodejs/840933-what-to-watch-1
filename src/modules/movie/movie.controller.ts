@@ -12,9 +12,9 @@ import { DocumentExistsMiddleware } from '../../middlewares/documentExists.middl
 import { PrivateRouteMiddleware } from '../../middlewares/privateRoute.middleware.js';
 import { ValidateDtoMiddleware } from '../../middlewares/validateDto.middleware.js';
 import { ValidateObjectIdMiddleware } from '../../middlewares/validateObjectId.middleware.js';
-import { COMPONENT } from '../../types/types/component.type.js';
+import { Component } from '../../types/types/component.type.js';
 import { getGenre, TGenre } from '../../types/types/genre.type.js';
-import { HttpMethod } from '../../types/enums/http-method.enum.js';
+import { HttpMethod } from '../../types/enums/httpMethod.enum.js';
 import { fillDTO } from '../../utils/commonFunctions.js';
 import { CommentServiceInterface } from '../comment/commentService.interface.js';
 import { CommentResponse } from '../comment/response/comment.response.js';
@@ -41,13 +41,13 @@ type QueryParamsGetMovies = {
 @injectable()
 export class MovieController extends Controller {
   constructor(
-    @inject(COMPONENT.LoggerInterface) logger: LoggerInterface,
-    @inject(COMPONENT.ConfigInterface) configService: ConfigInterface,
-    @inject(COMPONENT.UserServiceInterface)
+    @inject(Component.LoggerInterface) logger: LoggerInterface,
+    @inject(Component.ConfigInterface) configService: ConfigInterface,
+    @inject(Component.UserServiceInterface)
     private readonly userService: UserServiceInterface,
-    @inject(COMPONENT.MovieServiceInterface)
+    @inject(Component.MovieServiceInterface)
     private readonly movieService: MovieServiceInterface,
-    @inject(COMPONENT.CommentServiceInterface)
+    @inject(Component.CommentServiceInterface)
     private readonly commentService: CommentServiceInterface
   ) {
     super(logger, configService);

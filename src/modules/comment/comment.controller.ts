@@ -8,8 +8,8 @@ import { HttpError } from '../../common/errors/http.error.js';
 import { LoggerInterface } from '../../common/logger/logger.interface.js';
 import { PrivateRouteMiddleware } from '../../middlewares/privateRoute.middleware.js';
 import { ValidateDtoMiddleware } from '../../middlewares/validateDto.middleware.js';
-import { COMPONENT } from '../../types/types/component.type.js';
-import { HttpMethod } from '../../types/enums/http-method.enum.js';
+import { Component } from '../../types/types/component.type.js';
+import { HttpMethod } from '../../types/enums/httpMethod.enum.js';
 import { fillDTO } from '../../utils/commonFunctions.js';
 import { MovieServiceInterface } from '../movie/movieService.interface.js';
 import { UserServiceInterface } from '../user/userService.interface.js';
@@ -20,13 +20,13 @@ import { CommentResponse } from './response/comment.response.js';
 
 export default class CommentController extends Controller {
   constructor(
-    @inject(COMPONENT.LoggerInterface) logger: LoggerInterface,
-    @inject(COMPONENT.ConfigInterface) configService: ConfigInterface,
-    @inject(COMPONENT.UserServiceInterface)
+    @inject(Component.LoggerInterface) logger: LoggerInterface,
+    @inject(Component.ConfigInterface) configService: ConfigInterface,
+    @inject(Component.UserServiceInterface)
     private readonly userService: UserServiceInterface,
-    @inject(COMPONENT.CommentServiceInterface)
+    @inject(Component.CommentServiceInterface)
     private readonly commentService: CommentServiceInterface,
-    @inject(COMPONENT.MovieServiceInterface)
+    @inject(Component.MovieServiceInterface)
     private readonly movieService: MovieServiceInterface
   ) {
     super(logger, configService);

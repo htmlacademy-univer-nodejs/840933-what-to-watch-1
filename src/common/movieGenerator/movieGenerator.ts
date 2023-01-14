@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 
 import { GENRE_ARRAY } from '../../types/types/genre.type.js';
-import { MockData } from '../../types/types/mock-data.type.js';
+import { MockData } from '../../types/types/mockData.type.js';
 import {
   getRandomItem,
   getRandomItems,
@@ -17,7 +17,7 @@ import {
   MAX_RATING,
   MIN_DURATION,
   MAX_DURATION,
-} from '../../utils/movieGenerator.consts.js';
+} from '../../constants/movieGenerator.constants.js';
 
 export class MovieGenerator implements MovieGeneratorInterface {
   constructor(private readonly mockData: MockData) {}

@@ -69,18 +69,18 @@
       "disney@gmail.com"
     ],
     "posterPaths": [
-      "static/aviator.jpg",
-      "static/pulp-fiction.jpg",
-      "static/relevant.jpg",
-      "static/the-grand-budapest-hotel.jpg",
-      "static/moonrise-kingdom.jpg"
+      "aviator.jpg",
+      "pulp-fiction.jpg",
+      "relevant.jpg",
+      "the-grand-budapest-hotel.jpg",
+      "moonrise-kingdom.jpg"
     ],
     "backgroundImagePaths": [
-      "static/bg/aviator.jpg",
-      "static/bg/pulp-fiction.jpg",
-      "static/bg/relevant.jpg",
-      "static/bg/the-grand-budapest-hotel.jpg",
-      "static/bg/moonrise-kingdom.jpg"
+      "8Ckdnk121nCdsa.jpeg",
+      "OG9SaAd2MsLsln8cdBWAi.jpeg",
+      "Ac8sdkw7c9scsCDscssd.jpeg",
+      "vnd778csSSa09cdSScD56.jpeg",
+      "Chd89SD00cdsYrtPysA7.jpeg"
     ],
     "backgroundColors": [
       "green",

@@ -64,11 +64,11 @@ paths:
               properties:
                 login:
                   type: string
-                  example: dashav@mail.ru
+                  example: vladik@vk.ru
 
                 password:
                   type: string
-                  example: 123456
+                  example: qwerty123
 
       responses:
         "200":
@@ -168,7 +168,7 @@ paths:
             type: string
             format: uuid
           required: true
-          description: Movie id to get.
+          description: Уникальный идентификатор фильма.
 
       responses:
         "200":
@@ -272,7 +272,7 @@ paths:
         "404":
           description: Фильма с данным id не существует.
 
-  /movies?limit=60&genre=comedy:
+  /movies?limit=40&genre=drama:
     get:
       tags:
         - movies
@@ -285,14 +285,14 @@ paths:
           schema:
             type: integer
             default: 60
-            example: 10
+            example: 40
 
         - in: query
           name: genre
           schema:
             type: string
             enum: [ comedy, crime, documentary, drama, horror, family, romance, scifi, thriller ]
-            example: comedy
+            example: drama
 
       responses:
         "200":
@@ -427,7 +427,7 @@ paths:
             type: string
             format: uuid
           required: true
-          description: Movie id to get comments.
+          description: Уникальный идентификатор для фильма.
 
       responses:
         "200":
@@ -501,19 +501,19 @@ components:
         email:
           type: string
           format: email
-          example: dashav@mail.ru
+          example: vladek@vk.ru
 
         name:
           type: string
           minLength: 1
           maxLength: 15
-          example: Darya
+          example: kisik
 
         password:
           type: string
           minLength: 6
           maxLength: 12
-          example: 123456
+          example: qwerty123
 
         avatar:
           type: string
@@ -530,17 +530,17 @@ components:
       properties:
         name:
           type: string
-          example: Darya
+          example: kisik
 
         email:
           type: string
-          example: dashav@mail.ru
+          example: vladik@vk.com
 
         avatarPath:
           type: string
           format: uri
           pattern: ([^\s]+(\.(jpg|png))$)
-          example: /upload/avatar.png
+          example: /upload/8chKdsOiK.png
 
 
     createMovie:
@@ -551,39 +551,39 @@ components:
           type: string
           minLength: 2
           maxLength: 100
-          example: Голодные игры
+          example: Авиатор
 
         description:
           type: string
           minLength: 20
           maxLength: 1024
-          example: Деспотичное государство ежегодно устраивает показательные игры на выживание, за которыми в прямом эфире следит весь мир.
+          example: Получив от отца небольшую фабрику, Говард Хьюз превратил ее в гигантское, фантастически прибыльное предприятие. Став владельцем огромной кинокомпании, он снял самый дорогой для своего времени фильм и покорил сердца прелестнейших голливудских актрис.
 
         publishingDate:
           type: string
           format: date-time
-          example: 2022-10-21T22:55:33.903Z
+          example: 2005-02-03T23:59:33.903Z
 
         genre:
           type: string
           enum: [ comedy, crime, documentary, drama, horror, family, romance, scifi, thriller ]
-          example: comedy
+          example: drama
 
         releaseYear:
           type: integer
           minimum: 1895
           maximum: 2022
-          example: 2013
+          example: 2005
 
         previewPath:
           type: string
           format: url
-          example: https://www.what-to-watch.ru/hunger_games_preview
+          example: https://what-to-watch.ru/preview/aviator.jpg
 
         moviePath:
           type: string
           format: url
-          example: https://www.what-to-watch.ru/hunger_games
+          example: https://what-to-watch.ru/movie/aviator.jpg
 
         actors:
           type: array
@@ -591,33 +591,34 @@ components:
             type: string
           minItems: 1
           uniqueItems: true
-          example: [ Дженнифер Лоуренс, Джош Хатчерсон, Лиам Хемсворт ]
+          example: [ Леонардо Ди Каприо, Кейт Бланшетт, Джуд Ло ]
 
         director:
           type: string
           minLength: 2
           maxLength: 50
-          example: Гэри Росс
+          example: Мартин Скорсезе
 
         duration:
           type: number
           minimum: 2
+          example: 169
 
         posterPath:
           type: string
           format: uri
-          pattern: ([^\s]+(\.jpg)$)
-          example: hunger_games_poster.jpg
+          pattern: ([^\s]+(\.(jpg|jpeg))$)
+          example: static/aviator.jpg
 
         backgroundImagePath:
           type: string
           format: uri
-          pattern: ([^\s]+(\.jpg)$)
-          example: hunger_games_bg.jpg
+          pattern: ([^\s]+(\.(jpg|jpeg))$)
+          example: static/8ac7cjck.jpg
 
         backgroundColor:
           type: string
-          example: green
+          example: pink
 
       required:
         - title
@@ -642,29 +643,29 @@ components:
           type: string
           minLength: 2
           maxLength: 100
-          example: Голодные игры
+          example: Авиатор
 
         description:
           type: string
           minLength: 20
           maxLength: 1024
-          example: Деспотичное государство ежегодно устраивает показательные игры на выживание, за которыми в прямом эфире следит весь мир.
+          example: Получив от отца небольшую фабрику, Говард Хьюз превратил ее в гигантское, фантастически прибыльное предприятие. Став владельцем огромной кинокомпании, он снял самый дорогой для своего времени фильм и покорил сердца прелестнейших голливудских актрис.
 
         publishingDate:
           type: string
           format: date-time
-          example: 2022-10-21T22:55:33.903Z
+          example: 2005-02-03T23:59:33.903Z
 
         genre:
           type: string
           enum: [ comedy, crime, documentary, drama, horror, family, romance, scifi, thriller ]
-          example: comedy
+          example: drama
 
         releaseYear:
           type: integer
           minimum: 1895
           maximum: 2023
-          example: 2013
+          example: 2005
 
         rating:
           type: integer
@@ -675,12 +676,12 @@ components:
         previewPath:
           type: string
           format: url
-          example: https://www.what-to-watch.ru/hunger_games_preview
+          example: https://what-to-watch.ru/preview/aviator.jpg
 
         moviePath:
           type: string
           format: url
-          example: https://www.what-to-watch.ru/hunger_games
+          example: https://what-to-watch.ru/movie/aviator.jpg
 
         actors:
           type: array
@@ -688,23 +689,23 @@ components:
             type: string
           minItems: 1
           uniqueItems: true
-          example: [ Дженнифер Лоуренс, Джош Хатчерсон, Лиам Хемсворт ]
+          example: [ Леонардо Ди Каприо, Кейт Бланшетт, Джуд Ло ]
 
         director:
           type: string
           minLength: 2
           maxLength: 50
-          example: Гэри Росс
+          example: Мартин Скорсезе
 
         duration:
           type: number
           minimum: 2
-          example: 60
+          example: 169
 
         commentsCount:
           type: integer
           minimum: 0
-          example: 10
+          example: 290
 
         user:
           $ref: '#/components/schemas/user'
@@ -712,18 +713,18 @@ components:
         posterPath:
           type: string
           format: uri
-          pattern: ([^\s]+(\.jpg)$)
-          example: hunger_games_poster.jpg
+          pattern: ([^\s]+(\.(jpg|jpeg))$)
+          example: static/aviator.jpg
 
         backgroundImagePath:
           type: string
           format: uri
-          pattern: ([^\s]+(\.jpg)$)
-          example: hunger_games_bg.jpg
+          pattern: ([^\s]+(\.(jpg|jpeg))$)
+          example: static/8ac7cjck.jpg
 
         backgroundColor:
           type: string
-          example: green
+          example: pink
 
       required:
         - title
@@ -756,22 +757,22 @@ components:
           type: string
           minLength: 2
           maxLength: 100
-          example: Голодные игры
+          example: Авиатор
 
         publishingDate:
           type: string
           format: date-time
-          example: 2022-10-21T22:55:33.903Z
+          example: 2005-02-03T23:59:33.903Z
 
         genre:
           type: string
           enum: [ comedy, crime, documentary, drama, horror, family, romance, scifi, thriller ]
-          example: comedy
+          example: drama
 
         previewPath:
           type: string
           format: url
-          example: https://www.what-to-watch.ru/hunger_games_preview
+          example: https://what-to-watch.ru/preview/aviator.jpg
 
         user:
           $ref: '#/components/schemas/user'
@@ -780,12 +781,12 @@ components:
           type: string
           format: uri
           pattern: ([^\s]+(\.jpg)$)
-          example: hunger_games_poster.jpg
+          example: static/aviator.jpg
 
         commentsCount:
           type: integer
           minimum: 0
-          example: 10
+          example: 290
 
       required:
         - title
@@ -805,7 +806,7 @@ components:
           type: string
           minLength: 5
           maxLength: 1024
-          example: Супер крутой фильм!
+          example: Ди Каприо + Скорсезе === 🔥🔥🔥
 
         rating:
           type: integer

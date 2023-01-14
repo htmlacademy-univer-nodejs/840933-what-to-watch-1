@@ -12,9 +12,9 @@ export interface UserServiceInterface {
     dto: CreateUserDto,
     salt: string
   ): Promise<DocumentType<UserEntity>>;
-  findToWatch(userId: string): Promise<DocumentType<MovieEntity>[]>;
-  addToWatch(movieId: string, userId: string): Promise<void | null>;
-  deleteToWatch(movieId: string, userId: string): Promise<void | null>;
+  getMyList(userId: string): Promise<DocumentType<MovieEntity>[]>;
+  addToMyList(movieId: string, userId: string): Promise<void | null>;
+  deleteFromMyList(movieId: string, userId: string): Promise<void | null>;
   verifyUser(
     dto: LoginUserDto,
     salt: string

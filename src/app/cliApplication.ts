@@ -1,8 +1,8 @@
-import {CliCommandInterface} from '../cli-command/cli-command.interface.js';
+import {CliCommandInterface} from '../cliCommand/cliCommand.interface.js';
 
 type ParsedCommand = Record<string, string[]>;
 
-export default class CLIApplication {
+export class CLIApplication {
   private commands: Record<string, CliCommandInterface> = {};
   private defaultCommand = '--help';
 

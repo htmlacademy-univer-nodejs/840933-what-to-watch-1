@@ -1,5 +1,5 @@
 import {NextFunction, Request, Response} from 'express';
-import {HttpMethod} from '../enums/http-method.enum.js';
+import {HttpMethod} from '../enums/httpMethod.enum.js';
 import {MiddlewareInterface} from './middleware.interface.js';
 
 export interface RouteInterface<Path extends string> {

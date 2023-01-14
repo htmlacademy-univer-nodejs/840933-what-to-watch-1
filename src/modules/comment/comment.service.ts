@@ -2,7 +2,7 @@ import { types } from '@typegoose/typegoose';
 import { DocumentType } from '@typegoose/typegoose/lib/types.js';
 import { inject, injectable } from 'inversify';
 
-import { COMPONENT } from '../../types/types/component.type.js';
+import { Component } from '../../types/types/component.type.js';
 import { MovieServiceInterface } from '../movie/movieService.interface.js';
 import { CommentServiceInterface } from './commentService.interface.js';
 import { CommentEntity } from './comment.entity.js';
@@ -12,9 +12,9 @@ import { CreateCommentDto } from './dto/createComment.dto.js';
 @injectable()
 export class CommentService implements CommentServiceInterface {
   constructor(
-    @inject(COMPONENT.CommentModel)
+    @inject(Component.CommentModel)
     private readonly commentModel: types.ModelType<CommentEntity>,
-    @inject(COMPONENT.MovieServiceInterface)
+    @inject(Component.MovieServiceInterface)
     private readonly movieService: MovieServiceInterface
   ) {}
 

@@ -9,24 +9,24 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZ
 
 {
   "title": "Авиатор",
-  "description": "Кисик государство устраивает игры на выживание, за которыми в прямом эфире следит весь мир.",
+  "description": "Получив от отца небольшую фабрику, Говард Хьюз превратил ее в гигантское, фантастически прибыльное предприятие. Став владельцем огромной кинокомпании, он снял самый дорогой для своего времени фильм и покорил сердца прелестнейших голливудских актрис.",
   "publishingDate": "2022-10-21T22:55:33.903Z",
-  "genre": "thriller",
-  "releaseYear": 2013,
+  "genre": "drama",
+  "releaseYear": 2005,
   "rating": 7,
-  "commentsCount": 12,
-  "previewPath": "https://www.what-to-watch.ru/hunger_games_preview",
-  "moviePath": "https://www.what-to-watch.ru/hunger_games",
+  "commentsCount": 290,
+  "previewPath": "https://what-to-watch.ru/preview/aviator.jpg",
+  "moviePath": "https://what-to-watch.ru/movie/aviator.jpg",
   "actors": [
-    "Дженнифер Лоуренс",
-    "Джош Хатчерсон",
-    "Лиам Хемсворт"
+    "Леонардо Ди Каприо",
+    "Кейт Бланшетт",
+    "Джуд Лоу"
   ],
-  "director": "Гэри Росс",
-  "duration": 70,
+  "director": "Мартин Скорсезе",
+  "duration": 169,
   "posterPath": "aviator.jpg",
   "backgroundImagePath": "OG9SaAd2MsLsln8cdBWAi.jpeg",
-  "backgroundColor": "green"
+  "backgroundColor": "pink"
 }
 
 ###
@@ -38,23 +38,23 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZCI6IjYzYzE5OTdkNzRiNjJiYWZmMDdkNGIyYSIsImlhdCI6MTY3MzY5ODI3NywiZXhwIjoxNjczODcxMDc3fQ.FtuZJ0TTy3SyB4l4uP2IxacYL8s7mKlo4-3HQpkbqFs
 
 {
-  "title": "Король лев",
-  "description": "У величественного Короля-Льва Муфасы рождается наследник по имени Симба. Уже в детстве любознательный малыш становится жертвой интриг своего завистливого дяди Шрама, мечтающего о власти. Симба познаёт горе утраты, предательство и изгнание, но в конце концов обретает верных друзей и находит любимую. Закалённый испытаниями, он в нелёгкой борьбе отвоёвывает своё законное место в «Круге жизни», осознав, что значит быть настоящим Королём.",
+  "title": "Отель Гранд Будапешт",
+  "description": "Картина расскажет о легендарном консьерже популярного европейского отеля и проследит за его жизнью между двумя мировыми войнами, а также за его дружбой с юной сотрудницей, которая становится его протеже.",
   "publishingDate": "2022-10-22T22:55:33.903Z",
-  "genre": "drama",
-  "releaseYear": 2013,
-  "previewPath": "https://www.what-to-watch.ru/lion_ling_preview",
-  "moviePath": "https://www.what-to-watch.ru/lion_king",
+  "genre": "comedy",
+  "releaseYear": 2014,
+  "previewPath": "https://what-to-watch.ru/preview/the-grand-budapest-hotel.jpg",
+  "moviePath": "https://what-to-watch.ru/movie/the-grand-budapest-hotel.jpg",
   "actors": [
-    "Джеймс Эрл Джонс",
-    "Мэттью Бродерик",
-    "Джонатан Тейлор Томас"
+    "Эдвард Нортон",
+    "Сирша Ронан",
+    "Рэйф Файнс"
   ],
-  "director": "Роджер Алерс",
-  "duration": 12,
-  "posterPath": "lion_king_poster.jpg",
-  "backgroundImagePath": "lion_king_bg.jpg",
-  "backgroundColor": "orange",
+  "director": "Уэс Андерсон",
+  "duration": 112,
+  "posterPath": "the-grand-budapest-hotel.jpg",
+  "backgroundImagePath": "OG9SaAd2MsLsln8cdBWAi.jpeg",
+  "backgroundColor": "red",
   "isPromo": true
 }
 
@@ -90,29 +90,29 @@ Accept: application/json
 
 ###
 
-## Получить список фильмов «К просмотру»
-GET http://localhost:8000/users/to_watch HTTP/1.1
+## Получить «Мои фильмы»
+GET http://localhost:8000/users/mylist HTTP/1.1
 Accept: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZCI6IjYzYzE5OTdkNzRiNjJiYWZmMDdkNGIyYSIsImlhdCI6MTY3MzY5NzU2MCwiZXhwIjoxNjczODcwMzYwfQ.IhQ_ChT1zB00ENBhZME1VJ692lNLawIBP-EJ0pnuEow
 
 ###
 
-## Добавить фильм в список «К просмотру»
-POST http://localhost:8000/users/to_watch HTTP/1.1
+## Добавить фильм в «Мои фильмы»
+POST http://localhost:8000/users/mylist HTTP/1.1
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZCI6IjYzYzE5OTdkNzRiNjJiYWZmMDdkNGIyYSIsImlhdCI6MTY3MzY5NzU2MCwiZXhwIjoxNjczODcwMzYwfQ.IhQ_ChT1zB00ENBhZME1VJ692lNLawIBP-EJ0pnuEow
 
 {
-  "movieId": "63c1969174b62baff07d4adb"
+  "movieId": "63c2a6098086864cda7629b0"
 }
 
 ###
 
-## Удалить фильм из списка «К просмотру»
-DELETE http://localhost:8000/users/to_watch HTTP/1.1
+## Удалить фильм из «Мои фильмы»
+DELETE http://localhost:8000/users/mylist HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InVzZXJAbWFpbC5ydSIsImlkIjoiNjNiZGM5MWU2OTk5OTY5YWY2MmI3MTBhIiwiaWF0IjoxNjczNDgwNTEyLCJleHAiOjE2NzM2NTMzMTJ9.hbxFnkOA3q99Ob2UVricBjd0l80WB-MgUpMGe4VVUtk
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZCI6IjYzYzE5OTdkNzRiNjJiYWZmMDdkNGIyYSIsImlhdCI6MTY3MzY5NzU2MCwiZXhwIjoxNjczODcwMzYwfQ.IhQ_ChT1zB00ENBhZME1VJ692lNLawIBP-EJ0pnuEow
 
 {
   "movieId": "63bf39c669e4b4d4bf20a1e5"
@@ -133,7 +133,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRpa0B2ay5jb20iLCJpZCI6IjYzYzE5NjJiNzRiNjJiYWZmMDdkNGFjZSIsImlhdCI6MTY3MzYzMTMzMCwiZXhwIjoxNjczODA0MTMwfQ.7GpFXSTgboQaaDDFIZUWEpbRqxm-KwPd6jasPvQ4M-U
 
 {
-  "text": "Король Левик",
+  "text": "Бодрый фильм и актеры классные :)",
   "rating": 10,
   "movieId": "63c1969174b62baff07d4adb"
 }
@@ -204,7 +204,7 @@ Content-Type: application/json
 
 {
   "email": "vladek@vk.com",
-  "password": "123456"
+  "password": "qwerty123"
 }
 
 ###

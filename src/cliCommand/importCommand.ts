@@ -3,7 +3,7 @@ import ConfigService from '../common/config/config.service.js';
 import { DatabaseInterface } from '../common/dbClient/db.interface.js';
 import MongoDBService from '../common/dbClient/mongodb.service.js';
 import { TSVFileReader } from '../common/fileReader/tsvFileReader.js';
-import ConsoleLoggerService from '../common/logger/consoleLogger.service.js';
+import { ConsoleLoggerService } from '../common/logger/consoleLogger.service.js';
 import { LoggerInterface } from '../common/logger/logger.interface.js';
 import { MovieServiceInterface } from '../modules/movie/movieService.interface.js';
 import { MovieModel } from '../modules/movie/movie.entity.js';
@@ -14,11 +14,10 @@ import { UserService } from '../modules/user/user.service.js';
 import { Movie } from '../types/types/movie.type.js';
 import { createMovie } from '../utils/commonFunctions.js';
 import { getDBConnectionURI } from '../utils/db.js';
-import { CliCommandInterface } from './cli-command.interface.js';
+import { CliCommandInterface } from './cliCommand.interface.js';
+import { DEFAULT_USER_PASSWORD } from '../constants/defaultPassword.constant.js';
 
-const DEFAULT_USER_PASSWORD = '123456';
-
-export default class ImportCommand implements CliCommandInterface {
+export class ImportCommand implements CliCommandInterface {
   readonly name = '--import';
   private userService!: UserServiceInterface;
   private movieService!: MovieServiceInterface;
@@ -58,7 +57,7 @@ export default class ImportCommand implements CliCommandInterface {
       await fileReader.read();
     } catch (err) {
       if (err instanceof Error) {
-        this.logger.error(`Can't read the file: ${err.message}`);
+        this.logger.error(`Не получается прочитать файл (: ${err.message}`);
       }
     }
   }
@@ -77,13 +76,13 @@ export default class ImportCommand implements CliCommandInterface {
 
   private async onLine(line: string, resolve: () => void) {
     const movie = createMovie(line);
-    this.logger.info(`Created new movie: ${movie}`);
+    this.logger.info(`Создан новый фильм: ${movie}`);
     await this.saveMovie(movie);
     resolve();
   }
 
   private onComplete(count: number) {
-    this.logger.info(`${count} rows imported.`);
+    this.logger.info(`${count} строк записано в файл !`);
     this.databaseService.disconnect();
   }
 }

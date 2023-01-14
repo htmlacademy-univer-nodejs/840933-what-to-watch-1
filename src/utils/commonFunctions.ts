@@ -1,14 +1,11 @@
-import { TextEncoder } from 'node:util';
 import { ClassConstructor, plainToInstance } from 'class-transformer';
 import { ValidationError } from 'class-validator';
-import crypto from 'crypto';
-import * as jose from 'jose';
 
 import {
   STATIC_IMAGES,
 } from '../modules/movie/movie.models.js';
 import { getGenre } from '../types/types/genre.type.js';
-import { ServiceError } from '../types/enums/service-error.enum.js';
+import { ServiceError } from '../types/enums/serviceError.enum.js';
 import { ValidationErrorField } from '../types/types/validation-error-field.type.js';
 
 export const createMovie = (row: string) => {
@@ -57,25 +54,11 @@ export const checkPassword = (password: string) => {
   }
 };
 
-export const createSHA256 = (line: string, salt: string): string =>
-  crypto.createHmac('sha256', salt).update(line).digest('hex');
-
 export const fillDTO = <T, V>(someDto: ClassConstructor<T>, plainObject: V) =>
   plainToInstance(someDto, plainObject, {
     excludeExtraneousValues: true,
     enableImplicitConversion: true,
   });
-
-export const createJWT = async (
-  algorithm: string,
-  jwtSecret: string,
-  payload: object
-): Promise<string> =>
-  new jose.SignJWT({ ...payload })
-    .setProtectedHeader({ alg: algorithm })
-    .setIssuedAt()
-    .setExpirationTime('2d')
-    .sign(new TextEncoder().encode(jwtSecret));
 
 export const transformErrors = (
   errors: ValidationError[]
@@ -125,16 +108,15 @@ export const transformObject = (
 ) => {
   properties.forEach((property) =>
     transformProperty(property, data, (target: Record<string, unknown>) => {
-      const file = target[property] as string;
+      const file = String(target[property]);
 
       const rootPath = [
         ...STATIC_IMAGES,
-      ].includes(`${target[property]}`)
+      ].includes(file)
         ? staticPath
         : uploadPath;
 
       target[property] = `${rootPath}/${file}`;
-      console.log(`${rootPath}/${file}`);
     })
   );
 };

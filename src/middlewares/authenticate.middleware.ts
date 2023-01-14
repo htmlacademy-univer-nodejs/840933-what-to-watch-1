@@ -32,13 +32,14 @@ export class AuthenticateMiddleware implements MiddlewareInterface {
         return next(
           new HttpError(
             StatusCodes.BAD_REQUEST,
-            'Email and id is required',
+            'Почта и id являются обязательными',
             'AuthenticateMiddleware'
           )
         );
       }
 
       req.user = { email: `${payload.email}`, id: `${payload.id}` };
+
       return next();
     } catch {
       return next(
