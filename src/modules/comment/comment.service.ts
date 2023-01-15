@@ -8,6 +8,7 @@ import { CommentServiceInterface } from './commentService.interface.js';
 import { CommentEntity } from './comment.entity.js';
 import { MAX_COMMENTS_COUNT } from '../../constants/commentCount.constants.js';
 import { CreateCommentDto } from './dto/createComment.dto.js';
+import { SortType } from '../../types/enums/sortType.enum.js';
 
 @injectable()
 export class CommentService implements CommentServiceInterface {
@@ -25,6 +26,7 @@ export class CommentService implements CommentServiceInterface {
     const comment = await this.commentModel.create({ ...dto, user });
     await this.movieService.updateMovieRating(dto.movieId, dto.rating);
     await this.movieService.incCommentsCount(dto.movieId);
+
     return comment.populate('user');
   }
 
@@ -33,8 +35,9 @@ export class CommentService implements CommentServiceInterface {
   ): Promise<DocumentType<CommentEntity>[]> {
     const movieComments = await this.commentModel
       .find({ movieId })
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: SortType.DESC })
       .limit(MAX_COMMENTS_COUNT);
+
     return this.commentModel.populate(movieComments, 'user');
   }
 }

@@ -51,11 +51,11 @@ paths:
       tags:
         - users
       summary: Вход в закрытую часть приложения
-      description: Авторизует пользователя на основе логина и пароля.
+      description: Авторизует пользователя на основе логина и пароля
 
       requestBody:
         required: true
-        description: Логин и пароль пользователя.
+        description: Логин и пароль пользователя
         content:
           application/json:
             schema:
@@ -72,10 +72,7 @@ paths:
 
       responses:
         "200":
-          description: >
-            Успешно авторизован.
-            Объект с токеном.
-            Клиент использует этот токен для отправки любых запросов. Токен передаётся в заголовках.
+          description: Авторизация прошла успешно. Получай токен для работы в приложении :)
           content:
             application/json:
               schema:
@@ -87,7 +84,7 @@ paths:
                     format: jwt
 
         "401":
-          description: Пользователь не существует, либо логин или пароль указаны неверно
+          description: Пользователь не существует или была очепятка в пароле :(
 
 
     get:
@@ -106,7 +103,7 @@ paths:
 
       responses:
         "200":
-          description: Информация о пользователе успешно получена
+          description: Информация о пользователе успешно получена :)
           content:
             application/json:
               schema:

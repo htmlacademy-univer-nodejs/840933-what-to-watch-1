@@ -21,34 +21,34 @@ export class CreateMovieDto {
 
   @IsString({ message: 'Описание является обязательным' })
   @Length(20, 1024, {
-    message: 'description length must be from 20 to 1024 symbols',
+    message: 'Описание может быть от 20 до 1024 символов',
   })
   public description!: string;
 
-  @IsDateString({}, { message: 'postDate must be valid ISO date' })
+  @IsDateString({}, { message: 'Должно соответствовать формату ISO' })
   public publishingDate!: Date;
 
   @IsEnum(GenreEnum, {
     message:
-      'genre must be one of: \'comedy\', \'crime\', \'documentary\', \'drama\', \'horror\', \'family\', \'romance\', \'scifi\', \'thriller\'',
+      'Жанр должен быть \'comedy\', \'crime\', \'documentary\', \'drama\', \'horror\', \'family\', \'romance\', \'scifi\', \'thriller\'',
   })
   public genre!: TGenre;
 
-  @IsInt({ message: 'releaseYear must be an integer' })
-  @Min(1895, { message: 'Minimum releaseYear is 1895' })
-  @Max(2022, { message: 'Maximum releaseYear is 2022' })
+  @IsInt({ message: 'Год должен быть целым числом' })
+  @Min(1895, { message: 'Первый фильм вышел в 1895' })
+  @Max(2022, { message: 'Крайний фильм вышел 2023' })
   public releaseYear!: number;
 
-  @IsString({ message: 'previewPath is required' })
+  @IsString({ message: 'Превью фильма является обязательным' })
   public previewPath!: string;
 
-  @IsString({ message: 'moviePath is required' })
+  @IsString({ message: 'Путь к фильму является обязательным' })
   public moviePath!: string;
 
-  @IsArray({ message: 'Field actors must be an array' })
+  @IsArray({ message: 'Актеры — список строк' })
   public actors!: string[];
 
-  @IsString({ message: 'director is required' })
+  @IsString({ message: 'Продюсер является обязательным полем' })
   public director!: string;
 
   @IsInt({ message: 'Длительность это целое число минут' })

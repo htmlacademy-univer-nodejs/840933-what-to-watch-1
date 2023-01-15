@@ -72,10 +72,10 @@ Content-Type: multipart/form-data; boundary=----NewStaticFile
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZCI6IjYzYzE5OTdkNzRiNjJiYWZmMDdkNGIyYSIsImlhdCI6MTY3MzY5NjgwNSwiZXhwIjoxNjczODY5NjA1fQ.iUYM9pzCIjMZtGGoSJmLgdgO_Y-uwpc_IceoVvvBcI4
 
 ------NewStaticFile
-Content-Disposition: form-data; name="static"; filename="Владольф.jpg"
-Content-Type: image/jpeg
+Content-Disposition: form-data; name="static"; filename="google.pdf"
+Content-Type: application/pdf
 
-< /Users/mac/Desktop/Владольф.jpg
+< /Users/mac/Desktop/google.pdf
 ------NewStaticFile--
 
 ###
@@ -89,7 +89,7 @@ Content-Type: application/json
 }
 
 ###
-## Проверка токена пользователя
+## Информация о пользователе по токену
 GET http://localhost:8000/users/login HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZCI6IjYzYzE5OTdkNzRiNjJiYWZmMDdkNGIyYSIsImlhdCI6MTY3MzY5NjgwNSwiZXhwIjoxNjczODY5NjA1fQ.iUYM9pzCIjMZtGGoSJmLgdgO_Y-uwpc_IceoVvvBcI4
 
@@ -362,3 +362,28 @@ Content-Type: text/plain
 
 qwert
 --DataToLogin--
+
+###
+## Год меньше чем возможный для фильма (минимальный — 1895)
+POST http://localhost:8000/movies/create HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZCI6IjYzYzE5OTdkNzRiNjJiYWZmMDdkNGIyYSIsImlhdCI6MTY3MzgwOTE3MSwiZXhwIjoxNjczOTgxOTcxfQ.g27lAXtAstbr-aePcPMarNCASZI2OFW6wTWn7D6z99I
+
+{
+  "title": "Авиатор",
+  "description": "Получив от отца небольшую фабрику, Говард Хьюз превратил ее в гигантское, фантастически прибыльное предприятие. Став владельцем огромной кинокомпании, он снял самый дорогой для своего времени фильм и покорил сердца прелестнейших голливудских актрис.",
+  "publishingDate": "2005-05-02T23:59:33.903Z",
+  "genre": "drama",
+  "releaseYear": 1700,
+  "rating": 7,
+  "commentsCount": 290,
+  "previewPath": "https://what-to-watch.ru/preview/aviator.jpg",
+  "moviePath": "https://what-to-watch.ru/movie/aviator.jpg",
+  "actors": ["Кисик"],
+  "director": "Мартин Скорсезе",
+  "duration": 169,
+  "posterPath": "aviator.jpg",
+  "backgroundImagePath": "OG9SaAd2MsLsln8cdBWAi.jpeg",
+  "backgroundColor": "pink"
+}
