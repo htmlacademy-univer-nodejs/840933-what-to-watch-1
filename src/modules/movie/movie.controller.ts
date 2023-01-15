@@ -15,7 +15,7 @@ import { ValidateObjectIdMiddleware } from '../../middlewares/validateObjectId.m
 import { Component } from '../../types/types/component.type.js';
 import { getGenre } from '../../types/types/genre.type.js';
 import { HttpMethod } from '../../types/enums/httpMethod.enum.js';
-import { fillDTO } from '../../utils/commonFunctions.js';
+import { fillDTO } from '../../utils/dto.js';
 import { CommentServiceInterface } from '../comment/commentService.interface.js';
 import { CommentResponse } from '../comment/response/comment.response.js';
 import { UserServiceInterface } from '../user/userService.interface.js';

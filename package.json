@@ -17,7 +17,7 @@
     "clean": "rimraf dist",
     "ts": "ts-node",
     "doc": "npx redoc-cli serve specification/specification.yaml",
-    "mockServer": "json-server ./mocks/mock-server-data.json --port 8888"
+    "mockServer": "json-server ./mocks/mockData.json --port 8888"
   },
   "devDependencies": {
     "@types/convict": "6.1.1",

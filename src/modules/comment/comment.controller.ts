@@ -10,7 +10,7 @@ import { PrivateRouteMiddleware } from '../../middlewares/privateRoute.middlewar
 import { ValidateDtoMiddleware } from '../../middlewares/validateDto.middleware.js';
 import { Component } from '../../types/types/component.type.js';
 import { HttpMethod } from '../../types/enums/httpMethod.enum.js';
-import { fillDTO } from '../../utils/commonFunctions.js';
+import { fillDTO } from '../../utils/dto.js';
 import { MovieServiceInterface } from '../movie/movieService.interface.js';
 import { UserServiceInterface } from '../user/userService.interface.js';
 import { CommentServiceInterface } from './commentService.interface.js';

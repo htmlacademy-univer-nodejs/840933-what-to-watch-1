@@ -3,8 +3,7 @@ import typegoose, {
   getModelForClass,
 } from '@typegoose/typegoose';
 import { User } from '../../types/types/user.type.js';
-import { checkPassword } from '../../utils/commonFunctions.js';
-import { createSHA256 } from '../../utils/crypro.js';
+import { createSHA256, checkPassword } from '../../utils/crypro.js';
 import { DEFAULT_AVATAR_FILE_NAME } from './user.models.js';
 
 const { prop, modelOptions } = typegoose;

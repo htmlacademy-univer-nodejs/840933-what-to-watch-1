@@ -15,3 +15,9 @@ export const createJWT = async (
 
 export const createSHA256 = (line: string, salt: string): string =>
   createHmac('sha256', salt).update(line).digest('hex');
+
+export const checkPassword = (password: string) => {
+  if (password.length < 6 || password.length > 12) {
+    throw new Error('Password should be from 6 to 12 characters');
+  }
+};

@@ -12,7 +12,7 @@ import { ValidateDtoMiddleware } from '../../middlewares/validateDto.middleware.
 import { ValidateObjectIdMiddleware } from '../../middlewares/validateObjectId.middleware.js';
 import { Component } from '../../types/types/component.type.js';
 import { HttpMethod } from '../../types/enums/httpMethod.enum.js';
-import { fillDTO } from '../../utils/commonFunctions.js';
+import { fillDTO } from '../../utils/dto.js';
 import { MovieListItemResponse } from '../movie/response/movieListItem.response.js';
 import { CreateUserDto } from './dto/createUser.dto.js';
 import { LoginUserDto } from './dto/loginUser.dto.js';
