@@ -671,7 +671,7 @@ components:
           type: integer
           minimum: 0
           maximum: 10
-          example: 5
+          example: 7
 
         previewPath:
           type: string

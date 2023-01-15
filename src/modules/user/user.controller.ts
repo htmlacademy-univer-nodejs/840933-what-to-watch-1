@@ -120,19 +120,17 @@ export class UserController extends Controller {
   ): Promise<void> {
     const { body } = req;
     const existsUser = await this.userService.findByEmail(body.email);
+    const salt = this.configService.get('SALT');
 
     if (existsUser) {
       throw new HttpError(
         StatusCodes.CONFLICT,
-        `User with email «${body.email}» exists.`,
+        `Пользователь с таким «${body.email}» уже существует.`,
         'UserController'
       );
     }
 
-    const result = await this.userService.create(
-      body,
-      this.configService.get('SALT')
-    );
+    const result = await this.userService.create(body, salt);
     const createdUser: UserResponse = result;
 
     if (req.file) {

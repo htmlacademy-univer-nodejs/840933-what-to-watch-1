@@ -4,8 +4,8 @@ import { inject, injectable } from 'inversify';
 import { LoggerInterface } from '../../common/logger/logger.interface.js';
 import { Component } from '../../types/types/component.type.js';
 import { TGenre } from '../../types/types/genre.type.js';
-import CreateMovieDto from './dto/createMovie.dto.js';
-import UpdateMovieDto from './dto/updateMovie.dto.js';
+import { CreateMovieDto } from './dto/createMovie.dto.js';
+import { UpdateMovieDto } from './dto/updateMovie.dto.js';
 import { MovieServiceInterface } from './movieService.interface.js';
 import { MovieEntity } from './movie.entity.js';
 import { MAX_MOVIES_COUNT } from './movie.models.js';
@@ -22,8 +22,8 @@ export class MovieService implements MovieServiceInterface {
     dto: CreateMovieDto,
     user: string
   ): Promise<DocumentType<MovieEntity>> {
-    const movie = await this.movieModel.create({ ...dto, user });
-    this.logger.info(`New movie created: ${dto.title}`);
+    const movie = await (await this.movieModel.create({ ...dto, user })).populate('user');
+    this.logger.info(`Создан новый фильм: ${dto.title}`);
     return movie;
   }
 
@@ -44,6 +44,7 @@ export class MovieService implements MovieServiceInterface {
     movieId: string,
     dto: UpdateMovieDto
   ): Promise<DocumentType<MovieEntity> | null> {
+    this.logger.info(`Обновляю фильм: ${dto.title}`);
     return this.movieModel
       .findByIdAndUpdate(movieId, dto, { new: true })
       .populate('user');
@@ -85,9 +86,9 @@ export class MovieService implements MovieServiceInterface {
       .select('rating commentsCount');
     const oldRating = oldValues?.['rating'] ?? 0;
     const oldCommentsCount = oldValues?.['commentsCount'] ?? 0;
+    const newCommentsCount = (oldRating * oldCommentsCount + newRating) / (oldCommentsCount + 1);
     return this.movieModel.findByIdAndUpdate(movieId, {
-      rating:
-        (oldRating * oldCommentsCount + newRating) / (oldCommentsCount + 1),
+      rating: newCommentsCount,
     });
   }
 

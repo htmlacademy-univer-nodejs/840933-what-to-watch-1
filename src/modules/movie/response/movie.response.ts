@@ -3,7 +3,7 @@ import { Expose, Type } from 'class-transformer';
 import { TGenre } from '../../../types/types/genre.type.js';
 import { UserResponse } from '../../user/response/user.response.js';
 
-export default class MovieResponse {
+export class MovieResponse {
   @Expose()
   public id!: string;
 

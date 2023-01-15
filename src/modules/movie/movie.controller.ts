@@ -13,30 +13,20 @@ import { PrivateRouteMiddleware } from '../../middlewares/privateRoute.middlewar
 import { ValidateDtoMiddleware } from '../../middlewares/validateDto.middleware.js';
 import { ValidateObjectIdMiddleware } from '../../middlewares/validateObjectId.middleware.js';
 import { Component } from '../../types/types/component.type.js';
-import { getGenre, TGenre } from '../../types/types/genre.type.js';
+import { getGenre } from '../../types/types/genre.type.js';
 import { HttpMethod } from '../../types/enums/httpMethod.enum.js';
 import { fillDTO } from '../../utils/commonFunctions.js';
 import { CommentServiceInterface } from '../comment/commentService.interface.js';
 import { CommentResponse } from '../comment/response/comment.response.js';
 import { UserServiceInterface } from '../user/userService.interface.js';
-import CreateMovieDto from './dto/createMovie.dto.js';
-import UpdateMovieDto from './dto/updateMovie.dto.js';
+import { CreateMovieDto } from './dto/createMovie.dto.js';
+import { UpdateMovieDto } from './dto/updateMovie.dto.js';
 import { MovieServiceInterface } from './movieService.interface.js';
 import { MovieEntity } from './movie.entity.js';
-import {
-  MovieRoute,
-} from './movie.models.js';
-import {MovieListItemResponse} from './response/movieListItem.response.js';
-import MovieResponse from './response/movie.response.js';
-
-type ParamsGetMovie = {
-  movieId: string;
-};
-
-type QueryParamsGetMovies = {
-  limit?: string;
-  genre?: TGenre;
-};
+import { MovieRoute } from './movie.models.js';
+import { MovieListItemResponse } from './response/movieListItem.response.js';
+import { MovieResponse } from './response/movie.response.js';
+import { ParamsGetMovie, QueryParamsGetMovies } from '../../types/types/filmParams.type.js';
 
 @injectable()
 export class MovieController extends Controller {
@@ -51,8 +41,6 @@ export class MovieController extends Controller {
     private readonly commentService: CommentServiceInterface
   ) {
     super(logger, configService);
-
-    this.logger.info('Register routes for MovieController.');
 
     this.addRoute<MovieRoute>({
       path: MovieRoute.Promo,
@@ -112,6 +100,8 @@ export class MovieController extends Controller {
         new DocumentExistsMiddleware(this.movieService, 'Movie', 'movieId'),
       ],
     });
+
+    this.logger.info('Все маршруты MovieController были созданы.');
   }
 
   async index(
@@ -119,13 +109,9 @@ export class MovieController extends Controller {
     res: Response
   ): Promise<void> {
     const genre = req.query.genre;
-    const limit = req.query.limit ? parseInt(req.query.limit, 10) : undefined;
-    let movies: DocumentType<MovieEntity>[];
-    if (genre) {
-      movies = await this.movieService.findByGenre(getGenre(genre), limit);
-    } else {
-      movies = await this.movieService.find(limit);
-    }
+    const limit = req.query.limit ? parseInt(req.query.limit, 10) : Infinity;
+    const movies: DocumentType<MovieEntity>[] = genre ? await this.movieService.findByGenre(getGenre(genre), limit) : await this.movieService.find(limit);
+
     this.ok(res, fillDTO(MovieListItemResponse, movies));
   }
 
@@ -187,6 +173,7 @@ export class MovieController extends Controller {
   ): Promise<void> {
     const { params, user } = req;
     const movie = await this.movieService.findById(params.movieId);
+
     if (movie?.user?.id !== user.id) {
       throw new HttpError(
         StatusCodes.FORBIDDEN,
@@ -194,6 +181,7 @@ export class MovieController extends Controller {
         'MovieController'
       );
     }
+
     await this.movieService.deleteById(`${params.movieId}`);
     this.noContent(res, { message: 'Фильм успешно удален.' });
   }

@@ -11,14 +11,15 @@ import {
   Max,
   Min,
 } from 'class-validator';
+
 import { GenreEnum, TGenre } from '../../../types/types/genre.type.js';
 
-export default class CreateMovieDto {
-  @IsString({ message: 'title is required' })
-  @Length(2, 100, { message: 'title length must be from 2 to 100 symbols' })
+export class CreateMovieDto {
+  @IsString({ message: 'Название обязательно' })
+  @Length(2, 100, { message: 'Длина названия от 2 до 100' })
   public title!: string;
 
-  @IsString({ message: 'description is required' })
+  @IsString({ message: 'Описание является обязательным' })
   @Length(20, 1024, {
     message: 'description length must be from 20 to 1024 symbols',
   })
@@ -66,6 +67,11 @@ export default class CreateMovieDto {
 
   @IsString({ message: 'backgroundColor is required' })
   public backgroundColor!: string;
+
+  public user!: {
+    id: string;
+    email: string;
+  };
 
   @IsOptional()
   @IsBoolean({ message: 'isPromo should be boolean' })
