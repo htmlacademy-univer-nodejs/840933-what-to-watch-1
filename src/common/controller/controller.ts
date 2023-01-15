@@ -7,8 +7,8 @@ import { STATIC_RESOURCE_FIELDS } from '../../constants/application.contants.js'
 import { RouteInterface } from '../../types/interfaces/route.interface.js';
 import {
   getFullServerPath,
-  transformObject,
 } from '../../utils/commonFunctions.js';
+import { transformObject } from '../../utils/transform.js';
 import { ConfigInterface } from '../config/config.interface.js';
 import { LoggerInterface } from '../logger/logger.interface.js';
 import { ControllerInterface } from './controller.interface.js';

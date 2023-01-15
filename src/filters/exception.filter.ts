@@ -4,7 +4,7 @@ import { inject, injectable } from 'inversify';
 
 import { Component } from '../types/types/component.type.js';
 import { ServiceError } from '../types/enums/serviceError.enum.js';
-import { createErrorObject } from '../utils/commonFunctions.js';
+import { createErrorObject } from '../utils/transform.js';
 import { LoggerInterface } from '../common/logger/logger.interface.js';
 import { ExceptionFilterInterface } from './exceptionFilter.interface.js';
 import { HttpError } from '../common/errors/http.error.js';
@@ -69,7 +69,7 @@ export default class ExceptionFilter implements ExceptionFilterInterface {
     this.logger.error(`[Ошибка]: ${error.message}`);
 
     error.details.forEach((errorField) =>
-      this.logger.error(`[${errorField.property}] — ${errorField.messages}`)
+      this.logger.error(`[${errorField.property}] –> ${errorField.messages}`)
     );
 
     res

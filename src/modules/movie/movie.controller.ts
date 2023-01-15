@@ -23,7 +23,7 @@ import { CreateMovieDto } from './dto/createMovie.dto.js';
 import { UpdateMovieDto } from './dto/updateMovie.dto.js';
 import { MovieServiceInterface } from './movieService.interface.js';
 import { MovieEntity } from './movie.entity.js';
-import { MovieRoute } from './movie.models.js';
+import { MovieRoute } from './movie.route.js';
 import { MovieListItemResponse } from './response/movieListItem.response.js';
 import { MovieResponse } from './response/movie.response.js';
 import { ParamsGetMovie, QueryParamsGetMovies } from '../../types/types/filmParams.type.js';
@@ -155,7 +155,7 @@ export class MovieController extends Controller {
     if (movie?.user?.id !== user.id) {
       throw new HttpError(
         StatusCodes.FORBIDDEN,
-        `User with id ${user.id} doesn't own movie card with id ${movie?.id}, so can't edit it.`,
+        `Пользователь с id -> ${user.id} не может редактировать фильм с id -> ${movie?.id} :(`,
         'MovieController'
       );
     }

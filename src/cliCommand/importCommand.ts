@@ -12,7 +12,7 @@ import { UserServiceInterface } from '../modules/user/userService.interface.js';
 import { UserModel } from '../modules/user/user.entity.js';
 import { UserService } from '../modules/user/user.service.js';
 import { Movie } from '../types/types/movie.type.js';
-import { createMovie } from '../utils/commonFunctions.js';
+import { createMovie } from '../utils/movie.js';
 import { getDBConnectionURI } from '../utils/db.js';
 import { CliCommandInterface } from './cliCommand.interface.js';
 import { DEFAULT_USER_PASSWORD } from '../constants/defaultPassword.constant.js';

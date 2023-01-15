@@ -51,29 +51,24 @@ export class CreateMovieDto {
   @IsString({ message: 'director is required' })
   public director!: string;
 
-  @IsInt({ message: 'duration must be an integer' })
-  @Min(0, { message: 'duration can not be less than 0' })
+  @IsInt({ message: 'Длительность это целое число минут' })
+  @Min(0, { message: 'Длительность не может быть меньше 0' })
   public duration!: number;
 
-  @Matches(/(\S+(\.jpg)$)/, { message: 'posterPath must be .jpg format image' })
-  @IsString({ message: 'posterPath is required' })
+  @Matches(/(\S+(\.jpg)$)/, { message: 'Постер должно быть формата .jpg или .jpeg' })
+  @IsString({ message: 'Постер — обязательное поле' })
   public posterPath!: string;
 
   @Matches(/(\S+(\.(jpg|jpeg))$)/, {
-    message: 'backgroundImagePath must be .jpg format image',
+    message: 'Фоновое изображение должно быть формата .jpg или .jpeg',
   })
-  @IsString({ message: 'backgroundImagePath is required' })
+  @IsString({ message: 'Фоновое изображение является обязательным' })
   public backgroundImagePath!: string;
 
-  @IsString({ message: 'backgroundColor is required' })
+  @IsString({ message: 'Цвет фона является обязательынм' })
   public backgroundColor!: string;
 
-  public user!: {
-    id: string;
-    email: string;
-  };
-
   @IsOptional()
-  @IsBoolean({ message: 'isPromo should be boolean' })
+  @IsBoolean({ message: 'isPromo это булево значение' })
   public isPromo?: boolean;
 }

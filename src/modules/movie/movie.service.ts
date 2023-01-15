@@ -8,7 +8,7 @@ import { CreateMovieDto } from './dto/createMovie.dto.js';
 import { UpdateMovieDto } from './dto/updateMovie.dto.js';
 import { MovieServiceInterface } from './movieService.interface.js';
 import { MovieEntity } from './movie.entity.js';
-import { MAX_MOVIES_COUNT } from './movie.models.js';
+import { MAX_MOVIES_COUNT } from '../../constants/moviesCount.constant.js';
 
 @injectable()
 export class MovieService implements MovieServiceInterface {

@@ -19,7 +19,8 @@ import { LoginUserDto } from './dto/loginUser.dto.js';
 import { LoggedUserResponse } from './response/loggedUser.response.js';
 import { UserResponse } from './response/user.response.js';
 import { UserServiceInterface } from './userService.interface.js';
-import { JWT_ALGORITHM, UserRoute } from './user.models.js';
+import { UserRoute } from './user.models.js';
+import { JWT_ALGORITHM } from '../../constants/crypto.constants.js';
 import { UploadStaticMiddleware } from '../../middlewares/uploadStatic.middleware.js';
 import { createJWT } from '../../utils/crypro.js';
 
@@ -62,21 +63,21 @@ export class UserController extends Controller {
     this.addRoute<UserRoute>({
       path: UserRoute.MyList,
       method: HttpMethod.Get,
-      handler: this.getToWatch,
+      handler: this.getMyList,
       middlewares: [new PrivateRouteMiddleware(this.userService)],
     });
 
     this.addRoute<UserRoute>({
       path: UserRoute.MyList,
       method: HttpMethod.Post,
-      handler: this.postToWatch,
+      handler: this.addToMyList,
       middlewares: [new PrivateRouteMiddleware(this.userService)],
     });
 
     this.addRoute<UserRoute>({
       path: UserRoute.MyList,
       method: HttpMethod.Delete,
-      handler: this.deleteToWatch,
+      handler: this.deleteFromMyList,
       middlewares: [new PrivateRouteMiddleware(this.userService)],
     });
 
@@ -180,22 +181,24 @@ export class UserController extends Controller {
     }
 
     const user = await this.userService.findByEmail(req.user.email);
+
     this.ok(res, {
       ...fillDTO(LoggedUserResponse, user),
       token: req.headers.authorization?.split(' ')[1],
     });
   }
 
-  async getToWatch(
+  async getMyList(
     req: Request<Record<string, unknown>, Record<string, unknown>>,
     _res: Response
   ): Promise<void> {
     const { user } = req;
     const result = await this.userService.getMyList(user.id);
+
     this.ok(_res, fillDTO(MovieListItemResponse, result));
   }
 
-  async postToWatch(
+  async addToMyList(
     req: Request<
       Record<string, unknown>,
       Record<string, unknown>,
@@ -207,11 +210,11 @@ export class UserController extends Controller {
     await this.userService.addToMyList(body.movieId, user.id);
 
     this.noContent(_res, {
-      message: 'Успешно. Фильм добавлен в список "К просмотру".',
+      message: 'Фильм успешно добавлен в «Мои фильмы».',
     });
   }
 
-  async deleteToWatch(
+  async deleteFromMyList(
     req: Request<
       Record<string, unknown>,
       Record<string, unknown>,
@@ -222,7 +225,7 @@ export class UserController extends Controller {
     const { body, user } = req;
     await this.userService.deleteFromMyList(body.movieId, user.id);
     this.noContent(_res, {
-      message: 'Успешно. Фильм удален из списка "К просмотру".',
+      message: 'Фильм успешно удален из «Мои фильмы».',
     });
   }
 
@@ -233,7 +236,7 @@ export class UserController extends Controller {
     if (!user) {
       throw new HttpError(
         StatusCodes.NOT_FOUND,
-        `User with id ${userId} doesn't exist`,
+        `Пользователя с id -> ${userId} не существует :(`,
         'UploadFileMiddleware'
       );
     }

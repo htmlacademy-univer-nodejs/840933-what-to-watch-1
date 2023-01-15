@@ -6,22 +6,22 @@ info:
   version: 1.0.0
 tags:
   - name: users
-    description: Действия с пользователем.
+    description: Пользователи.
   - name: movies
-    description: Действия с фильмами.
+    description: Фильмы.
   - name: comments
-    description: Действия с комментариями.
+    description: Комментарии.
 
 paths:
   /users/register:
     post:
       tags:
         - users
-      summary: Создание нового пользователя
-      description: Регистрирует нового пользователя.
+      summary: Создание нового пользователя.
+      description: Регистрация нового пользователя в приложение.
 
       requestBody:
-        description: Информация для создания нового пользователя.
+        description: Поля которые могут быть у пользователя (можно посмотреть в схеме по созданию пользователя)
         content:
           multipart/form-data:
             schema:
@@ -33,17 +33,17 @@ paths:
 
       responses:
         "201":
-          description: Пользователь зарегистрирован. Объект пользователя.
+          description: Пользователь успешно зарегистрирован.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/user'
 
         "409":
-          description: Пользователь с таким email уже существует.
+          description: Пользователь с таким email уже существует :(
 
         "400":
-          description: Не удалось обработать запрос, так как он представлен в неправильном формате или является некорректным.
+          description: Неверный формат запроса :(
 
 
   /users/login:
@@ -296,7 +296,7 @@ paths:
 
       responses:
         "200":
-          description: Успешно. Список фильмов, соответствующих запросу.
+          description: Список фильмов был успешно получен.
           content:
             application/json:
               schema:
@@ -324,11 +324,11 @@ paths:
                 $ref: '#/components/schemas/movie'
 
 
-  /users/to_watch:
+  /users/mylist:
     get:
       tags:
         - users
-      summary: Получить список фильмов «К просмотру»
+      summary: Получить «Мои фильмы»
       description: Возвращает список фильмов, добавленных к просмотру
 
       parameters:
@@ -356,8 +356,8 @@ paths:
     post:
       tags:
         - users
-      summary: Добавить фильм в список "К просмотру"
-      description: Добавляет фильм в список "К просмотру"
+      summary: Добавить фильм в «Мои фильмы»
+      description: Добавляет фильм в список «Мои фильмы»
 
       requestBody:
         description: id фильма, который добавляют в список.
@@ -386,8 +386,8 @@ paths:
     delete:
       tags:
         - users
-      summary: Удалить фильм из списка "К просмотру"
-      description: Удаляет фильм из списка "К просмотру"
+      summary: Удалить фильм «Мои фильмы»
+      description: Удаляет фильм из списка «Мои фильмы»
 
       requestBody:
         description: id этого фильма.
@@ -407,7 +407,7 @@ paths:
 
       responses:
         "204":
-          description: Успешно. Фильм удален из списка "К просмотру".
+          description: Успешно. Фильм удален из списка «Мои фильмы».
 
         "401":
           description: Пользователь не авторизован. Запрос отклонен.
@@ -528,6 +528,10 @@ components:
       type: object
 
       properties:
+        id:
+          type: string
+          example: 63c1997d74b62baff07d4b2a
+
         name:
           type: string
           example: kisik

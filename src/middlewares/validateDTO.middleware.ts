@@ -5,7 +5,7 @@ import { NextFunction, Request, Response } from 'express';
 
 import { ValidationError } from '../common/errors/validation.error.js';
 import { MiddlewareInterface } from '../types/interfaces/middleware.interface.js';
-import { transformErrors } from '../utils/commonFunctions.js';
+import { transformErrors } from '../utils/transform.js';
 
 export class ValidateDtoMiddleware implements MiddlewareInterface {
   constructor(private readonly dto: ClassConstructor<object>) {}

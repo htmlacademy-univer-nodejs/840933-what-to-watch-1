@@ -88,7 +88,7 @@ npm run mockServer
 npm run doc
 ```
 
-Запускает на http://localhost:8080 спецификацию в формате OpenAPI 3.
+Запускает на http://localhost:8080 спецификацию в формате OpenAPI 3 (@redocly/cli не использую из-за проблем с запуском на node 16.18.0).
 
 #### Запустить CLI
 

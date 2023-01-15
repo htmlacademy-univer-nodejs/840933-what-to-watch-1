@@ -9,7 +9,7 @@ export default class LoggerService implements LoggerInterface {
 
   constructor() {
     this.logger = pino();
-    this.logger.info('Logger created.');
+    this.logger.info('Было подключено логирование событий');
   }
 
   debug(message: string, ...args: unknown[]): void {

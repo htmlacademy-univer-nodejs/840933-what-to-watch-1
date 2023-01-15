@@ -6,7 +6,7 @@ import { Component } from '../../types/types/component.type.js';
 import { MovieServiceInterface } from '../movie/movieService.interface.js';
 import { CommentServiceInterface } from './commentService.interface.js';
 import { CommentEntity } from './comment.entity.js';
-import { MAX_COMMENTS_COUNT } from './comment.models.js';
+import { MAX_COMMENTS_COUNT } from '../../constants/commentCount.constants.js';
 import { CreateCommentDto } from './dto/createComment.dto.js';
 
 @injectable()

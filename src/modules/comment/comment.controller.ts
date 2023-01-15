@@ -14,7 +14,7 @@ import { fillDTO } from '../../utils/commonFunctions.js';
 import { MovieServiceInterface } from '../movie/movieService.interface.js';
 import { UserServiceInterface } from '../user/userService.interface.js';
 import { CommentServiceInterface } from './commentService.interface.js';
-import { CommentRoute } from './comment.models.js';
+import { CommentRoute } from './comment.route.js';
 import { CreateCommentDto } from './dto/createComment.dto.js';
 import { CommentResponse } from './response/comment.response.js';
 
