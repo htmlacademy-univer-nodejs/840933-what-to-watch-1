@@ -2,9 +2,9 @@ import typegoose, {
   defaultClasses,
   getModelForClass,
 } from '@typegoose/typegoose';
-
-import { User } from '../../types/user.type.js';
-import { createSHA256 } from '../../utils/crypto.js';
+import { User } from '../../types/types/user.type.js';
+import { createSHA256, checkPassword } from '../../utils/crypro.js';
+import { DEFAULT_AVATAR_FILE_NAME } from '../../constants/defaultAvatar.constant.js';
 
 const { prop, modelOptions } = typegoose;
 
@@ -27,35 +27,29 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
   @prop({ unique: true, required: true })
   public email!: string;
 
-  @prop()
+  @prop({ default: DEFAULT_AVATAR_FILE_NAME })
   public avatarPath?: string;
 
-  @prop({ required: true, default: [] })
-  public listFilmToWatch!: string[];
-
-  @prop({ required: true, default: '' })
+  @prop({ required: true })
   public name!: string;
 
-  @prop({ required: true, default: '', validate: {
-    validator: (v: string) => v.length < 12 && v.length > 6,
-    message: 'Пароль должен быть больше 6 символов и меньше 12'
-  } })
+  @prop({ required: true, default: [] })
+  public mylist!: string[];
+
+  @prop({ required: true })
   private password!: string;
 
   setPassword(password: string, salt: string) {
-    if (password.length < 6 && password.length > 12) {
-      throw Error('Password length must be between 6 and 12 characters');
-    }
-
+    checkPassword(password);
     this.password = createSHA256(password, salt);
-  }
-
-  getPassword() {
-    return this.password;
   }
 
   verifyPassword(password: string, salt: string) {
     return createSHA256(password, salt) === this.password;
+  }
+
+  getPassword() {
+    return this.password;
   }
 }
 

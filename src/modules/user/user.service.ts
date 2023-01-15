@@ -2,22 +2,22 @@ import { types } from '@typegoose/typegoose';
 import { DocumentType } from '@typegoose/typegoose/lib/types.js';
 import { inject, injectable } from 'inversify';
 
-import { UserEntity } from './user.entity.js';
+import { LoggerInterface } from '../../common/logger/logger.interface.js';
+import { Component } from '../../types/types/component.type.js';
+import { MovieEntity } from '../movie/movie.entity.js';
 import { CreateUserDto } from './dto/createUser.dto.js';
-import { Component } from '../../types/component.type.js';
-import { Logger } from '../../common/logger/logger.type.js';
-import { FilmEntity } from '../film/film.entity.js';
-import { UserServiceType } from './user.type.js';
 import { LoginUserDto } from './dto/loginUser.dto.js';
+import { UserServiceInterface } from './userService.interface.js';
+import { UserEntity } from './user.entity.js';
 
 @injectable()
-export class UserService implements UserServiceType {
+export class UserService implements UserServiceInterface {
   constructor(
-    @inject(Component.Logger) private logger: Logger,
+    @inject(Component.LoggerInterface) private logger: LoggerInterface,
     @inject(Component.UserModel)
     private readonly userModel: types.ModelType<UserEntity>,
-    @inject(Component.FilmModel)
-    private readonly filmModel: types.ModelType<FilmEntity>
+    @inject(Component.MovieModel)
+    private readonly movieModel: types.ModelType<MovieEntity>
   ) {}
 
   async create(
@@ -28,9 +28,20 @@ export class UserService implements UserServiceType {
     user.setPassword(dto.password, salt);
 
     const result = await this.userModel.create(user);
-    this.logger.info(`Создан новый пользователь: ${user.email}`);
+    this.logger.info(`Новый пользователь успешно создан: ${user.email}`);
 
     return result;
+  }
+
+  async findById(userId: string): Promise<DocumentType<UserEntity> | null> {
+    return this.userModel.findById(userId);
+  }
+
+  async setUserAvatarPath(
+    userId: string,
+    avatarPath: string
+  ): Promise<void | null> {
+    return this.userModel.findByIdAndUpdate(userId, { avatarPath });
   }
 
   async findByEmail(email: string): Promise<DocumentType<UserEntity> | null> {
@@ -50,34 +61,36 @@ export class UserService implements UserServiceType {
     return this.create(dto, salt);
   }
 
-  async findListFilmToWatch(userId: string): Promise<DocumentType<FilmEntity>[]> {
-    const listFilmToWatch = await this.userModel.findById(userId).select('listFilmToWatch');
-    return this.filmModel.find({
-      _id: {
-        $in: listFilmToWatch?.listFilmToWatch
-      }
-    });
+  async getMyList(userId: string): Promise<DocumentType<MovieEntity>[]> {
+    const mylist = await this.userModel
+      .findById(userId)
+      .select('mylist');
+
+    return this.movieModel
+      .find({ _id: { $in: mylist?.mylist } })
+      .populate('user');
   }
 
-  async addFilmToWatch(movieId: string, userId: string): Promise<void | null> {
+  async addToMyList(movieId: string, userId: string): Promise<void | null> {
     return this.userModel.findByIdAndUpdate(userId, {
-      $addToSet: {
-        listFilmToWatch: movieId
-      }
+      $addToSet: { mylist: movieId },
     });
   }
 
-  async verifyUser(dto: LoginUserDto, salt: string): Promise<DocumentType<UserEntity> | null> {
+  async deleteFromMyList(movieId: string, userId: string): Promise<void | null> {
+    return this.userModel.findByIdAndUpdate(userId, {
+      $pull: { mylist: movieId },
+    });
+  }
+
+  async verifyUser(
+    dto: LoginUserDto,
+    salt: string
+  ): Promise<DocumentType<UserEntity> | null> {
     const user = await this.findByEmail(dto.email);
     if (user && user.verifyPassword(dto.password, salt)) {
       return user;
     }
     return null;
-  }
-
-  async deleteFilmToWatch(movieId: string, userId: string): Promise<void | null> {
-    return this.userModel.findByIdAndUpdate(userId, {
-      $pull: {moviesToWatch: movieId}
-    });
   }
 }

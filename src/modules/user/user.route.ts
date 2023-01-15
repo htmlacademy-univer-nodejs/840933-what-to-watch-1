@@ -1,6 +1,8 @@
 export enum UserRoute {
-  REGISTER = '/register',
-  LOGIN = '/login',
-  TO_WATCH = '/to_watch',
-  AVATAR = '/:userId/avatar'
+  Register = '/register',
+  Login = '/login',
+  MyList = '/mylist',
+  Avatar = '/:userId/avatar',
+  Static = '/static',
+  Logout = '/logout'
 }

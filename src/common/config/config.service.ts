@@ -1,30 +1,28 @@
-import { config } from 'dotenv';
-import { inject, injectable } from 'inversify';
+import {config} from 'dotenv';
+import {inject, injectable} from 'inversify';
 
-import { ConfigInterface } from './config.interface.js';
-import { Logger } from '../logger/logger.type.js';
-import { configSchema } from './config.schema.js';
-import { Component } from '../../types/component.type.js';
-import { ConfigSchema } from './config.type.schema.js';
+import {ConfigInterface} from './config.interface.js';
+import {LoggerInterface} from '../logger/logger.interface.js';
+import {CONFIG_SCHEMA, ConfigSchema} from './config.schema.js';
+import { Component } from '../../types/types/component.type.js';
 
 @injectable()
-export default class ConfigService implements ConfigInterface {
+export class ConfigService implements ConfigInterface {
   private readonly config: ConfigSchema;
 
-  constructor(
-    @inject(Component.Logger) private logger: Logger
-  ) {
+  constructor(@inject(Component.LoggerInterface) private logger: LoggerInterface) {
     const parsedOutput = config();
 
     if (parsedOutput.error) {
-      throw new Error('Не получается прочитать .env файл.');
+      throw new Error('Cannot read .env file.');
     }
 
-    configSchema.load({});
-    configSchema.validate({ allowed: 'strict', output: this.logger.info });
+    CONFIG_SCHEMA.load({});
+    CONFIG_SCHEMA.validate({allowed: 'strict', output: this.logger.info});
 
-    this.config = configSchema.getProperties();
-    this.logger.info('.env файл успешно прочитан');
+    this.config = CONFIG_SCHEMA.getProperties();
+
+    this.logger.info('.env файл был успешно прочитан.');
   }
 
   get<T extends keyof ConfigSchema>(key: T): ConfigSchema[T] {

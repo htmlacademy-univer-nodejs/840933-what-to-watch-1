@@ -1,56 +1,61 @@
 openapi: 3.0.3
-
 info:
-  title: API проекта «Что посмотреть».
-  description: Документация для сервера «Что посмотреть».
+  title: API сервер для личного проекта «Что посмотреть».
+  description: |-
+    * Список ресурсов и маршрутов сервера «Что посмотреть».
   version: 1.0.0
-
 tags:
   - name: users
-    description: Действия с пользователем.
-  - name: films
-    description: Действия с фильмами.
+    description: Пользователи
+  - name: movies
+    description: Фильмы
   - name: comments
-    description: Действия с комментариями.
+    description: Комментарии
 
 paths:
   /users/register:
     post:
       tags:
         - users
-      summary: Создание нового пользователя
-      description: Регистрирует нового пользователя.
+      summary: Создание нового пользователя.
+      description: Регистрация нового пользователя в приложение.
 
       requestBody:
-        description: Информация для создания нового пользователя.
+        description: Поля которые могут быть у пользователя (можно посмотреть в схеме по созданию пользователя)
         content:
-          application/json:
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/createUser'
+            encoding:
+              avatar:
+                contentType: image/png, image/jpeg
         required: true
 
       responses:
         "201":
-          description: Пользователь зарегистрирован. Объект пользователя.
+          description: Пользователь успешно зарегистрирован.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/user'
 
         "409":
-          description: Пользователь с таким email уже существует.
+          description: Пользователь с таким email уже существует :(
+
+        "400":
+          description: Неверный формат запроса :(
 
 
   /users/login:
     post:
       tags:
         - users
-      summary: Авторизация пользователя
-      description: Авторизует пользователя (используется логин и пароль от 6 до 12 символов).
+      summary: Вход в закрытую часть приложения
+      description: Авторизует пользователя на основе логина и пароля
 
       requestBody:
         required: true
-        description: Логин и пароль авторизующегося пользователя.
+        description: Логин и пароль пользователя
         content:
           application/json:
             schema:
@@ -59,353 +64,436 @@ paths:
               properties:
                 login:
                   type: string
-                  example: kotikvacia@skbkontur.ru
+                  example: vladik@vk.ru
 
                 password:
                   type: string
-                  example: vladikKisa
+                  example: qwerty123
 
       responses:
         "200":
-          description: Успешно авторизован.
-          headers:
-            Set-Cookie:
+          description: Авторизация прошла успешно. Получай токен для работы в приложении :)
+          content:
+            application/json:
               schema:
-                type: string
-                example: SESSIONID=kot123; Path=/; HttpOnly
+                type: object
 
-        "403":
-          description: Неправильные пароль или логин.
+                properties:
+                  token:
+                    type: string
+                    format: jwt
+
+        "401":
+          description: Пользователь не существует или была очепятка в пароле :(
 
 
     get:
       tags:
         - users
       summary: Информация о пользователе
-      description: Информация о пользователе.
+      description: Возвращает информацию по авторизованному пользователю
 
       parameters:
-        - in: cookie
-          name: SESSIONID
+        - in: header
+          name: Authorization
           required: true
           schema:
             type: string
+            format: Bearer jwt
 
       responses:
         "200":
-          description: Информация о пользователе была получена.
+          description: Информация о пользователе успешно получена :)
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/user'
 
-  /films/create:
+        "401":
+          description: Невалидный токен :(
+
+  /users/logout:
     post:
       tags:
-        - films
+        - users
+      summary: Выход из сессии
+      description: Возвращает токен который был добавлен черный лист
+
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+            format: Bearer jwt
+
+      responses:
+        "200":
+          description: Токен был успешно добавлен в черный список
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  token:
+                    type: string
+                    format: jwt
+        "401":
+          description: Невалидный токен :(
+
+  /users/{userId}/avatar:
+    post:
+      tags:
+        - users
+      summary: Загрузка аватара пользователя
+      description: Загружает иозображение аватара пользователя. Изображение аватара должно быть в формате .jpg или .png
+      responses:
+        "201":
+          description: Аватар пользователя был успешно загружен
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  avatarPath:
+                    type: string
+
+  /users/static:
+    post:
+      tags:
+        - users
+      summary: Загрузка всякого контента на сервер
+      description: Загружаем всякий контент на сервер
+      responses:
+        "201":
+          description: Контент был успешно загружен на сервер
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  staticFile:
+                    type: string
+
+  /movies/create:
+    post:
+      tags:
+        - movies
       summary: Добавление нового фильма
-      description: Добавляет новый фильм.
+      description: Добавляет новый фильм в БД
+
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+            format: Bearer jwt
 
       requestBody:
-        description: Информация для добавления нового фильма.
+        description: Поля которые нужны для добавления фильма (можно посмотреть в схеме createMovie)
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/createFilm'
+              $ref: '#/components/schemas/createMovie'
         required: true
 
       responses:
         "201":
-          description: Фильм был успешно создан.
+          description: Фильм был успешно добавлен
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/film'
+                $ref: '#/components/schemas/movie'
 
         "400":
-          description: Неверный формат запроса.
+          description: Неверный формат запроса :(
+
+        "401":
+          description: Необходимо пройти процесс авторизации :(
 
 
-  /films/{filmId}:
+  /movies/{movieId}:
     get:
       tags:
-        - films
-      summary: Получение детальной информации по фильму.
-      description: Получает детальную информацию по определенному фильму.
+        - movies
+      summary: Получение информации по фильму
+      description: Получает информацию по фильму по его id
 
       parameters:
         - in: path
-          name: filmId
+          name: movieId
           schema:
             type: string
             format: uuid
           required: true
-          description: ID фильма для запроса.
+          description: Уникальный идентификатор фильма
 
       responses:
         "200":
-          description: Полная информация по фильму была получена.
+          description: Информация по фильму была успешно получена
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/film'
+                $ref: '#/components/schemas/movie'
 
         "404":
-          description: Фильма с данным id не существует.
+          description: Фильма с данным id не существует
 
     patch:
       tags:
-        - film
-      summary: Изменение карточки фильма
-      description: Измененяет карточку фильма.
+        - movies
+      summary: Редактирование карточки фильма
+      description: Редактирует карточку фильма, созданную пользователем.
 
       parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+            format: Bearer jwt
         - in: path
-          name: filmId
+          name: movieId
           schema:
             type: string
             format: uuid
           required: true
-          description: ID фильма для обновления.
+          description: Movie id to update.
 
       requestBody:
-        description: Вся информация по фильму для обновления и его ID.
+        description: Полный набор информации по фильму.
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/updateFilm'
+              $ref: '#/components/schemas/updateMovie'
         required: true
 
       responses:
         "200":
-          description: Информация по фильму была обновлена.
+          description: Фильм обновлен. Новый объект фильма.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/film'
+                $ref: '#/components/schemas/movie'
 
         "400":
-          description: Неверный формат фильма.
+          description: Не удалось обработать запрос, так как он представлен в неправильном формате или является некорректным.
+
+        "401":
+          description: Пользователь не авторизован. Редактировать карточки фильмов могут только авторизованные клиенты.
+
+        "403":
+          description: Пользователь не создавал фильм и поэтому не может его редактировать :(
 
         "404":
-          description: Фильма с данным id не существует.
+          description: Фильма с таким id нет :(
 
 
     delete:
       tags:
-        - film
+        - movies
       summary: Удаление карточки фильма
       description: Удаляет карточку фильма, созданную пользователем
 
       parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+            format: Bearer jwt
         - in: path
-          name: filmId
+          name: movieId
           schema:
             type: string
             format: uuid
           required: true
-          description: ID фильма для удаления.
+          description: Уникальный идентификатор фильма
 
       requestBody:
-        description: ID пользователя.
+        description: Уникальный идентификатор пользователя который хочет удалить фильм
         content:
           application/json:
             schema:
               type: object
 
-              properties:
-                userId:
-                  type: string
-                  format: uuid
-
       responses:
         "204":
-          description: Фильм был успешно удален.
+          description: Фильм был успешно удален :)
+
+        "401":
+          description: Нужно пройти авторизацию :(
 
         "403":
-          description: Недостаточно прав для операции.
+          description: Пользователь с id <userId> не может удалить фильм с id <movieId> :(
 
         "404":
-          description: Фильма с данным id не существует.
+          description: Фильм с таким id не был найден :(
 
-  /films?limit=60&genre=comedy:
+  /movies?limit=40&genre=drama:
     get:
       tags:
-        - films
-      summary: Список фильмов
-      description: Возвращает список фильмов с возможностью ограничить количество выдачи (по умолчанию не больше 60).
+        - movies
+      summary: Получить все фильмы
+      description: Возвращает список фильмов (по умолчанию не больше 60)
 
       parameters:
         - in: query
           name: limit
           schema:
             type: integer
-            example: 10
+            default: 60
+            example: 40
 
         - in: query
           name: genre
           schema:
             type: string
             enum: [ comedy, crime, documentary, drama, horror, family, romance, scifi, thriller ]
-            example: romance
+            example: drama
 
       responses:
         "200":
-          description: Список фильмов создан.
+          description: Список фильмов был успешно получен
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/filmListItem'
+                  $ref: '#/components/schemas/movieListItem'
 
         "400":
-          description: Неверный формат запроса.
+          description: Не удалось обработать запрос, так как он представлен в неправильном формате или является некорректным.
 
 
-  /films/promo:
+  /movies/promo:
     get:
       tags:
-        - films
-      summary: Получение промо-фильма
-      description: Получение полной информации по промо фильму.
+        - movies
+      summary: Получение информации по промо фильму
+      description: Получение информации по промо фильму
 
       responses:
         "200":
-          description: Полная информация по фильму успешно получена.
+          description: Информация по промо фильму была получена
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/film'
+                $ref: '#/components/schemas/movie'
 
 
-  /films/to-watch:
+  /users/mylist:
     get:
       tags:
-        - films
-      summary: Получить список фильмов для просмотра
-      description: Возвращает список фильмов, добавленных к просмотру
+        - users
+      summary: Получить «Мои фильмы»
+      description: Возвращает список «Моих фильмов»
 
-      requestBody:
-        description: Id пользователя, запрашивающего фильмы к просмотру.
-        content:
-          application/json:
-            schema:
-              type: object
-
-              properties:
-                userId:
-                  type: string
-                  format: uuid
-
-              required:
-                - userId
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+            format: Bearer jwt
 
       responses:
         "200":
-          description: Успешно. Фильмы, добавленные к просмотру.
+          description: Успешно получены «Мои фильмы»
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/filmListItem'
+                  $ref: '#/components/schemas/movieListItem'
 
         "401":
-          description: Пользователь не авторизован. Запрос отклонен.
+          description: Необходимо пройти процесс авторизации :(
 
 
     post:
       tags:
-        - films
-      summary: Добавить фильм в список "К просмотру"
-      description: Добавляет фильм в список "К просмотру"
+        - users
+      summary: Добавить фильм в «Мои фильмы»
+      description: Добавляет фильм в список «Мои фильмы»
 
       requestBody:
-        description: Id пользователя, добавляющего фильм к просмотру, и id фильма, который добавляют в список.
+        description: Уникальный идентификатор фильма который мы добавляем в «Мои фильмы»
         content:
           application/json:
             schema:
               type: object
 
               properties:
-                userId:
-                  type: string
-                  format: uuid
-                  example: 6329c3d6a04ab1061c6425ea
-
-                filmId:
+                movieId:
                   type: string
                   format: uuid
                   example: 6329c3d6a04ab1061c6425ease8u342
 
               required:
-                - userId
-                - filmId
+                - movieId
 
       responses:
-        "201":
-          description: Успешно. Фильм добавлен в список "К просмотру".
+        "204":
+          description: Фильм успешно добавлен в список «Мои фильмы» :)
 
         "401":
-          description: Пользователь не авторизован. Запрос отклонен.
+          description: Необходимо пройти процесс авторизации :(
 
 
     delete:
       tags:
-        - films
-      summary: Удалить фильм из списка "К просмотру"
-      description: Удаляет фильм из списка "К просмотру"
+        - users
+      summary: Удалить фильм «Мои фильмы»
+      description: Удаляет фильм из списка «Мои фильмы»
 
       requestBody:
-        description: Id пользователя, удаляющего фильм из списка "К просмотру", и id этого фильма.
+        description: Уникальный идентификатор фильма который хотим удалить из списка «Мои фильмы»
         content:
           application/json:
             schema:
               type: object
 
               properties:
-                userId:
+                movieId:
                   type: string
                   format: uuid
-                  example: C1F19E77-F93B-4F48-92A7-8908041C0C57
-
-                filmId:
-                  type: string
-                  format: uuid
-                  example: C1F19E77-F93B-4F48-92A7-8908041C0C57
+                  example: 6329c3d6a04ab1061c6425ease8u342
 
               required:
-                - userId
-                - filmId
+                - movieId
 
       responses:
         "204":
-          description: Фильм был удален из списка «К просмотру».
+          description: Фильм удален из списка «Мои фильмы»
 
         "401":
-          description: Пользователь не авторизован.
+          description: Необходимо пройти процесс авторизации :(
 
 
-  /films/{filmId}/comments:
+  /movies/{movieId}/comments:
     get:
       tags:
         - comments
-      summary: Получить список комментариев для определённого фильма
-      description: Возвращает список комментариев для определенного фильма.
+      summary: Комментарии к фильму
+      description: Возвращает список комментариев для определенного фильма
 
       parameters:
         - in: path
-          name: filmId
+          name: movieId
           schema:
             type: string
             format: uuid
           required: true
-          description: Идентификатор фильма для получения комментариев.
+          description: Уникальный идентификатор для фильма
 
       responses:
         "200":
-          description: Список комментариев к фильму создан.
+          description: Список комментариев к фильму был успешно получен
           content:
             application/json:
               schema:
@@ -414,18 +502,26 @@ paths:
                   $ref: '#/components/schemas/comment'
 
         "404":
-          description: Фильм с таким id не существует.
+          description: Фильм с таким id не был найден :(
 
 
   /comments:
     post:
       tags:
         - comments
-      summary: Добавить новый комментарий к фильму
-      description: Добавляет новый комментарий к фильму.
+      summary: Добавить новый комментарий к определённому фильму
+      description: Добавляет новый комментарий к определенному фильму.
+
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+            format: Bearer jwt
 
       requestBody:
-        description: id фильма + комментарий к нему.
+        description: Уникальный идентификатор фильма + информация по комментарию (можно посмотреть в схеме comment)
         content:
           application/json:
             schema:
@@ -433,29 +529,29 @@ paths:
                 - $ref: '#/components/schemas/comment'
                 - type: object
                   properties:
-                    filmId:
+                    movieId:
                       type: string
                       format: uuid
                       example: 6329c3d6a04ab1061c6425ea
                   required:
-                    - filmId
+                    - movieId
 
       responses:
         "200":
-          description: Комментарий успешно создан.
+          description: Комментарий был успешно добавлен
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/comment'
 
         "400":
-          description: Запрос не подходит по формату.
+          description: Неверный формат запроса :(
 
         "401":
-          description: Пользователь не авторизован.
+          description: Необходимо пройти процесс авторизации :(
 
         "404":
-          description: Фильма с таким id не существует.
+          description: Фильм с таким id не был найден :(
 
 
 components:
@@ -466,15 +562,29 @@ components:
       properties:
         email:
           type: string
-          example: kotikvacia@skbkontur.ru
+          format: email
+          example: vladek@vk.ru
 
         name:
           type: string
-          example: kotikvacia
+          minLength: 1
+          maxLength: 15
+          example: kisik
 
         password:
           type: string
-          example: 123456
+          minLength: 6
+          maxLength: 12
+          example: qwerty123
+
+        avatar:
+          type: string
+          format: binary
+
+      required:
+        - email
+        - password
+        - name
 
     user:
       type: object
@@ -482,14 +592,24 @@ components:
       properties:
         id:
           type: string
-          format: uuid
-          example: 6329c3d6a04ab1061c6425ea
+          example: 63c1997d74b62baff07d4b2a
+
+        name:
+          type: string
+          example: kisik
 
         email:
           type: string
-          example: kotikvacia@skbkontur.ru
+          example: vladik@vk.com
 
-    createFilm:
+        avatarPath:
+          type: string
+          format: uri
+          pattern: ([^\s]+(\.(jpg|png))$)
+          example: /upload/8chKdsOiK.png
+
+
+    createMovie:
       type: object
 
       properties:
@@ -497,39 +617,39 @@ components:
           type: string
           minLength: 2
           maxLength: 100
-          example: 500 Дней Лета
+          example: Авиатор
 
         description:
           type: string
           minLength: 20
           maxLength: 1024
-          example: Саммер Филд и Том Хенсен встречают друг друга и отлично проводят время, но вскоре их настигает кризис отношений с которым они должны справится ?
+          example: Получив от отца небольшую фабрику, Говард Хьюз превратил ее в гигантское, фантастически прибыльное предприятие. Став владельцем огромной кинокомпании, он снял самый дорогой для своего времени фильм и покорил сердца прелестнейших голливудских актрис.
 
         publishingDate:
           type: string
           format: date-time
-          example: 2009-09-17T23:59:48.903Z
+          example: 2005-02-03T23:59:33.903Z
 
         genre:
           type: string
           enum: [ comedy, crime, documentary, drama, horror, family, romance, scifi, thriller ]
-          example: romance
+          example: drama
 
         releaseYear:
           type: integer
           minimum: 1895
           maximum: 2022
-          example: 2009
+          example: 2005
 
         previewPath:
           type: string
           format: url
-          example: https://www.what-to-watch.ru/preview/500-day-summer
+          example: https://what-to-watch.ru/preview/aviator.jpg
 
-        filmPath:
+        moviePath:
           type: string
           format: url
-          example: https://www.what-to-watch.ru/500-day-summer
+          example: https://what-to-watch.ru/movie/aviator.jpg
 
         actors:
           type: array
@@ -537,38 +657,34 @@ components:
             type: string
           minItems: 1
           uniqueItems: true
-          example: [ Зоу Дешанель, Джозеф Гордон-Левитт, Хлоя Грейс Морец ]
+          example: [ Леонардо Ди Каприо, Кейт Бланшетт, Джуд Ло ]
 
         director:
           type: string
           minLength: 2
           maxLength: 50
-          example: Марк Уэбб
+          example: Мартин Скорсезе
 
-        durationInMinutes:
+        duration:
           type: number
-          minimum: 1
-
-        userId:
-          type: string
-          format: uuid
-          example: C1F19E77-F93B-4F48-92A7-8908041C0C57
+          minimum: 2
+          example: 169
 
         posterPath:
           type: string
           format: uri
-          pattern: ([^\s]+(\.jpg)$)
-          example: 500-day-summer.jpg
+          pattern: ([^\s]+(\.(jpg|jpeg))$)
+          example: static/aviator.jpg
 
         backgroundImagePath:
           type: string
           format: uri
-          pattern: ([^\s]+(\.jpg)$)
-          example: background/500-day-summer.jpg
+          pattern: ([^\s]+(\.(jpg|jpeg))$)
+          example: static/8ac7cjck.jpg
 
         backgroundColor:
           type: string
-          example: yellow
+          example: pink
 
       required:
         - title
@@ -577,16 +693,15 @@ components:
         - genre
         - releaseYear
         - previewPath
-        - filmPath
+        - moviePath
         - actors
         - director
-        - durationInMinutes
-        - userId
+        - duration
         - posterPath
         - backgroundImagePath
         - backgroundColor
 
-    film:
+    movie:
       type: object
 
       properties:
@@ -594,45 +709,45 @@ components:
           type: string
           minLength: 2
           maxLength: 100
-          example: 500 Дней Лета
+          example: Авиатор
 
         description:
           type: string
           minLength: 20
           maxLength: 1024
-          example: Саммер Филд и Том Хенсен встречают друг друга и отлично проводят время, но вскоре их настигает кризис отношений с которым они должны справится ?
+          example: Получив от отца небольшую фабрику, Говард Хьюз превратил ее в гигантское, фантастически прибыльное предприятие. Став владельцем огромной кинокомпании, он снял самый дорогой для своего времени фильм и покорил сердца прелестнейших голливудских актрис.
 
         publishingDate:
           type: string
           format: date-time
-          example: 2009-09-17T23:59:48.903Z
+          example: 2005-02-03T23:59:33.903Z
 
         genre:
           type: string
           enum: [ comedy, crime, documentary, drama, horror, family, romance, scifi, thriller ]
-          example: romance
+          example: drama
 
         releaseYear:
           type: integer
           minimum: 1895
-          maximum: 2022
-          example: 2009
+          maximum: 2023
+          example: 2005
 
         rating:
           type: integer
           minimum: 0
           maximum: 10
-          example: 8
+          example: 7
 
         previewPath:
           type: string
           format: url
-          example: https://www.what-to-watch.ru/preview/500-day-summer
+          example: https://what-to-watch.ru/preview/aviator.jpg
 
-        filmPath:
+        moviePath:
           type: string
           format: url
-          example: https://www.what-to-watch.ru/500-day-summer
+          example: https://what-to-watch.ru/movie/aviator.jpg
 
         actors:
           type: array
@@ -640,23 +755,23 @@ components:
             type: string
           minItems: 1
           uniqueItems: true
-          example: [ Зоу Дешанель, Джозеф Гордон-Левитт, Хлоя Грейс Морец ]
+          example: [ Леонардо Ди Каприо, Кейт Бланшетт, Джуд Ло ]
 
         director:
           type: string
           minLength: 2
           maxLength: 50
-          example: Марк Уэбб
+          example: Мартин Скорсезе
 
-        durationInMinutes:
+        duration:
           type: number
-          minimum: 1
-          example: 96
+          minimum: 2
+          example: 169
 
         commentsCount:
           type: integer
           minimum: 0
-          example: 1012
+          example: 290
 
         user:
           $ref: '#/components/schemas/user'
@@ -664,18 +779,18 @@ components:
         posterPath:
           type: string
           format: uri
-          pattern: ([^\s]+(\.jpg)$)
-          example: 500-day-summer.jpg
+          pattern: ([^\s]+(\.(jpg|jpeg))$)
+          example: static/aviator.jpg
 
         backgroundImagePath:
           type: string
           format: uri
-          pattern: ([^\s]+(\.jpg)$)
-          example: background/500-day-summer.jpg
+          pattern: ([^\s]+(\.(jpg|jpeg))$)
+          example: static/8ac7cjck.jpg
 
         backgroundColor:
           type: string
-          example: green
+          example: pink
 
       required:
         - title
@@ -685,30 +800,22 @@ components:
         - releaseYear
         - rating
         - previewPath
-        - filmPath
+        - moviePath
         - actors
         - director
-        - durationInMinutes
+        - duration
         - commentsCount
         - user
         - posterPath
         - backgroundImagePath
         - backgroundColor
 
-    updateFilm:
+    updateMovie:
       allOf:
-        - $ref: '#/components/schemas/createFilm'
-        - type: object
-          properties:
-            filmId:
-              type: string
-              format: uuid
-              example: C1F19E77-F93B-4F48-92A7-8908041C0C57
-          required:
-            - filmId
+        - $ref: '#/components/schemas/createMovie'
 
 
-    filmListItem:
+    movieListItem:
       type: object
 
       properties:
@@ -716,22 +823,22 @@ components:
           type: string
           minLength: 2
           maxLength: 100
-          example: 500 Дней Лета
+          example: Авиатор
 
         publishingDate:
           type: string
           format: date-time
-          example: 2009-09-17T23:59:48.903Z
+          example: 2005-02-03T23:59:33.903Z
 
         genre:
           type: string
           enum: [ comedy, crime, documentary, drama, horror, family, romance, scifi, thriller ]
-          example: romance
+          example: drama
 
         previewPath:
           type: string
           format: url
-          example: https://www.what-to-watch.ru/preview/500-day-summer
+          example: https://what-to-watch.ru/preview/aviator.jpg
 
         user:
           $ref: '#/components/schemas/user'
@@ -740,12 +847,12 @@ components:
           type: string
           format: uri
           pattern: ([^\s]+(\.jpg)$)
-          example: posters/500-day-summer.jpg
+          example: static/aviator.jpg
 
         commentsCount:
           type: integer
           minimum: 0
-          example: 10
+          example: 290
 
       required:
         - title
@@ -765,23 +872,14 @@ components:
           type: string
           minLength: 5
           maxLength: 1024
-          example: Очень интересный фильм ! Зоу и Джозеф вместе смотрятся очень красиво
+          example: Ди Каприо + Скорсезе === 🔥🔥🔥
 
         rating:
           type: integer
           minimum: 0
           maximum: 10
-          example: 9
-
-        publishingDate:
-          type: string
-          format: date-time
-          example: 2019-10-28T20:55:28.903Z
-
-        user:
-          $ref: '#/components/schemas/user'
+          example: 10
 
       required:
         - text
         - rating
-        - user

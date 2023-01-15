@@ -1,62 +1,62 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { inject } from 'inversify';
-import { HttpMethod } from '../../utils/http.enum';
 
-import { Component } from '../../types/component.type';
-import { Logger } from '../../common/logger/logger.type';
-import { ControllerService } from '../../controller/controller.service';
-import { CommentServiceInterface } from './comment.interface';
-import { FilmServiceInterface } from '../film/film.interface';
-import { CommentRoute } from './comment.route';
-import { PrivateRouteMiddleware } from '../../middlewares/privateRoute.middleware';
-import { ValidateDtoMiddleware } from '../../middlewares/validateDTO.middleware';
-import { CommentDto } from './dto/comment.dto';
-import { CommentResponse } from './response/comment.response';
+import { ConfigInterface } from '../../common/config/config.interface.js';
+import { Controller } from '../../common/controller/controller.js';
+import { HttpError } from '../../common/errors/http.error.js';
+import { LoggerInterface } from '../../common/logger/logger.interface.js';
+import { PrivateRouteMiddleware } from '../../middlewares/privateRoute.middleware.js';
+import { ValidateDtoMiddleware } from '../../middlewares/validateDto.middleware.js';
+import { Component } from '../../types/types/component.type.js';
+import { HttpMethod } from '../../types/enums/httpMethod.enum.js';
 import { fillDTO } from '../../utils/dto.js';
-import { HttpError } from '../../errors/http.errors';
+import { MovieServiceInterface } from '../movie/movieService.interface.js';
+import { UserServiceInterface } from '../user/userService.interface.js';
+import { CommentServiceInterface } from './commentService.interface.js';
+import { CommentRoute } from './comment.route.js';
+import { CreateCommentDto } from './dto/createComment.dto.js';
+import { CommentResponse } from './response/comment.response.js';
+import { CheckTokenInBlackListMiddleware } from '../../middlewares/checkTokenInBlacklist.middleware.js';
 
-export default class CommentController extends ControllerService {
+export class CommentController extends Controller {
   constructor(
-    @inject(Component.Logger) logger: Logger,
+    @inject(Component.LoggerInterface) logger: LoggerInterface,
+    @inject(Component.ConfigInterface) configService: ConfigInterface,
+    @inject(Component.UserServiceInterface)
+    private readonly userService: UserServiceInterface,
     @inject(Component.CommentServiceInterface)
     private readonly commentService: CommentServiceInterface,
-    @inject(Component.FilmServiceInterface)
-    private readonly filmService: FilmServiceInterface
+    @inject(Component.MovieServiceInterface)
+    private readonly movieService: MovieServiceInterface
   ) {
-    super(logger);
+    super(logger, configService);
 
-    this.logger.info('Register routes for CommentController.');
+    this.logger.info('Зарегистрированы пути для CommentController.');
     this.addRoute<CommentRoute>({
-      path: CommentRoute.ROOT,
+      path: CommentRoute.Root,
       method: HttpMethod.Post,
       handler: this.create,
       middlewares: [
-        new PrivateRouteMiddleware(),
-        new ValidateDtoMiddleware(CommentDto),
+        new PrivateRouteMiddleware(this.userService),
+        new ValidateDtoMiddleware(CreateCommentDto),
+        new CheckTokenInBlackListMiddleware()
       ],
     });
   }
 
-  public async create(
-    req: Request,
-    res: Response
-  ): Promise<void> {
-    const { body, user }: any = req;
+  public async create(req: Request, res: Response): Promise<void> {
+    const { body, user } = req;
 
-    if (!(await this.filmService.exists(body.filmId))) {
+    if (!(await this.movieService.exists(body.movieId))) {
       throw new HttpError(
         StatusCodes.NOT_FOUND,
-        `Фильм с id ${body.filmId} не был найден.`,
+        `Фильма с id ${body.movieId} не существует.`,
         'CommentController'
       );
     }
 
-    const comment = await this.commentService.create({
-      ...body,
-      userId: user.id,
-    });
-
+    const comment = await this.commentService.create(body, user.id);
     this.created(res, fillDTO(CommentResponse, comment));
   }
 }

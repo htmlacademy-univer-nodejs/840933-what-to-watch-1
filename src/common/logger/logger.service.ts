@@ -1,30 +1,30 @@
-import * as pino from 'pino';
+import pino, { Logger } from 'pino';
 import { injectable } from 'inversify';
 
-import { Logger } from './logger.type.js';
+import { LoggerInterface } from './logger.interface.js';
 
 @injectable()
-export default class LoggerService implements Logger {
-  private logger!: Logger;
+export class LoggerService implements LoggerInterface {
+  private readonly logger: Logger;
 
   constructor() {
-    this.logger = pino.pino();
-    this.logger.info('Подключение логирования…');
+    this.logger = pino();
+    this.logger.info('Было подключено логирование событий');
   }
 
-  public debug(message: string, ...args: unknown[]): void {
+  debug(message: string, ...args: unknown[]): void {
     this.logger.debug(message, ...args);
   }
 
-  public error(message: string, ...args: unknown[]): void {
+  error(message: string, ...args: unknown[]): void {
     this.logger.error(message, ...args);
   }
 
-  public info(message: string, ...args: unknown[]): void {
+  info(message: string, ...args: unknown[]): void {
     this.logger.info(message, ...args);
   }
 
-  public warn(message: string, ...args: unknown[]): void {
+  warn(message: string, ...args: unknown[]): void {
     this.logger.warn(message, ...args);
   }
 }
