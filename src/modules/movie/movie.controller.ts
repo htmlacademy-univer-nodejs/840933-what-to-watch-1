@@ -119,7 +119,7 @@ export class MovieController extends Controller {
     res: Response
   ): Promise<void> {
     const genre = req.query.genre;
-    const limit = req.query.limit ? parseInt(req.query.limit, 10) : Infinity;
+    const limit = req.query.limit ? parseInt(req.query.limit, 10) : 1000;
     const movies: DocumentType<MovieEntity>[] = genre ? await this.movieService.findByGenre(getGenre(genre), limit) : await this.movieService.find(limit);
 
     this.ok(res, fillDTO(MovieListItemResponse, movies));
@@ -165,7 +165,7 @@ export class MovieController extends Controller {
     if (movie?.user?.id !== user.id) {
       throw new HttpError(
         StatusCodes.FORBIDDEN,
-        `Пользователь с id -> ${user.id} не может редактировать фильм с id -> ${movie?.id} :(`,
+        `Пользователь с id -> ${user.id} не может редактировать фильм этот фильм :(`,
         'MovieController'
       );
     }
@@ -187,7 +187,7 @@ export class MovieController extends Controller {
     if (movie?.user?.id !== user.id) {
       throw new HttpError(
         StatusCodes.FORBIDDEN,
-        `User with id ${user.id} doesn't own movie card with id ${movie?.id}, so can't delete it.`,
+        `Пользователь с id -> ${user.id} не может удалить этот фильм :(`,
         'MovieController'
       );
     }
