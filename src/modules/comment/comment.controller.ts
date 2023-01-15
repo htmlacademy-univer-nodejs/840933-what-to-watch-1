@@ -17,8 +17,9 @@ import { CommentServiceInterface } from './commentService.interface.js';
 import { CommentRoute } from './comment.route.js';
 import { CreateCommentDto } from './dto/createComment.dto.js';
 import { CommentResponse } from './response/comment.response.js';
+import { CheckTokenInBlackListMiddleware } from '../../middlewares/checkTokenInBlacklist.middleware.js';
 
-export default class CommentController extends Controller {
+export class CommentController extends Controller {
   constructor(
     @inject(Component.LoggerInterface) logger: LoggerInterface,
     @inject(Component.ConfigInterface) configService: ConfigInterface,
@@ -39,6 +40,7 @@ export default class CommentController extends Controller {
       middlewares: [
         new PrivateRouteMiddleware(this.userService),
         new ValidateDtoMiddleware(CreateCommentDto),
+        new CheckTokenInBlackListMiddleware()
       ],
     });
   }

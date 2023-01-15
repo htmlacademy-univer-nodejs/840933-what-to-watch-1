@@ -1,4 +1,4 @@
-import {CliCommandInterface} from '../cliCommand/cliCommand.interface.js';
+import { CliCommandInterface } from '../cliCommand/cliCommand.interface.js';
 
 type ParsedCommand = Record<string, string[]>;
 

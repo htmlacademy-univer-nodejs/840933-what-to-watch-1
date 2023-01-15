@@ -6,7 +6,7 @@ import { LoggerInterface } from '../logger/logger.interface.js';
 import { DatabaseInterface } from './db.interface.js';
 
 @injectable()
-export default class MongoDBService implements DatabaseInterface {
+export class MongoDBService implements DatabaseInterface {
   constructor(
     @inject(Component.LoggerInterface) private logger: LoggerInterface
   ) {}

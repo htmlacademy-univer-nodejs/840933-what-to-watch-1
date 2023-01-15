@@ -4,7 +4,7 @@ import typegoose, {
 } from '@typegoose/typegoose';
 import { User } from '../../types/types/user.type.js';
 import { createSHA256, checkPassword } from '../../utils/crypro.js';
-import { DEFAULT_AVATAR_FILE_NAME } from './user.models.js';
+import { DEFAULT_AVATAR_FILE_NAME } from '../../constants/defaultAvatar.constant.js';
 
 const { prop, modelOptions } = typegoose;
 

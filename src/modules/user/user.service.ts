@@ -28,7 +28,7 @@ export class UserService implements UserServiceInterface {
     user.setPassword(dto.password, salt);
 
     const result = await this.userModel.create(user);
-    this.logger.info(`New user created: ${user.email}`);
+    this.logger.info(`Новый пользователь успешно создан: ${user.email}`);
 
     return result;
   }
@@ -65,6 +65,7 @@ export class UserService implements UserServiceInterface {
     const mylist = await this.userModel
       .findById(userId)
       .select('mylist');
+
     return this.movieModel
       .find({ _id: { $in: mylist?.mylist } })
       .populate('user');

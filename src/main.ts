@@ -2,18 +2,18 @@ import { types } from '@typegoose/typegoose';
 import { Container } from 'inversify';
 import 'reflect-metadata';
 
-import Application from './app/application.js';
+import { Application } from './app/application.js';
 import { ConfigInterface } from './common/config/config.interface.js';
-import ConfigService from './common/config/config.service.js';
+import { ConfigService } from './common/config/config.service.js';
 import { ControllerInterface } from './common/controller/controller.interface.js';
 import { DatabaseInterface } from './common/dbClient/db.interface.js';
-import MongoDBService from './common/dbClient/mongodb.service.js';
+import { MongoDBService } from './common/dbClient/mongodb.service.js';
 import { ExceptionFilterInterface } from './filters/exceptionFilter.interface.js';
-import ExceptionFilter from './filters/exception.filter.js';
+import { ExceptionFilter } from './filters/exception.filter.js';
 import { LoggerInterface } from './common/logger/logger.interface.js';
-import LoggerService from './common/logger/logger.service.js';
+import { LoggerService } from './common/logger/logger.service.js';
 import { CommentServiceInterface } from './modules/comment/commentService.interface.js';
-import CommentController from './modules/comment/comment.controller.js';
+import { CommentController } from './modules/comment/comment.controller.js';
 import {
   CommentEntity,
   CommentModel,

@@ -3,7 +3,6 @@ export enum UserRoute {
   Login = '/login',
   MyList = '/mylist',
   Avatar = '/:userId/avatar',
-  Static = '/static'
+  Static = '/static',
+  Logout = '/logout'
 }
-
-export const DEFAULT_AVATAR_FILE_NAME = 'default-avatar.png';

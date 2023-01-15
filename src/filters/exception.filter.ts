@@ -11,7 +11,7 @@ import { HttpError } from '../common/errors/http.error.js';
 import { ValidationError } from '../common/errors/validation.error.js';
 
 @injectable()
-export default class ExceptionFilter implements ExceptionFilterInterface {
+export class ExceptionFilter implements ExceptionFilterInterface {
   constructor(
     @inject(Component.LoggerInterface) private logger: LoggerInterface
   ) {

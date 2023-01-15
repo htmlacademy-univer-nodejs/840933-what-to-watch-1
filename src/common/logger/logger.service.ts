@@ -4,7 +4,7 @@ import { injectable } from 'inversify';
 import { LoggerInterface } from './logger.interface.js';
 
 @injectable()
-export default class LoggerService implements LoggerInterface {
+export class LoggerService implements LoggerInterface {
   private readonly logger: Logger;
 
   constructor() {

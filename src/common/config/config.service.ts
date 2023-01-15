@@ -7,7 +7,7 @@ import {CONFIG_SCHEMA, ConfigSchema} from './config.schema.js';
 import { Component } from '../../types/types/component.type.js';
 
 @injectable()
-export default class ConfigService implements ConfigInterface {
+export class ConfigService implements ConfigInterface {
   private readonly config: ConfigSchema;
 
   constructor(@inject(Component.LoggerInterface) private logger: LoggerInterface) {

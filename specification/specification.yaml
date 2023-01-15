@@ -115,6 +115,71 @@ paths:
         "401":
           description: Невалидный токен :(
 
+  /users/logout:
+    post:
+      tags:
+        - users
+      summary: Выход из сессии
+      description: Возвращает токен который был добавлен черный лист
+
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+            format: Bearer jwt
+
+      responses:
+        "200":
+          description: Токен был успешно добавлен в черный список
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  token:
+                    type: string
+                    format: jwt
+        "401":
+          description: Невалидный токен :(
+
+  /users/{userId}/avatar:
+    post:
+      tags:
+        - users
+      summary: Загрузка аватара пользователя
+      description: Загружает иозображение аватара пользователя. Изображение аватара должно быть в формате .jpg или .png
+      responses:
+        "201":
+          description: Аватар пользователя был успешно загружен
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  avatarPath:
+                    type: string
+
+  /users/static:
+    post:
+      tags:
+        - users
+      summary: Загрузка всякого контента на сервер
+      description: Загружаем всякий контент на сервер
+      responses:
+        "201":
+          description: Контент был успешно загружен на сервер
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  staticFile:
+                    type: string
 
   /movies/create:
     post:

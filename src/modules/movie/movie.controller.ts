@@ -27,6 +27,7 @@ import { MovieRoute } from './movie.route.js';
 import { MovieListItemResponse } from './response/movieListItem.response.js';
 import { MovieResponse } from './response/movie.response.js';
 import { ParamsGetMovie, QueryParamsGetMovies } from '../../types/types/filmParams.type.js';
+import { CheckTokenInBlackListMiddleware } from '../../middlewares/checkTokenInBlacklist.middleware.js';
 
 @injectable()
 export class MovieController extends Controller {
@@ -47,20 +48,24 @@ export class MovieController extends Controller {
       method: HttpMethod.Get,
       handler: this.showPromo,
     });
+
     this.addRoute<MovieRoute>({
       path: MovieRoute.Root,
       method: HttpMethod.Get,
       handler: this.index,
     });
+
     this.addRoute<MovieRoute>({
       path: MovieRoute.Create,
       method: HttpMethod.Post,
       handler: this.create,
       middlewares: [
         new PrivateRouteMiddleware(this.userService),
+        new CheckTokenInBlackListMiddleware(),
         new ValidateDtoMiddleware(CreateMovieDto),
       ],
     });
+
     this.addRoute<MovieRoute>({
       path: MovieRoute.Movie,
       method: HttpMethod.Get,
@@ -70,27 +75,32 @@ export class MovieController extends Controller {
         new DocumentExistsMiddleware(this.movieService, 'Movie', 'movieId'),
       ],
     });
+
     this.addRoute<MovieRoute>({
       path: MovieRoute.Movie,
       method: HttpMethod.Patch,
       handler: this.update,
       middlewares: [
         new PrivateRouteMiddleware(this.userService),
+        new CheckTokenInBlackListMiddleware(),
         new ValidateObjectIdMiddleware('movieId'),
         new ValidateDtoMiddleware(UpdateMovieDto),
         new DocumentExistsMiddleware(this.movieService, 'Movie', 'movieId'),
       ],
     });
+
     this.addRoute<MovieRoute>({
       path: MovieRoute.Movie,
       method: HttpMethod.Delete,
       handler: this.delete,
       middlewares: [
         new PrivateRouteMiddleware(this.userService),
+        new CheckTokenInBlackListMiddleware(),
         new ValidateObjectIdMiddleware('movieId'),
         new DocumentExistsMiddleware(this.movieService, 'Movie', 'movieId'),
       ],
     });
+
     this.addRoute<MovieRoute>({
       path: MovieRoute.Comments,
       method: HttpMethod.Get,

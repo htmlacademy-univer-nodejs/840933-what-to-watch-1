@@ -16,6 +16,7 @@ export class AuthenticateMiddleware implements MiddlewareInterface {
   ): Promise<void> {
     const authorizationHeader = req.headers?.authorization?.split(' ');
     const xToken: string | undefined = req.headers?.['x-token']?.toString();
+
     if (!authorizationHeader && !xToken) {
       return next();
     }
@@ -45,7 +46,7 @@ export class AuthenticateMiddleware implements MiddlewareInterface {
       return next(
         new HttpError(
           StatusCodes.UNAUTHORIZED,
-          'Invalid token',
+          'Неверное значение для токена',
           'AuthenticateMiddleware'
         )
       );

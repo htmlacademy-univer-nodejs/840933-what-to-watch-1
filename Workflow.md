@@ -167,7 +167,7 @@ HOST='localhost'
 1.0.1
 ```
 
-`npm run ts ./src/cli.ts -- --generate 10 './mocks/demo.tsv' http://localhost:8888/api` <– пример работы **generate**
+`npm run ts ./src/cli.ts -- --generate 10 './mocks/demo.tsv' http://localhost:8888/api` <– пример работы **generate** (перед запуском нужно **обязательно** запустить )
 
 ```plaintext
 .env файл был успешно прочитан.

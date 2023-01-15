@@ -19,10 +19,12 @@ import { LoginUserDto } from './dto/loginUser.dto.js';
 import { LoggedUserResponse } from './response/loggedUser.response.js';
 import { UserResponse } from './response/user.response.js';
 import { UserServiceInterface } from './userService.interface.js';
-import { UserRoute } from './user.models.js';
+import { UserRoute } from './user.route.js';
 import { JWT_ALGORITHM } from '../../constants/crypto.constants.js';
 import { UploadStaticMiddleware } from '../../middlewares/uploadStatic.middleware.js';
 import { createJWT } from '../../utils/crypro.js';
+import { BLOCKED_TOKENS } from '../../constants/blockedTokens.constant.js';
+import { CheckTokenInBlackListMiddleware } from '../../middlewares/checkTokenInBlacklist.middleware.js';
 
 @injectable()
 export class UserController extends Controller {
@@ -61,24 +63,42 @@ export class UserController extends Controller {
     });
 
     this.addRoute<UserRoute>({
+      path: UserRoute.Logout,
+      method: HttpMethod.Post,
+      handler: this.logout,
+      middlewares: [
+        new PrivateRouteMiddleware(this.userService)
+      ]
+    });
+
+    this.addRoute<UserRoute>({
       path: UserRoute.MyList,
       method: HttpMethod.Get,
       handler: this.getMyList,
-      middlewares: [new PrivateRouteMiddleware(this.userService)],
+      middlewares: [
+        new CheckTokenInBlackListMiddleware(),
+        new PrivateRouteMiddleware(this.userService)
+      ],
     });
 
     this.addRoute<UserRoute>({
       path: UserRoute.MyList,
       method: HttpMethod.Post,
       handler: this.addToMyList,
-      middlewares: [new PrivateRouteMiddleware(this.userService)],
+      middlewares: [
+        new CheckTokenInBlackListMiddleware(),
+        new PrivateRouteMiddleware(this.userService)
+      ],
     });
 
     this.addRoute<UserRoute>({
       path: UserRoute.MyList,
       method: HttpMethod.Delete,
       handler: this.deleteFromMyList,
-      middlewares: [new PrivateRouteMiddleware(this.userService)],
+      middlewares: [
+        new PrivateRouteMiddleware(this.userService),
+        new CheckTokenInBlackListMiddleware()
+      ],
     });
 
     this.addRoute<UserRoute>({
@@ -87,6 +107,7 @@ export class UserController extends Controller {
       handler: this.uploadAvatar,
       middlewares: [
         new PrivateRouteMiddleware(this.userService),
+        new CheckTokenInBlackListMiddleware(),
         new ValidateObjectIdMiddleware('userId'),
         new UploadFileMiddleware(
           'avatar',
@@ -101,6 +122,7 @@ export class UserController extends Controller {
       handler: this.uploadStatic,
       middlewares: [
         new PrivateRouteMiddleware(this.userService),
+        new CheckTokenInBlackListMiddleware(),
         new UploadStaticMiddleware(
           'static',
           this.configService.get('STATIC_DIRECTORY')
@@ -149,10 +171,8 @@ export class UserController extends Controller {
     }: Request<Record<string, unknown>, Record<string, unknown>, LoginUserDto>,
     res: Response
   ): Promise<void> {
-    const user = await this.userService.verifyUser(
-      body,
-      this.configService.get('SALT')
-    );
+    const salt = this.configService.get('SALT');
+    const user = await this.userService.verifyUser(body, salt);
 
     if (!user) {
       throw new HttpError(
@@ -165,13 +185,15 @@ export class UserController extends Controller {
     const token = await createJWT(
       JWT_ALGORITHM,
       this.configService.get('JWT_SECRET'),
-      { email: user.email, id: user.id }
+      { email: user?.email, id: user?.id }
     );
 
     this.ok(res, { token });
   }
 
   async get(req: Request, res: Response): Promise<void> {
+    const token = String(req.headers.authorization?.split(' ')[1]);
+
     if (!req.user) {
       throw new HttpError(
         StatusCodes.UNAUTHORIZED,
@@ -184,7 +206,25 @@ export class UserController extends Controller {
 
     this.ok(res, {
       ...fillDTO(LoggedUserResponse, user),
-      token: req.headers.authorization?.split(' ')[1],
+      token,
+    });
+  }
+
+  async logout(req: Request, res: Response): Promise<void> {
+    const token = String(req.headers.authorization?.split(' ')[1]);
+
+    if (!req.user) {
+      throw new HttpError(
+        StatusCodes.UNAUTHORIZED,
+        'Unauthorized',
+        'UserController'
+      );
+    }
+
+    BLOCKED_TOKENS.add(token);
+
+    this.ok(res, {
+      token
     });
   }
 

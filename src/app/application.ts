@@ -13,7 +13,7 @@ import { getFullServerPath } from '../utils/commonFunctions.js';
 import { getDBConnectionURI } from '../utils/db.js';
 
 @injectable()
-export default class Application {
+export class Application {
   private expressApp: Express;
 
   constructor(
@@ -64,14 +64,21 @@ export default class Application {
 
   async init() {
     const port = this.config.get('PORT');
+    const dbUser = this.config.get('DB_USER');
+    const dbPasswd = this.config.get('DB_PASSWORD');
+    const dbHost = this.config.get('DB_HOST');
+    const dbPort = this.config.get('DB_PORT');
+    const dbName = this.config.get('DB_NAME');
+    const host = this.config.get('HOST');
+
     this.logger.info(`Приложение было запущено на порту: ${port}.`);
 
     const uri = getDBConnectionURI(
-      this.config.get('DB_USER'),
-      this.config.get('DB_PASSWORD'),
-      this.config.get('DB_HOST'),
-      this.config.get('DB_PORT'),
-      this.config.get('DB_NAME')
+      dbUser,
+      dbPasswd,
+      dbHost,
+      dbPort,
+      dbName
     );
 
     await this.dbClient.connect(uri);
@@ -79,7 +86,7 @@ export default class Application {
     this.initMiddleware();
     this.initRoutes();
     this.initExceptionFilters();
-    const host = this.config.get('HOST');
+
     this.expressApp.listen(port, () =>
       this.logger.info(`Сервер был запущен на url -> ${getFullServerPath(host, port)}`)
     );

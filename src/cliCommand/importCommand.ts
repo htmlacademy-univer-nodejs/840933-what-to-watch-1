@@ -1,7 +1,7 @@
 import { ConfigInterface } from '../common/config/config.interface.js';
-import ConfigService from '../common/config/config.service.js';
+import { ConfigService } from '../common/config/config.service.js';
 import { DatabaseInterface } from '../common/dbClient/db.interface.js';
-import MongoDBService from '../common/dbClient/mongodb.service.js';
+import { MongoDBService } from '../common/dbClient/mongodb.service.js';
 import { TSVFileReader } from '../common/fileReader/tsvFileReader.js';
 import { ConsoleLoggerService } from '../common/logger/consoleLogger.service.js';
 import { LoggerInterface } from '../common/logger/logger.interface.js';

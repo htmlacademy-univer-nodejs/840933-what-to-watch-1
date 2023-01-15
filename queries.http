@@ -9,7 +9,7 @@ Content-Type: multipart/form-data; boundary=DataToLogin
 Content-Disposition: form-data; name="email"
 Content-Type: text/plain
 
-evik@vk.com
+evik@mail.com
 --DataToLogin
 Content-Disposition: form-data; name="name"
 Content-Type: text/plain
@@ -67,7 +67,6 @@ Content-Type: image/png
 ###
 
 ## Обновление статики
-
 POST http://localhost:8000/users/static HTTP/1.1
 Content-Type: multipart/form-data; boundary=----NewStaticFile
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZCI6IjYzYzE5OTdkNzRiNjJiYWZmMDdkNGIyYSIsImlhdCI6MTY3MzY5NjgwNSwiZXhwIjoxNjczODY5NjA1fQ.iUYM9pzCIjMZtGGoSJmLgdgO_Y-uwpc_IceoVvvBcI4
@@ -80,21 +79,24 @@ Content-Type: image/jpeg
 ------NewStaticFile--
 
 ###
-
 ## Вход в закрытую часть приложения (получаем токен с которым делаем остальные запросы)
 POST http://localhost:8000/users/login HTTP/1.1
 Content-Type: application/json
 
 {
   "email": "vladek@vk.com",
-  "password": "qwerty123"
+  "password": "123456"
 }
 
 ###
-
 ## Проверка токена пользователя
 GET http://localhost:8000/users/login HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZCI6IjYzYzE5OTdkNzRiNjJiYWZmMDdkNGIyYSIsImlhdCI6MTY3MzY5NjgwNSwiZXhwIjoxNjczODY5NjA1fQ.iUYM9pzCIjMZtGGoSJmLgdgO_Y-uwpc_IceoVvvBcI4
+
+###
+## Выход из сессии
+POST http://localhost:8000/users/logout HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZCI6IjYzYzE5OTdkNzRiNjJiYWZmMDdkNGIyYSIsImlhdCI6MTY3MzgwOTEyMiwiZXhwIjoxNjczOTgxOTIyfQ.gsGryviNTo05sIdVVk0DozHmVeB51IfY3civqQbxiOc
 
 ###
 
@@ -103,7 +105,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZ
 POST http://localhost:8000/movies/create HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZCI6IjYzYzE5OTdkNzRiNjJiYWZmMDdkNGIyYSIsImlhdCI6MTY3MzYzMjE0NSwiZXhwIjoxNjczODA0OTQ1fQ.QOSlczvhMOLunlV2pwF6ZGap8sJ4nK3bEtN6p1ZOPHQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZCI6IjYzYzE5OTdkNzRiNjJiYWZmMDdkNGIyYSIsImlhdCI6MTY3MzgwOTE3MSwiZXhwIjoxNjczOTgxOTcxfQ.g27lAXtAstbr-aePcPMarNCASZI2OFW6wTWn7D6z99I
 
 {
   "title": "Авиатор",
@@ -133,7 +135,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZ
 PATCH http://localhost:8000/movies/63c29a0483e4f0e1a55550c7 HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZCI6IjYzYzE5OTdkNzRiNjJiYWZmMDdkNGIyYSIsImlhdCI6MTY3MzY5ODI3NywiZXhwIjoxNjczODcxMDc3fQ.FtuZJ0TTy3SyB4l4uP2IxacYL8s7mKlo4-3HQpkbqFs
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZCI6IjYzYzE5OTdkNzRiNjJiYWZmMDdkNGIyYSIsImlhdCI6MTY3MzgwOTE3MSwiZXhwIjoxNjczOTgxOTcxfQ.g27lAXtAstbr-aePcPMarNCASZI2OFW6wTWn7D6z99I
 
 {
   "title": "Отель Гранд Будапешт",
@@ -160,7 +162,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZ
 
 ## Удаление фильма
 DELETE http://localhost:8000/movies/63c295e5b577c08e2073c25f HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRpa0B2ay5jb20iLCJpZCI6IjYzYzE5NjJiNzRiNjJiYWZmMDdkNGFjZSIsImlhdCI6MTY3MzYzMTMzMCwiZXhwIjoxNjczODA0MTMwfQ.7GpFXSTgboQaaDDFIZUWEpbRqxm-KwPd6jasPvQ4M-U
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZCI6IjYzYzE5OTdkNzRiNjJiYWZmMDdkNGIyYSIsImlhdCI6MTY3MzY5ODI3NywiZXhwIjoxNjczODcxMDc3fQ.FtuZJ0TTy3SyB4l4uP2IxacYL8s7mKlo4-3HQpkbqFs
 
 ###
 
@@ -228,7 +230,7 @@ Accept: application/json
 ## Добавить комментарий к фильму
 POST http://localhost:8000/comments HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRpa0B2ay5jb20iLCJpZCI6IjYzYzE5NjJiNzRiNjJiYWZmMDdkNGFjZSIsImlhdCI6MTY3MzYzMTMzMCwiZXhwIjoxNjczODA0MTMwfQ.7GpFXSTgboQaaDDFIZUWEpbRqxm-KwPd6jasPvQ4M-U
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRla0B2ay5jb20iLCJpZCI6IjYzYzE5OTdkNzRiNjJiYWZmMDdkNGIyYSIsImlhdCI6MTY3MzgwOTE3MSwiZXhwIjoxNjczOTgxOTcxfQ.g27lAXtAstbr-aePcPMarNCASZI2OFW6wTWn7D6z99I
 
 {
   "text": "Бодрый фильм и актеры классные :)",
@@ -238,7 +240,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRpa0B2ay5jb20iLCJpZ
 ###
 
 # Всякие невалидные запросы
-## Создаем фильм без какого-то обязательного поля
+## Создаем фильм без какого-то обязательного поля (тут title)
 POST http://localhost:8000/movies/create HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -315,3 +317,48 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZsYWRpa0B2ay5jb20iLCJpZ
   "rating": 10,
   "movieId": "63c1969174b62baff07d4adb"
 }
+
+###
+## Создание пользователя c слишком длинным паролем
+POST http://localhost:8000/users/register HTTP/1.1
+Content-Type: multipart/form-data; boundary=DataToLogin
+
+--DataToLogin
+Content-Disposition: form-data; name="email"
+Content-Type: text/plain
+
+evik@mail.com
+--DataToLogin
+Content-Disposition: form-data; name="name"
+Content-Type: text/plain
+
+evik
+--DataToLogin
+Content-Disposition: form-data; name="password"
+Content-Type: text/plain
+
+AdipiscingReprehenderitQuisDuisEtAuteExcepteurNonSuntEliPariaturLorem
+--DataToLogin--
+
+###
+
+## Создание пользователя c слишком коротким паролем
+POST http://localhost:8000/users/register HTTP/1.1
+Content-Type: multipart/form-data; boundary=DataToLogin
+
+--DataToLogin
+Content-Disposition: form-data; name="email"
+Content-Type: text/plain
+
+evik@mail.com
+--DataToLogin
+Content-Disposition: form-data; name="name"
+Content-Type: text/plain
+
+evik
+--DataToLogin
+Content-Disposition: form-data; name="password"
+Content-Type: text/plain
+
+qwert
+--DataToLogin--
