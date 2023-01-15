@@ -92,20 +92,22 @@ npm run doc
 
 ### Переменные окружения
 
-Файл с переменными окружения находится в корне проекта под названием `.env-example`.
+Файл с примером переменных окружения — `.env.example`.
 Чтобы запустить проект скопируйте содержимое в `.env` файлик.
 
-* PORT=8000
-* SALT='Vladik'
-* DB_HOST=127.0.0.1
-* DB_USER='vladik'
-* DB_PASSWORD='kotikvacia'
-* DB_PORT=27017
-* DB_NAME='what-to-watch-db'
-* JWT_SECRET='secret'
-* UPLOAD_DIRECTORY='/upload'
-* STATIC_DIRECTORY='/static'
-* HOST='localhost'
+```plaintext
+PORT=8000
+SALT='Vladik'
+DB_HOST=127.0.0.1
+DB_USER='vladik'
+DB_PASSWORD='kotikvacia'
+DB_PORT=27017
+DB_NAME='what-to-watch-db'
+JWT_SECRET='secret'
+UPLOAD_DIRECTORY='/upload'
+STATIC_DIRECTORY='/static'
+HOST='localhost'
+```
 
 ### Запросы к серверу
 

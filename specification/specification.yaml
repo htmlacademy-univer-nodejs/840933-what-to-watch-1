@@ -6,11 +6,11 @@ info:
   version: 1.0.0
 tags:
   - name: users
-    description: Пользователи.
+    description: Пользователи
   - name: movies
-    description: Фильмы.
+    description: Фильмы
   - name: comments
-    description: Комментарии.
+    description: Комментарии
 
 paths:
   /users/register:
@@ -55,7 +55,7 @@ paths:
 
       requestBody:
         required: true
-        description: Логин и пароль авторизующегося пользователя.
+        description: Логин и пароль пользователя.
         content:
           application/json:
             schema:
@@ -87,14 +87,14 @@ paths:
                     format: jwt
 
         "401":
-          description: Пользователь не существует, либо логин или пароль указаны неверно.
+          description: Пользователь не существует, либо логин или пароль указаны неверно
 
 
     get:
       tags:
         - users
-      summary: Проверка состояния пользователя
-      description: Возвращает информацию по авторизованному пользователю.
+      summary: Информация о пользователе
+      description: Возвращает информацию по авторизованному пользователю
 
       parameters:
         - in: header
@@ -106,14 +106,14 @@ paths:
 
       responses:
         "200":
-          description: Успешно. Информация о пользователе.
+          description: Информация о пользователе успешно получена
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/user'
 
         "401":
-          description: Невалидный токен. Пользователь не авторизован.
+          description: Невалидный токен :(
 
 
   /movies/create:
@@ -121,7 +121,7 @@ paths:
       tags:
         - movies
       summary: Добавление нового фильма
-      description: Добавляет новый фильм.
+      description: Добавляет новый фильм в БД
 
       parameters:
         - in: header
@@ -132,7 +132,7 @@ paths:
             format: Bearer jwt
 
       requestBody:
-        description: Информация для добавления нового фильма.
+        description: Поля которые нужны для добавления фильма (можно посмотреть в схеме createMovie)
         content:
           application/json:
             schema:
@@ -141,25 +141,25 @@ paths:
 
       responses:
         "201":
-          description: Фильм добавлен. Объект фильма.
+          description: Фильм был успешно добавлен
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/movie'
 
         "400":
-          description: Не удалось обработать запрос, так как он представлен в неправильном формате или является некорректным.
+          description: Неверный формат запроса :(
 
         "401":
-          description: Пользователь не авторизован. Добавлять новые фильмы могут только авторизованные клиенты.
+          description: Необходимо пройти процесс авторизации :(
 
 
   /movies/{movieId}:
     get:
       tags:
         - movies
-      summary: Получение детальной информации по фильму
-      description: Получает детальную информацию по определенному фильму.
+      summary: Получение информации по фильму
+      description: Получает информацию по фильму по его id
 
       parameters:
         - in: path
@@ -168,18 +168,18 @@ paths:
             type: string
             format: uuid
           required: true
-          description: Уникальный идентификатор фильма.
+          description: Уникальный идентификатор фильма
 
       responses:
         "200":
-          description: Успешно. Детальная информация по фильму.
+          description: Информация по фильму была успешно получена
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/movie'
 
         "404":
-          description: Фильма с данным id не существует.
+          description: Фильма с данным id не существует
 
     patch:
       tags:
@@ -250,10 +250,10 @@ paths:
             type: string
             format: uuid
           required: true
-          description: Movie id to delete.
+          description: Уникальный идентификатор фильма
 
       requestBody:
-        description: Id пользователя, пытающегося удалить фильм.
+        description: Уникальный идентификатор пользователя который хочет удалить фильм
         content:
           application/json:
             schema:
@@ -261,23 +261,23 @@ paths:
 
       responses:
         "204":
-          description: Фильм успешно удален.
+          description: Фильм был успешно удален :)
 
         "401":
-          description: Пользователь не авторизован. Удалять карточки фильмов могут только авторизованные клиенты.
+          description: Нужно пройти авторизацию :(
 
         "403":
-          description: Пользователь, пытающийся удалить карточку фильма, не является её владельцем, поэтому ему запрещено её удалять.
+          description: Пользователь с id <userId> не может удалить фильм с id <movieId> :(
 
         "404":
-          description: Фильма с данным id не существует.
+          description: Фильм с таким id не был найден :(
 
   /movies?limit=40&genre=drama:
     get:
       tags:
         - movies
-      summary: Получение списка фильмов
-      description: Возвращает список фильмов (по умолчанию не больше 60).
+      summary: Получить все фильмы
+      description: Возвращает список фильмов (по умолчанию не больше 60)
 
       parameters:
         - in: query
@@ -296,7 +296,7 @@ paths:
 
       responses:
         "200":
-          description: Список фильмов был успешно получен.
+          description: Список фильмов был успешно получен
           content:
             application/json:
               schema:
@@ -312,12 +312,12 @@ paths:
     get:
       tags:
         - movies
-      summary: Получение промо-фильма
-      description: Получение детальной информации по промо фильму.
+      summary: Получение информации по промо фильму
+      description: Получение информации по промо фильму
 
       responses:
         "200":
-          description: Успешно. Детальная информация по промо фильму.
+          description: Информация по промо фильму была получена
           content:
             application/json:
               schema:
@@ -329,7 +329,7 @@ paths:
       tags:
         - users
       summary: Получить «Мои фильмы»
-      description: Возвращает список фильмов, добавленных к просмотру
+      description: Возвращает список «Моих фильмов»
 
       parameters:
         - in: header
@@ -341,7 +341,7 @@ paths:
 
       responses:
         "200":
-          description: Успешно. Фильмы, добавленные к просмотру.
+          description: Успешно получены «Мои фильмы»
           content:
             application/json:
               schema:
@@ -350,7 +350,7 @@ paths:
                   $ref: '#/components/schemas/movieListItem'
 
         "401":
-          description: Пользователь не авторизован. Запрос отклонен.
+          description: Необходимо пройти процесс авторизации :(
 
 
     post:
@@ -360,7 +360,7 @@ paths:
       description: Добавляет фильм в список «Мои фильмы»
 
       requestBody:
-        description: id фильма, который добавляют в список.
+        description: Уникальный идентификатор фильма который мы добавляем в «Мои фильмы»
         content:
           application/json:
             schema:
@@ -377,10 +377,10 @@ paths:
 
       responses:
         "204":
-          description: Успешно. Фильм добавлен в список "К просмотру".
+          description: Фильм успешно добавлен в список «Мои фильмы» :)
 
         "401":
-          description: Пользователь не авторизован. Запрос отклонен.
+          description: Необходимо пройти процесс авторизации :(
 
 
     delete:
@@ -390,7 +390,7 @@ paths:
       description: Удаляет фильм из списка «Мои фильмы»
 
       requestBody:
-        description: id этого фильма.
+        description: Уникальный идентификатор фильма который хотим удалить из списка «Мои фильмы»
         content:
           application/json:
             schema:
@@ -407,18 +407,18 @@ paths:
 
       responses:
         "204":
-          description: Успешно. Фильм удален из списка «Мои фильмы».
+          description: Фильм удален из списка «Мои фильмы»
 
         "401":
-          description: Пользователь не авторизован. Запрос отклонен.
+          description: Необходимо пройти процесс авторизации :(
 
 
   /movies/{movieId}/comments:
     get:
       tags:
         - comments
-      summary: Получить список комментариев для определённого фильма
-      description: Возвращает список комментариев для определенного фильма.
+      summary: Комментарии к фильму
+      description: Возвращает список комментариев для определенного фильма
 
       parameters:
         - in: path
@@ -427,11 +427,11 @@ paths:
             type: string
             format: uuid
           required: true
-          description: Уникальный идентификатор для фильма.
+          description: Уникальный идентификатор для фильма
 
       responses:
         "200":
-          description: Успешно. Список комментариев к фильму.
+          description: Список комментариев к фильму был успешно получен
           content:
             application/json:
               schema:
@@ -440,7 +440,7 @@ paths:
                   $ref: '#/components/schemas/comment'
 
         "404":
-          description: Фильм с таким id не существует.
+          description: Фильм с таким id не был найден :(
 
 
   /comments:
@@ -459,7 +459,7 @@ paths:
             format: Bearer jwt
 
       requestBody:
-        description: Id фильма, к которому добавляют комментарий, и сам комментарий.
+        description: Уникальный идентификатор фильма + информация по комментарию (можно посмотреть в схеме comment)
         content:
           application/json:
             schema:
@@ -476,20 +476,20 @@ paths:
 
       responses:
         "200":
-          description: Успешно. Комментарий добавлен.
+          description: Комментарий был успешно добавлен
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/comment'
 
         "400":
-          description: Не удалось обработать запрос, так как он представлен в неправильном формате или является некорректным.
+          description: Неверный формат запроса :(
 
         "401":
-          description: Пользователь не авторизован. Запрос отклонен.
+          description: Необходимо пройти процесс авторизации :(
 
         "404":
-          description: Фильм с данным id не найден.
+          description: Фильм с таким id не был найден :(
 
 
 components:
