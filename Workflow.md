@@ -110,9 +110,88 @@ STATIC_DIRECTORY='/static'
 HOST='localhost'
 ```
 
+### Работа с БД
+
+* Чтобы поднять локально базу данных нужно выполнить `docker-compose up -d` (опция `-d` позволяет запустить процесс в фоне и не блокировать консоль)
+* Чтобы закрыть базу данных можно выполнить команду `docker-compose down`
+
 ### Запросы к серверу
 
 Файл с запросами `queries.http` (можно отправлять из редактора если есть расширение или из Postman)
+
+#### Пример запроса
+
+```http
+# Фильмы
+## Добавить фильм
+POST http://localhost:8000/movies/create HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZhc2lrQG1haWwuY29tIiwiaWQiOiI2M2M0NThjNWMwNjkwNmZhZDc5YTk4NzgiLCJpYXQiOjE2NzM4MTIyMTYsImV4cCI6MTY3Mzk4NTAxNn0.F-QKIkJYUgD3gcFKKHfC4rUXAmAabcPLV5l4ybT3X1E
+
+{
+  "title": "Авиатор",
+  "description": "Получив от отца небольшую фабрику, Говард Хьюз превратил ее в гигантское, фантастически прибыльное предприятие. Став владельцем огромной кинокомпании, он снял самый дорогой для своего времени фильм и покорил сердца прелестнейших голливудских актрис.",
+  "publishingDate": "2005-05-02T23:59:33.903Z",
+  "genre": "drama",
+  "releaseYear": 2005,
+  "rating": 8,
+  "commentsCount": 290,
+  "previewPath": "https://what-to-watch.ru/preview/aviator.jpg",
+  "moviePath": "https://what-to-watch.ru/movie/aviator.jpg",
+  "actors": [
+    "Леонардо Ди Каприо",
+    "Кейт Бланшетт",
+    "Джуд Лоу"
+  ],
+  "director": "Мартин Скорсезе",
+  "duration": 169,
+  "posterPath": "aviator.jpg",
+  "backgroundImagePath": "OG9SaAd2MsLsln8cdBWAi.jpeg",
+  "backgroundColor": "pink"
+}
+```
+
+#### Пример ответа
+
+```plaintext
+HTTP/1.1 201 Created
+X-Powered-By: Express
+Access-Control-Allow-Origin: *
+Content-Type: application/json; charset=utf-8
+Content-Length: 1177
+ETag: W/"499-bnTyDhrlOrKU9+FxN2IXL4gDhg0"
+Date: Mon, 16 Jan 2023 06:34:54 GMT
+Connection: close
+
+{
+  "title": "Авиатор",
+  "description": "Получив от отца небольшую фабрику, Говард Хьюз превратил ее в гигантское, фантастически прибыльное предприятие. Став владельцем огромной кинокомпании, он снял самый дорогой для своего времени фильм и покорил сердца прелестнейших голливудских актрис.",
+  "publishingDate": 1115078373903,
+  "genre": "drama",
+  "releaseYear": 2005,
+  "rating": 8,
+  "previewPath": "https://what-to-watch.ru/preview/aviator.jpg",
+  "moviePath": "https://what-to-watch.ru/movie/aviator.jpg",
+  "actors": [
+    "Леонардо Ди Каприо",
+    "Кейт Бланшетт",
+    "Джуд Лоу"
+  ],
+  "director": "Мартин Скорсезе",
+  "duration": 169,
+  "user": {
+    "id": "63c458c5c06906fad79a9878",
+    "email": "vasik@mail.com",
+    "name": "evik",
+    "avatarPath": "http://localhost:8000/static/default-avatar.jpeg"
+  },
+  "posterPath": "http://localhost:8000/static/aviator.jpg",
+  "backgroundImagePath": "http://localhost:8000/static/OG9SaAd2MsLsln8cdBWAi.jpeg",
+  "backgroundColor": "pink",
+  "commentsCount": 290
+}
+```
 
 ### Работа с консольной программой
 
